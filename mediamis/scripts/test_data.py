@@ -645,7 +645,7 @@ def run():
     django_admin_log_19.change_message = u''
     django_admin_log_19.save()
 
-    """"
+    """
     from south.models import MigrationHistory
 
     south_migrationhistory_1 = MigrationHistory()
@@ -659,7 +659,7 @@ def run():
     south_migrationhistory_2.migration = u'0002_auto__add_field_book_nb_pages'
     south_migrationhistory_2.applied = datetime.datetime(2011, 7, 30, 17, 39, 8, 720667)
     south_migrationhistory_2.save()
-    """"
+    """
 
     from friendlib.models import Media
 
