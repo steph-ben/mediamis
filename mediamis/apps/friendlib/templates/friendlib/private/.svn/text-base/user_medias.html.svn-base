@@ -1,0 +1,20 @@
+{% extends "friendlib/private/base.html" %}
+{% load i18n %}
+
+{% block content-main %}
+    {{ block.super }}
+    {% if media_list %}
+        <h2>{% trans "My medias" %}</h2>
+
+        <div id="media">
+            <table>
+            {% for media in media_list %}
+                <tr>
+                {% include "friendlib/snippets/media_detail.html" %}
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock content-main %}

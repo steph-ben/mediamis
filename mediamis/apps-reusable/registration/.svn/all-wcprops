@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/mediamis/!svn/ver/21/trunk/mediamis/mediamis/apps-reusable/registration
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/mediamis/!svn/ver/11/trunk/mediamis/mediamis/apps-reusable/registration/urls.py
+END
+middleware.py
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/mediamis/!svn/ver/11/trunk/mediamis/mediamis/apps-reusable/registration/middleware.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/mediamis/!svn/ver/11/trunk/mediamis/mediamis/apps-reusable/registration/__init__.py
+END

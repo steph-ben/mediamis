@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block header %}
+    <h1>Homepage</h1><h2>My account</h2>
+{% endblock %}
+
+{# Base outline for public page(s) #}
+
+{% block container %}
+
+    <div id="header-title" class="box">
+        <p>Une belle image avec le nom du site, etc?</p>
+    </div>
+
+    <div id="login" class="box">
+    {% if user.is_authenticated %}
+        <p>
+            {% trans "You are connected as" %}<br>
+            <strong>{{ user.username }}</strong><br>
+            <span id="hostname"></span><br>
+            <a href="{% url registration:logout %}">{% trans "Logout" %}</a>
+
+
+        </p>
+    {% else %}
+        <div>
+        {% include "registration/registration_form.html" %}
+        </div>
+    {% endif %}
+    </div>
+
+    <div id="hot-news" class="box">
+        <p>
+            <b>Rappel !</b>
+            <a href="#">Voir tous mes rappels..</a>
+            <p><b>A récupérer dans la semaine</b></p>
+            <p><b>A rendre dans la semaine</b></p>
+        </p>
+    </div>
+
+    <div id="search" class="box">
+        <form method="GET" action="{% url search %}">
+            <label>{% trans "Search media" %}</label>
+                {% include "friendlib/snippets/search_form.html" %}
+            <input type="submit" value="{% trans "Search" %}" />
+        </form>
+    </div>
+
+
+    <div id="user-nav" class="box">
+        <a href="#">Messagerie</a>
+        <a href="#">Demandes de prêts amis / autres</a>
+    </div>
+
+
+    <div id="mini-library" class="box">
+        <p>
+            <b>Ma bibliothèque !</b><br>
+        </p>
+        <p>
+            Mini dessin de ma bibliothèque !!! En cliquant dessus, on peut tout y faire héhéhé
+        </p>
+        <p>
+            <a href="#">+ Ajout média</a>
+        </p>
+    </div>
+    
+    <div id="content" class="box">
+        {% block content %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+{% block content-header %}
+    {{ block.super }}
+{% endblock content-header %}
+
+
+{% block content-main %}
+    {{ block.super }}
+{% endblock content-main %}

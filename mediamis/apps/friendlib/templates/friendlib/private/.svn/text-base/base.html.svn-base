@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h2>Homepage</h2><h1>My account</h1>
+{% endblock %}
+
+{% block content-header %}
+    {{ block.super }}
+    <p>This is my private pages</p>
+    <h2>My Acount</h2><h2>My medias</h2>
+{% endblock content-header %}
+
+
+{% block content-main %}
+    {{ block.super }}
+{% endblock content-main %}

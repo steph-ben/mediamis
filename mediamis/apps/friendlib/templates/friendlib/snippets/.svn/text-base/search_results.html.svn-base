@@ -1,0 +1,27 @@
+{% load i18n %}
+
+{% if media_list %}
+    <h2>{% trans "Result list" %}</h2>
+
+    <div id="media-list">
+        {% for media in media_list %}
+            {% include "friendlib/snippets/media_detail.html" %}
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if pager.has_previous %}
+                <a href="?page={{ pager.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ pager.number }} of {{ pager.paginator.num_pages }}.
+            </span>
+
+            {% if pager.has_next %}
+                <a href="?page={{ pager.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}

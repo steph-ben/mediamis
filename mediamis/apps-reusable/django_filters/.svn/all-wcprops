@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/mediamis/!svn/ver/7/trunk/mediamis/mediamis/apps-reusable/django_filters
+END
+filters.py
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/mediamis/!svn/ver/7/trunk/mediamis/mediamis/apps-reusable/django_filters/filters.py
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/mediamis/!svn/ver/7/trunk/mediamis/mediamis/apps-reusable/django_filters/views.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/mediamis/!svn/ver/7/trunk/mediamis/mediamis/apps-reusable/django_filters/__init__.py
+END
+filterset.py
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/mediamis/!svn/ver/7/trunk/mediamis/mediamis/apps-reusable/django_filters/filterset.py
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/mediamis/!svn/ver/7/trunk/mediamis/mediamis/apps-reusable/django_filters/models.py
+END
+widgets.py
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/mediamis/!svn/ver/7/trunk/mediamis/mediamis/apps-reusable/django_filters/widgets.py
+END
+fields.py
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/mediamis/!svn/ver/7/trunk/mediamis/mediamis/apps-reusable/django_filters/fields.py
+END

@@ -1,0 +1,52 @@
+{% extends "friendlib/public/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+    {{ block.super }}
+    | Homepage
+{% endblock %}
+
+
+{% block content %}
+    <div id="rack">
+        <p>Ici un dessin d'une étagère / médiathèque avec la liste des derniers évèvements !</p>
+    </div>
+
+{% endblock %}
+
+
+
+
+{#{% block content-header %}#}
+{#    {{ block.super }}#}
+{##}
+{#	<form method="GET" action="{% url search %}">#}
+{#		<h2>{% trans "Search media" %}</h2>#}
+{#            {% include "friendlib/snippets/search_form.html" %}#}
+{#		<input type="submit" value="{% trans "Search" %}" />#}
+{#	</form>#}
+{#{% endblock content-header %}#}
+{##}
+{##}
+{#{% block content-main %}#}
+{#    {{ block.super }}#}
+{#	<h2>{% trans "Latest list" %}</h2>#}
+{##}
+{#    <div id="lastmedia">#}
+{#        <table>#}
+{#        {% for media in lastmedia_list %}#}
+{#            <tr>#}
+{#            {% include "friendlib/snippets/media_detail.html" %}#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#        </table>#}
+{#    </div>#}
+{##}
+{#    {% block custom-content %}#}
+{#    <div id="welcome">#}
+{#        <p>On this box you will see latest news for your media, when authenticated !</p>#}
+{#    </div>#}
+{#    {% endblock %}#}
+{##}
+{#{% endblock content-main %}#}

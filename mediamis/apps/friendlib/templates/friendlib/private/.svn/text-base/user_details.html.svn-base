@@ -1,0 +1,14 @@
+{% extends "friendlib/private/base.html" %}
+{% load i18n %}
+
+
+{% block content-header %}
+    {{ block.super }}
+    <h2>MY ACCOUNT</h2>
+{% endblock content-header %}
+
+
+{% block content-main %}
+    {{ block.super }}
+    <p>USER FORM !</p>
+{% endblock content-main %}

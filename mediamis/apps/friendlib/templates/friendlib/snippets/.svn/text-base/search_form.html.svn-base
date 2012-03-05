@@ -1,0 +1,1 @@
+<p>{{ search_form.as_p }}</p>

@@ -1,0 +1,101 @@
+# Install the app
+#################
+
+# Create a virtualenv 
+$  virtualenv --no-site-packages ve
+
+# Activate virtual envrionnement
+$  source ve/bin/activate
+
+ You're now in virtual environment: all programs will be installed in ~/ve !
+
+
+# Install dependencies
+$ python setup.py install
+
+# Error on windows for djeneralize
+See http://stackoverflow.com/questions/9136375/django-file-picker-setup-py-broken
+Remove trailing slash in ve/build/djeneralize/MANIFEST.in
+
+
+# Check the settings
+$ vim mediamis/settings/local_settings.py
+
+
+# Create tables
+ ./manage.py schemamigration friendlib --initial
+ ./manage.py syncdb
+ ./manage.py migrate
+
+
+
+
+# Run development server
+########################
+
+$ ./manage.py runserver_plus
+
+
+
+
+# Use on Heroku ...
+####################
+Cf. http://devcenter.heroku.com/articles/django
+
+#!!! Make sure mediamis/settings.py exist and IS a file, because heroku add some stuff
+
+$ git init
+$ git add .
+$ git commit -m "plouf"
+
+$ heroku create --stack cedar
+$ git push heroku master
+
+# Check process
+$ heroku ps
+
+# Si pas de web worker
+$ heroku scale web=1
+
+$ heroku open
+
+
+
+# Various tips
+###############
+
+# Generate graph of models
+./manage.py graph_models -g friendlib auth -o ../specs/models.png
+
+
+# Update databases tables
+ ./manage.py schemamigration friendlib --auto
+ ./manage.py migrate friendlib
+
+
+# Export data
+ ./manage.py dumpscript > scripts/mescouilles.py
+
+
+# Load script data
+ ./manage.py reset auth friendlib
+ ./manage.py runscript 
+
+
+
+
+
+# Create initial south migration (once for all)
+$ for app in cipsdb ajax_validation crumbs; do ./manage schemamigration $app --initial ; done
+
+# Create tables for on all databases
+$ ./manage multi_syncdb
+$ ./manage mutil_migrate
+
+
+# Note on South
+###############
+Upgrade a model
+
+$ ./manage.py schemamigration cipsdb --auto
+$ ./manage.py migrate cipsdb

@@ -1,0 +1,26 @@
+{% load i18n %}
+
+<body>
+<head>
+    <title>{% block title %}Mediamis{% endblock %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="{{ MEDIA_URL }}css/style.css" rel="stylesheet" type="text/css" />
+  {% block head %}
+  {% endblock head %}
+</head>
+<html>
+
+<div id="debug-info">
+Quelques liens utiles :
+    <a href="/specs/pages-html/index.html">Voir la maquette</a>
+    <a href="/admin">Go to admin</a>
+</div>
+
+<div id="container">
+
+    {% block container %}
+    {% endblock %}
+
+</div>
+</html>
+</body>

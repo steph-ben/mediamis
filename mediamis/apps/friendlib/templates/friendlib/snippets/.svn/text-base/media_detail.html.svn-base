@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div id="media" class="light-box">
+    <div id="description">
+        <label>{%  trans "Title: " %}</label><span>{{ media.title }}</span><br>
+        {% if media.description %}
+        <label>{% trans "Description: " %}</label><span>{{ media.description }}</span><br>
+        {% endif %}
+        <label>{% trans "Owner: " %}</label><span>{{ media.owner }}</span><br>
+    </div>
+    <div id="actions">
+        {% if user.is_authenticated %}
+            {# TODO: Ici mettre en place le "row-level-permission" #}
+            {# ---> Le user doit aussi être proprietaire du media pour l'editer ! #}
+            <a href="{% url admin:friendlib_media_change media.pk %}">{% trans "Edit" %}</a>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,25 @@
+{% load i18n %}
+
+<span class="title">{% trans "Login form" %}</span>
+<hr>
+
+{# Auth form posted data is catched by login middleware #}
+<form class="inline" method="post" action="">{% csrf_token %}
+    {% if request.auth_form.errors %}
+        <div class="errors"><p>{% trans "Username and password didn't match. Please try again." %}</p></div>
+    {% endif %}
+
+    <p>
+        {{ request.auth_form.username.label }}
+        {{ request.auth_form.username }}
+    </p>
+    <p>
+        {{ request.auth_form.password.label }}
+        {{ request.auth_form.password }}
+    </p>
+
+    <input type="submit" id="login" value="{% trans "Login" %}" />
+    <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+

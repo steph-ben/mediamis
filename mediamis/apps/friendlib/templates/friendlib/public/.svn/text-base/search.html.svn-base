@@ -1,0 +1,9 @@
+{% extends "friendlib/public/base.html" %}
+{% load i18n %}
+
+
+{% block content %}
+    <div id="search-result">
+        {% include "friendlib/snippets/search_results.html" %}
+    </div>
+{% endblock content %}
