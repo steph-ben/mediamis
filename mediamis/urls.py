@@ -17,21 +17,25 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 )
 
-#if settings.SERVE_STATIC_FILES:
-urlpatterns += patterns('',
-	url(r'^media/(?P<path>.*)$',
-		'django.views.static.serve',
-		dict(
-			document_root = settings.MEDIA_ROOT,
-			show_indexes = True
-		)
-	),
-	url(r'^specs/(?P<path>.*)$',
-		'django.views.static.serve',
-		dict(
-			document_root = '../specs/',
-			show_indexes = True
-		)
-	),
+if settings.SERVE_STATIC_FILES:
+    urlpatterns += patterns('',
+        url(r'^media/(?P<path>.*)$',
+            'django.views.static.serve',
+            dict(
+                document_root = settings.MEDIA_ROOT,
+                show_indexes = True
+            )
+        ),
+        url(r'^specs/(?P<path>.*)$',
+            'django.views.static.serve',
+            dict(
+                document_root = '../specs/',
+                show_indexes = True
+            )
+        ),
 
+    )
+	
+urlpatterns += patterns(”,
+(r’^static/(?P.*)$’, ‘django.views.static.serve’, {‘document_root’: settings.STATIC_ROOT}),
 )
