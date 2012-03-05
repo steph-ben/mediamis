@@ -54,7 +54,7 @@ STATIC_ROOT = 'static/'
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
-SERVE_STATIC_FILES = False
+SERVE_STATIC_FILES = True
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
@@ -181,7 +181,7 @@ DATABASES = {
 
 
 # Dev server serve /media files
-SERVE_STATIC_FILES = False
+SERVE_STATIC_FILES = True
 
 
 # For debug toolbar
