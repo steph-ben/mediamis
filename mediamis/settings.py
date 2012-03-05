@@ -45,6 +45,7 @@ MEDIA_ROOT = '/app/mediamis/media/'
 MEDIA_URL = 'http://soif.arcadio.info/mediamis/media/'
 
 
+
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
