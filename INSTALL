@@ -67,7 +67,6 @@ $ heroku open
 # Generate graph of models
 ./manage.py graph_models -g friendlib auth -o ../specs/models.png
 
-
 # Update databases tables
  ./manage.py schemamigration friendlib --auto
  ./manage.py migrate friendlib
