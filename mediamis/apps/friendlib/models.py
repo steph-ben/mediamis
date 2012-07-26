@@ -1,3 +1,5 @@
+# -*- coding: latin-1 -*-
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -74,3 +76,41 @@ class BoardGame(Media):
         specialization = 'boardgame'
 
 
+class MediaRequest(models.Model):
+    """ Symbolize the request of one user to catch another user's Media
+    Could have different status:
+        - Pending
+        - Accepted
+        - Declined
+
+    TODO: If status is Accepted, Media status need to be set as "borrowed"
+    """
+    STATUS_CHOICES = (
+        (u'P', _('Pending')),
+        (u'A', _('Accepted')),
+        (u'D', _('Declined'))
+    )
+
+    media = models.ForeignKey(Media, related_name='requests')
+    borrower = models.ForeignKey(User, related_name='requested_medias')
+    message = models.TextField()
+    status = models.CharField(_('status'), max_length=1, blank=False,
+                               choices = STATUS_CHOICES)
+    date_requested = models.DateTimeField()     # Creation of the request
+    date_answered = models.DateTimeField(null=True, blank=True)      # When the owner answered yes or no
+    date_media_rented = models.DateTimeField(null=True, blank=True)  # (set by owner) When the media could be rented
+    date_return_due = models.DateTimeField(null=True, blank=True)    # (set by owner) When the Media has to be returned
+
+    def __unicode__(self):
+        return u'%s wants to borrow <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
+
+    """
+    - Toutes les demandes d'emprun d'un user:
+        user.requested_medias.objects.all()
+    - Toutes les demandes d'emprunts sur les medias d'un user:
+        MediaRequest.objects.filter(media__owner=user)
+    - Tous les media à rendre bientot:
+        MediaRequest.objects.filter(borrower=user, date_return_due=soon)
+    - Tous les medias à se faire rendre bientot:
+        MediaRequest.objects.filter(media__owner=user, date_return_due=soon)
+    """

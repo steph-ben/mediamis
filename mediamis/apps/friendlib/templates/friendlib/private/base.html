@@ -10,12 +10,34 @@
 {% block container %}
     {{ block.super }}
     <div id="user-nav" class="box">
-        <p>
-            <b>Rappel !</b>
-            <a href="#">Voir tous mes rappels..</a>
-            <p><b>A récupérer dans la semaine</b></p>
-            <p><b>A rendre dans la semaine</b></p>
-        </p>
+    <p>
+        <table>
+            <thead>
+                <tr><th>{% trans "Medias qu'on veut m'emprunter:" %}</th></tr>
+            </thead>
+            <tbody>
+            {% for media_request in requested_medias %}
+                <tr><td>{{ media_request }}</td></tr>
+            {% empty %}
+                <tr><td>{% trans "Pas de requetes !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+    <p>
+        <table>
+            <thead>
+                <tr><th>{% trans "Medias que je veux emprunter:" %}</th></tr>
+            </thead>
+            <tbody>
+            {% for media_wanted in wanted_medias %}
+                <tr><td>{{ media_wanted }}</td></tr>
+            {% empty %}
+                <tr><td>{% trans "Pas de requetes !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
     </div>
 
 {#    <div id="user-nav" class="box">#}

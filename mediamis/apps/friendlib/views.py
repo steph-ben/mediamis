@@ -3,7 +3,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from friendlib.forms import MediaSearchForm
 from friendlib.filters import MediaFilterSet
-from friendlib.models import Media
+from friendlib.models import Media, MediaRequest
 
 def home(request):
     filter = MediaFilterSet(request.GET or None)
@@ -60,9 +60,20 @@ def search(request):
     return direct_to_template(request, 'friendlib/public/search.html', context)
 
 def myaccount(request):
-    context = {}
     #TODO: how to get user's id here ?!
-    search_context = get_search_context({'owner':2})
+    user = 3
+
+    # Medias people want to borrow from me
+    wanted_medias = MediaRequest.objects.filter(borrower=user)
+    # Medias I want to borrow
+    requested_medias = MediaRequest.objects.filter(media__owner=user)
+    # Media search form & results
+    search_context = get_search_context({'owner':user})
+    
+    context = {
+        'wanted_medias': wanted_medias,
+        'requested_medias': requested_medias
+    }
     context.update(search_context)
  
     return direct_to_template(request, 'friendlib/private/index.html', context)
