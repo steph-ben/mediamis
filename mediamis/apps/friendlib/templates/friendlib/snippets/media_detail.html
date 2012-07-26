@@ -10,9 +10,13 @@
     </div>
     <div id="actions">
         {% if user.is_authenticated %}
-            {# TODO: Ici mettre en place le "row-level-permission" #}
-            {# ---> Le user doit aussi être proprietaire du media pour l'editer ! #}
-            <a href="{% url admin:friendlib_media_change media.pk %}">{% trans "Edit" %}</a>
+            {% if user == media.owner %}
+                {# TODO: Ici mettre en place le "row-level-permission" #}
+                {# ---> Le user doit aussi être proprietaire du media pour l'editer ! #}
+                <a href="{% url admin:friendlib_media_change media.pk %}">{% trans "Edit" %}</a>
+            {% else %}
+                <a href="#">{% trans "Request this stuff !" %}</a>
+            {% endif %}
         {% endif %}
     </div>
 </div>

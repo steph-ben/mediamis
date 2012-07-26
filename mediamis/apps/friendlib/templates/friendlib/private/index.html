@@ -10,10 +10,12 @@
 
 {% block content %}
     <div id="news">
-        <h3>Actus des amis</h3>
-        <p><b>Coup de coeurs :</b></p>
-        <p><b>Achats : </b></p>
-        <p><b>Retours : </b></p>
-        <p><b>Commentaires: </b></p>
+        <h3>Ma bibliothèque !</h3>
+        <p>
+            <a href="{% url admin:friendlib_book_add %}">{% trans "+ Ajouter un livre" %}</a>
+            <a href="{% url admin:friendlib_dvd_add %}">{% trans "+ Ajouter un DVD" %}</a>
+            <a href="{% url admin:friendlib_boardgame_add %}">{% trans "+ Ajouter un board game" %}</a>
+        </p>
+        {% include "friendlib/snippets/search_results.html" %}
     </div>
 {% endblock %}

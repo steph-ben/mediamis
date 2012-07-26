@@ -10,5 +10,5 @@ class MediaFilterSet(django_filters.FilterSet):
     class Meta:
         model = Media
         #form = MediaSearchForm
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'owner', 'specialization_type']
 

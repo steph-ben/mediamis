@@ -32,13 +32,13 @@ def _search(request):
     }
     return direct_to_template(request, 'friendlib/public/search.html', context)
 
-def search(request):
-    filter = MediaFilterSet(request.GET or None)
+def get_search_context(my_request):
+    filter = MediaFilterSet(my_request or None)
     paginator = Paginator(filter.qs, 5) # Show 25 per page
 
     # Make sure page request is an int. If not, deliver first page.
     try:
-        page = int(request.GET.get('page', '1'))
+        page = int(my_request.get('page', '1'))
     except ValueError:
         page = 1
 
@@ -53,15 +53,21 @@ def search(request):
         'media_list': qs.object_list,
         'pager': qs,
     }
+    return context
+
+def search(request):
+    context = get_search_context(request.GET or None)
     return direct_to_template(request, 'friendlib/public/search.html', context)
 
 def myaccount(request):
-    return direct_to_template(request, 'friendlib/private/index.html', {})
+    context = {}
+    #TODO: how to get user's id here ?!
+    search_context = get_search_context({'owner':2})
+    context.update(search_context)
+ 
+    return direct_to_template(request, 'friendlib/private/index.html', context)
 
-def mymedias(request):
-    qs = Media.objectsAll().filter(owner__id=1)
-
-    context = {
-        'media_list': qs,
-    }
-    return direct_to_template(request, 'friendlib/private/user_medias.html', context)
+def add_media(request):
+    context = {}
+    context.update(search_context)
+    return direct_to_template(request, 'friendlib/private/index.html', context)

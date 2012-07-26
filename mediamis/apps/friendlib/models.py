@@ -73,3 +73,4 @@ class BoardGame(Media):
     class Meta:
         specialization = 'boardgame'
 
+
