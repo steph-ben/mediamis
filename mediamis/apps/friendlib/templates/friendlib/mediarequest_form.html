@@ -1,0 +1,20 @@
+{% extends "friendlib/private/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+    {{ block.super }}
+    | Homepage
+{% endblock %}
+
+
+{% block content %}
+    <form method="POST" action="{% url mediarequest_create %}">{% csrf_token %}
+        {{ mediarequest }}
+        {{ form.as_p }}
+
+        <input type="submit" value="{% trans "Create" %}" />
+    </div>
+{% endblock %}
+
+

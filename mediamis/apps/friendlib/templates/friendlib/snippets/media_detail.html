@@ -15,7 +15,7 @@
                 {# ---> Le user doit aussi être proprietaire du media pour l'editer ! #}
                 <a href="{% url admin:friendlib_media_change media.pk %}">{% trans "Edit" %}</a>
             {% else %}
-                <a href="#">{% trans "Request this stuff !" %}</a>
+                <a href="{% url mediarequest_create %}">{% trans "Request this stuff !" %}</a>
             {% endif %}
         {% endif %}
     </div>

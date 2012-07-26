@@ -16,8 +16,11 @@
                 <tr><th>{% trans "Medias qu'on veut m'emprunter:" %}</th></tr>
             </thead>
             <tbody>
-            {% for media_request in requested_medias %}
-                <tr><td>{{ media_request }}</td></tr>
+            {% for req in requests_for_my_medias %}
+                <tr>
+                    <td>{{ req }}</td>
+                    <td><a href="#">{% trans "Accept/Deny/etc..." %}</a></td>
+                </tr>
             {% empty %}
                 <tr><td>{% trans "Pas de requetes !" %}</td></tr>
             {% endfor %}
@@ -27,11 +30,17 @@
     <p>
         <table>
             <thead>
-                <tr><th>{% trans "Medias que je veux emprunter:" %}</th></tr>
+                <tr>
+                    <th>{% trans "Medias que je veux emprunter:" %}</th>
+                    <th>{% trans "Status" %}</th>
+                </tr>
             </thead>
             <tbody>
-            {% for media_wanted in wanted_medias %}
-                <tr><td>{{ media_wanted }}</td></tr>
+            {% for req in requests_medias_i_want %}
+                <tr>
+                    <td>{{ req }}</td>
+                    <td>{{ req.status }}</td>
+                </tr>
             {% empty %}
                 <tr><td>{% trans "Pas de requetes !" %}</td></tr>
             {% endfor %}

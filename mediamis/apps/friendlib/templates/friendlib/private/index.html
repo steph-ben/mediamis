@@ -12,9 +12,9 @@
     <div id="news">
         <h3>Ma bibliothèque !</h3>
         <p>
-            <a href="{% url admin:friendlib_book_add %}">{% trans "+ Ajouter un livre" %}</a>
-            <a href="{% url admin:friendlib_dvd_add %}">{% trans "+ Ajouter un DVD" %}</a>
-            <a href="{% url admin:friendlib_boardgame_add %}">{% trans "+ Ajouter un board game" %}</a>
+            <a href="{% url book_create %}">{% trans "+ Ajouter un livre" %}</a>
+            <a href="{% url dvd_create %}">{% trans "+ Ajouter un DVD" %}</a>
+            <a href="{% url boardgame_create %}">{% trans "+ Ajouter un board game" %}</a>
         </p>
         {% include "friendlib/snippets/search_results.html" %}
     </div>

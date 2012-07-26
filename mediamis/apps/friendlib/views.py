@@ -1,5 +1,6 @@
 from django.views.generic.simple import direct_to_template
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from friendlib.forms import MediaSearchForm
 from friendlib.filters import MediaFilterSet
@@ -64,15 +65,15 @@ def myaccount(request):
     user = 3
 
     # Medias people want to borrow from me
-    wanted_medias = MediaRequest.objects.filter(borrower=user)
+    requests_for_my_medias = MediaRequest.objects.filter(media__owner=user)
     # Medias I want to borrow
-    requested_medias = MediaRequest.objects.filter(media__owner=user)
+    requests_medias_i_want = MediaRequest.objects.filter(borrower=user)
     # Media search form & results
     search_context = get_search_context({'owner':user})
     
     context = {
-        'wanted_medias': wanted_medias,
-        'requested_medias': requested_medias
+        'requests_for_my_medias': requests_for_my_medias,
+        'requests_medias_i_want': requests_medias_i_want
     }
     context.update(search_context)
  
@@ -82,3 +83,18 @@ def add_media(request):
     context = {}
     context.update(search_context)
     return direct_to_template(request, 'friendlib/private/index.html', context)
+
+
+#####
+###TODO: How to initialize the view correctly, eg. with predefined Media, Borrower and so on
+#####
+class BookCreateView(CreateView):
+    pass
+class DVDCreateView(CreateView):
+    pass
+class BoardGameCreateView(CreateView):
+    pass
+class MediaRequestCreateView(CreateView):
+    def get_context_data(self, *args, **kwargs):
+        context = super(MediaRequestCreateView, self).get_context_data(*args, **kwargs)
+        return context
