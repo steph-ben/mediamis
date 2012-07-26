@@ -12,7 +12,7 @@ SQL_DEBUG = False
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '../data/friendlib.db',                      # Or path to database file if using sqlite3.
+        'NAME': 'data/friendlib.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -22,7 +22,9 @@ DATABASES = {
 
 
 # Dev server serve /media files
+INSTALLED_APPS += ('django.contrib.staticfiles',)
 SERVE_STATIC_FILES = True
+MEDIA_ROOT = "C:\Users\steph\Docs perso\Code\dev\perso\mediamis\mediamis\media"
 
 
 # For debug toolbar
