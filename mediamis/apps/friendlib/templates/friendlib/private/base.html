@@ -33,6 +33,48 @@
         </table>
     </p>
 
+    <p>
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans "Medias que je veux emprunter et qu'il faut que j'aille chercher !:" %}</th>
+                    <th>{% trans "Status" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for req in requests_medias_i_want_and_accepted %}
+                <tr>
+                    <td>{{ req }}</td>
+                    <td>{{ req.status }}</td>
+                </tr>
+            {% empty %}
+                <tr><td>{% trans "Pas de requetes !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+
+    <p>
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans "Medias empruntés que j'ai chez moi actuellement:" %}</th>
+                    <th>{% trans "Date de retour prévue" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for req in medias_i_borrowed %}
+                <tr>
+                    <td>{{ req.media }}</td>
+                    <td>{{ req.date_return_due }}</td>
+                </tr>
+            {% empty %}
+                <tr><td>{% trans "Pas de requetes !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+
     </div>
 
     <div id="user-nav" class="box">
@@ -45,7 +87,7 @@
             {% for req in requests_for_my_medias_pending %}
                 <tr>
                     <td>{{ req }}</td>
-                    <td><a href="{% url mediarequest_update req.pk %}">{% trans "Accept/Deny" %}</a></td>
+                    <td><a href="{% url mediarequest_accept req.pk %}">{% trans "Accept/Deny" %}</a></td>
                 </tr>
             {% empty %}
                 <tr><td>{% trans "Pas de requetes !" %}</td></tr>
@@ -63,7 +105,7 @@
             {% for req in requests_ive_accepted_but_still_home %}
                 <tr>
                     <td>{{ req }}</td>
-                    <td><a href="{% url mediarequest_update req.pk %}">{% trans "Set to borrowed !" %}</a></td>
+                    <td><a href="{% url mediarequest_set_borrowed req.pk %}">{% trans "Set to borrowed !" %}</a></td>
                 </tr>
             {% empty %}
                 <tr><td>{% trans "Aucuns !" %}</td></tr>
@@ -81,7 +123,7 @@
             {% for req in requests_ive_accepted_and_borrowed %}
                 <tr>
                     <td>{{ req }}</td>
-                    <td><a href="{% url mediarequest_update req.pk %}">{% trans "Say it's back !" %}</a></td>
+                    <td><a href="{% url mediarequest_set_back req.pk %}">{% trans "Say it's back !" %}</a></td>
                 </tr>
             {% empty %}
                 <tr><td>{% trans "Aucun Media en dehors de chez toi !" %}</td></tr>

@@ -2,11 +2,13 @@ from django.conf.urls.defaults import *
 
 from friendlib.models import Book, MediaRequest, DVD, BoardGame
 from friendlib.views import home, search, myaccount
+from friendlib.views import mediarequest_set_borrowed, mediarequest_set_back
 from friendlib.views import MediaRequestCreateView, MediaRequestAcceptView, MediaRequestUpdateView
 from friendlib.views import BookCreateView
 from friendlib.views import DVDCreateView
 from friendlib.views import BoardGameCreateView
 from friendlib.forms import MediaRequestForm
+from friendlib.forms import MediaRequestAcceptForm
 
 urlpatterns = patterns('',
     url(r'^$', home, name="home"),
@@ -20,12 +22,15 @@ urlpatterns = patterns('',
         name='mediarequest_create'),
 
     url(r'request/(?P<slug>[0-9]+)/accept/$',
-        MediaRequestAcceptView.as_view(model=MediaRequest, slug_field='id'),
+        MediaRequestAcceptView.as_view(model=MediaRequest,
+                                       slug_field='id',
+                                       form_class=MediaRequestAcceptForm,
+                                       template_name='friendlib/private/mediarequest_accept.html'),
         name='mediarequest_accept'
     ),
     #url(r'request/(?P<slug>[0-9]+)/deny/$',
-    #url(r'request/(?P<slug>[0-9]+)/borrowed/$',
-    #url(r'request/(?P<slug>[0-9]+)/back/$',
+    url(r'request/(?P<reqid>[0-9]+)/borrowed/$', mediarequest_set_borrowed, name='mediarequest_set_borrowed'),
+    url(r'request/(?P<reqid>[0-9]+)/back/$', mediarequest_set_back, name='mediarequest_set_back'),
 
 
 

@@ -18,7 +18,14 @@ class Media(BaseGeneralizationModel):
     def __unicode__(self):
         return u'%s: %s' % (self.title, self.description)
 
+    def has_been_requested_by(self, user):
+        b = MediaRequest.objects.filter(borrower=user, media=media)
+        if b:
+            return True
+        else:
+            return False
 
+        
 class Book(Media):
     author = models.CharField(_('author name'), max_length=255, null=True, blank=True)
     size = models.CharField(_('size of the book'), max_length=255, null=True, blank=True)
@@ -108,6 +115,10 @@ class MediaRequest(models.Model):
             return u'%s is waiting to get <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
         elif ( (self.status == 'A') and (self.media.borrowed == True) ):
             return u'%s has borrowed <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
+        elif self.status == 'D':
+            return u'%s has denied <<%s>> from %s' % (self.media.owner, self.media, self.borrower)
+        else:
+            return u'%s' % self.media
 
     @models.permalink
     def get_absolute_url(self):
@@ -122,4 +133,8 @@ class MediaRequest(models.Model):
         MediaRequest.objects.filter(borrower=user, date_return_due=soon)
     - Tous les medias à se faire rendre bientot:
         MediaRequest.objects.filter(media__owner=user, date_return_due=soon)
+    - Est-ce que l'utilisateur courant a deja fait une requete sur cet object ?
+        MediaRequest.objects.filter(borrower=user, media=media)
+    - Combien de personnes veulents acceder a cet object ?
+    - Est-ce que l'object est deja prete ?
     """

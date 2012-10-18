@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from django.views.generic.simple import direct_to_template
+from django.views.generic.simple import direct_to_template, redirect_to
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
@@ -80,6 +80,8 @@ def myaccount(request):
 
     # Medias I want to borrow
     requests_medias_i_want = MediaRequest.objects.filter(borrower=user, status='P')
+    requests_medias_i_want_and_accepted = MediaRequest.objects.filter(borrower=user, status='A', media__borrowed=False)
+    medias_i_borrowed = MediaRequest.objects.filter(borrower=user, status='A', media__borrowed=True)
 
     # Media search form & results
     search_context = get_search_context({'owner':user})
@@ -88,7 +90,9 @@ def myaccount(request):
         'requests_for_my_medias_pending': requests_for_my_medias_pending,
         'requests_ive_accepted_but_still_home': requests_ive_accepted_but_still_home,
         'requests_ive_accepted_and_borrowed': requests_ive_accepted_and_borrowed,
-        'requests_medias_i_want': requests_medias_i_want
+        'requests_medias_i_want': requests_medias_i_want,
+        'requests_medias_i_want_and_accepted': requests_medias_i_want_and_accepted,
+        'medias_i_borrowed': medias_i_borrowed
     }
     context.update(search_context)
  
@@ -112,7 +116,6 @@ class BoardGameCreateView(CreateView):
 
 
 class MediaRequestCreateView(CreateView):
-
     def get(self, request, *args, **kwargs):
         # Set up form data from requests
         user = request.user
@@ -122,7 +125,6 @@ class MediaRequestCreateView(CreateView):
         # Define default form data
         status = 'P'
         
-
         # Fill form with correct infos
         self.initial.update({
             'borrower': user,
@@ -139,10 +141,28 @@ class MediaRequestCreateView(CreateView):
         return context
 
 class MediaRequestAcceptView(UpdateView):
-    template_name = 'friendlib/snippets/mediarequest_accept.html'
+    pass
 
 class MediaRequestUpdateView(UpdateView):
     pass
+
+@login_required
+def mediarequest_set_borrowed(request, reqid):
+    mediarequest = get_object_or_404(MediaRequest, id=reqid)
+    mediarequest.media.borrower = mediarequest.borrower
+    mediarequest.media.borrowed = True
+    mediarequest.media.save()
+
+    return redirect_to(request, '/friendlib/myaccount')
+
+@login_required
+def mediarequest_set_back(request, reqid):
+    mediarequest = get_object_or_404(MediaRequest, id=reqid)
+    mediarequest.media.borrower = None
+    mediarequest.media.borrowed = False
+    mediarequest.media.save()
+
+    return redirect_to(request, '/friendlib/myaccount')
 
 #@login_required
 #def mediarequest_create(request, media_id):

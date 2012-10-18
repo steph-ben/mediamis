@@ -25,6 +25,21 @@ class MediaRequestForm(forms.ModelForm):
         #self.fields['datatype'].choices = choices
         #self.fields['datatype'].initial = (c[0] for c in choices)
 
+class MediaRequestAcceptForm(forms.ModelForm):
+    """
+    TODO here:
+      - show correct field and unmodifiables
+      - widget de selection de date de retour voulu
+      - pouvoir choisir entre Accept / Deny only (plus de 'Pending' possible)
+    """
+    #
+    class Meta:
+        model = MediaRequest
+        widgets = {
+            'borrower' : HiddenInput(),
+            'date_answered': HiddenInput(),
+            'date_media_rented': HiddenInput(),
+        }
 
 class MediaSearchForm(forms.Form):
     CHOICES_MEDIATYPE = (
