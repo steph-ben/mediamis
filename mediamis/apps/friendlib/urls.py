@@ -2,17 +2,36 @@ from django.conf.urls.defaults import *
 
 from friendlib.models import Book, MediaRequest, DVD, BoardGame
 from friendlib.views import home, search, myaccount
-from friendlib.views import MediaRequestCreateView, BookCreateView
+from friendlib.views import MediaRequestCreateView, MediaRequestAcceptView, MediaRequestUpdateView
 from friendlib.views import BookCreateView
 from friendlib.views import DVDCreateView
 from friendlib.views import BoardGameCreateView
+from friendlib.forms import MediaRequestForm
 
 urlpatterns = patterns('',
     url(r'^$', home, name="home"),
     url(r'^search/$', search, name="search"),
     url(r'^myaccount/$', myaccount, name="myaccount"),
 
-    url(r'request/$', MediaRequestCreateView.as_view(model=MediaRequest), name='mediarequest_create'),
+    url(r'requestmedia/(?P<mediaid>[0-9]+)/$',
+        MediaRequestCreateView.as_view(model=MediaRequest,
+                           form_class=MediaRequestForm,
+                           template_name='friendlib/private/mediarequest_create.html'),
+        name='mediarequest_create'),
+
+    url(r'request/(?P<slug>[0-9]+)/accept/$',
+        MediaRequestAcceptView.as_view(model=MediaRequest, slug_field='id'),
+        name='mediarequest_accept'
+    ),
+    #url(r'request/(?P<slug>[0-9]+)/deny/$',
+    #url(r'request/(?P<slug>[0-9]+)/borrowed/$',
+    #url(r'request/(?P<slug>[0-9]+)/back/$',
+
+
+
+    url(r'req/(?P<slug>[0-9]+)/$',
+        MediaRequestUpdateView.as_view(model=MediaRequest, slug_field='id'),
+        name='mediarequest_update'),
 
     url(r'^books/create/$', BookCreateView.as_view(model=Book), name='book_create'),
 

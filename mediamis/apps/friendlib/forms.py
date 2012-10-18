@@ -1,10 +1,29 @@
+from django.forms.widgets import HiddenInput
 import re
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.auth.models import User
-from friendlib.models import BoardGame, DVD, Book, Media
+from friendlib.models import BoardGame, DVD, Book, Media, MediaRequest
+
+
+class MediaRequestForm(forms.ModelForm):
+    class Meta:
+        model = MediaRequest
+        widgets = {
+            'borrower' : HiddenInput(),
+            'status': HiddenInput(),
+            'date_answered': HiddenInput(),
+            'date_media_rented': HiddenInput(),
+            'date_return_due': HiddenInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(MediaRequestForm, self).__init__(*args, **kwargs)
+
+        #self.fields['datatype'].choices = choices
+        #self.fields['datatype'].initial = (c[0] for c in choices)
 
 
 class MediaSearchForm(forms.Form):

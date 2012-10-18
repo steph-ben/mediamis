@@ -91,19 +91,28 @@ class MediaRequest(models.Model):
         (u'D', _('Declined'))
     )
 
-    media = models.ForeignKey(Media, related_name='requests')
-    borrower = models.ForeignKey(User, related_name='requested_medias')
+    media = models.ForeignKey(Media, related_name='requests', blank=False, null=False)
+    borrower = models.ForeignKey(User, related_name='requested_medias', blank=False, null=False)
     message = models.TextField()
     status = models.CharField(_('status'), max_length=1, blank=False,
                                choices = STATUS_CHOICES)
-    date_requested = models.DateTimeField()     # Creation of the request
+    date_requested = models.DateTimeField(auto_now_add=True)     # Creation of the request
     date_answered = models.DateTimeField(null=True, blank=True)      # When the owner answered yes or no
     date_media_rented = models.DateTimeField(null=True, blank=True)  # (set by owner) When the media could be rented
     date_return_due = models.DateTimeField(null=True, blank=True)    # (set by owner) When the Media has to be returned
 
     def __unicode__(self):
-        return u'%s wants to borrow <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
+        if self.status == 'P':
+            return u'%s wants to borrow <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
+        elif ( (self.status == 'A') and (self.media.borrowed == False) ):
+            return u'%s is waiting to get <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
+        elif ( (self.status == 'A') and (self.media.borrowed == True) ):
+            return u'%s has borrowed <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('myaccount',)
+    
     """
     - Toutes les demandes d'emprun d'un user:
         user.requested_medias.objects.all()

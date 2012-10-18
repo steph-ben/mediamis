@@ -2,6 +2,7 @@
 
 <div id="media" class="light-box">
     <div id="description">
+        <label>{% trans "Type:" %}</label><span>{{ media.specialization_type }}</span><br>
         <label>{%  trans "Title: " %}</label><span>{{ media.title }}</span><br>
         {% if media.description %}
         <label>{% trans "Description: " %}</label><span>{{ media.description }}</span><br>
@@ -15,8 +16,10 @@
                 {# ---> Le user doit aussi être proprietaire du media pour l'editer ! #}
                 <a href="{% url admin:friendlib_media_change media.pk %}">{% trans "Edit" %}</a>
             {% else %}
-                <a href="{% url mediarequest_create %}">{% trans "Request this stuff !" %}</a>
+                <a href="{% url mediarequest_create media.pk%}">{% trans "Request this stuff !" %}</a>
             {% endif %}
+         {% else %}
+            <a href="#">{% trans "Want to borrow ?" %}</a>
         {% endif %}
     </div>
 </div>

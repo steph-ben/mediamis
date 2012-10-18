@@ -9,24 +9,9 @@
 
 {% block container %}
     {{ block.super }}
+
     <div id="user-nav" class="box">
-    <p>
-        <table>
-            <thead>
-                <tr><th>{% trans "Medias qu'on veut m'emprunter:" %}</th></tr>
-            </thead>
-            <tbody>
-            {% for req in requests_for_my_medias %}
-                <tr>
-                    <td>{{ req }}</td>
-                    <td><a href="#">{% trans "Accept/Deny/etc..." %}</a></td>
-                </tr>
-            {% empty %}
-                <tr><td>{% trans "Pas de requetes !" %}</td></tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </p>
+
     <p>
         <table>
             <thead>
@@ -47,7 +32,67 @@
             </tbody>
         </table>
     </p>
+
     </div>
+
+    <div id="user-nav" class="box">
+    <p>
+        <table>
+            <thead>
+                <tr><th>{% trans "Mes Medias à moi qu'on veut m'emprunter:" %}</th></tr>
+            </thead>
+            <tbody>
+            {% for req in requests_for_my_medias_pending %}
+                <tr>
+                    <td>{{ req }}</td>
+                    <td><a href="{% url mediarequest_update req.pk %}">{% trans "Accept/Deny" %}</a></td>
+                </tr>
+            {% empty %}
+                <tr><td>{% trans "Pas de requetes !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+
+    <p>
+        <table>
+            <thead>
+                <tr><th>{% trans "Mes Medias à moi que j'ai accepter de prêter, mais qui sont encore chez moi:" %}</th></tr>
+            </thead>
+            <tbody>
+            {% for req in requests_ive_accepted_but_still_home %}
+                <tr>
+                    <td>{{ req }}</td>
+                    <td><a href="{% url mediarequest_update req.pk %}">{% trans "Set to borrowed !" %}</a></td>
+                </tr>
+            {% empty %}
+                <tr><td>{% trans "Aucuns !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+
+    <p>
+        <table>
+            <thead>
+                <tr><th>{% trans "Mes Medias à moi que j'ai prêté ... on doit me les rendre un jour !" %}</th></tr>
+            </thead>
+            <tbody>
+            {% for req in requests_ive_accepted_and_borrowed %}
+                <tr>
+                    <td>{{ req }}</td>
+                    <td><a href="{% url mediarequest_update req.pk %}">{% trans "Say it's back !" %}</a></td>
+                </tr>
+            {% empty %}
+                <tr><td>{% trans "Aucun Media en dehors de chez toi !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+
+    </div>
+
+
 
 {#    <div id="user-nav" class="box">#}
 {#        <a href="#">Messagerie</a>#}

@@ -11,6 +11,17 @@
 {% block content %}
     <div id="rack">
         <p>Ici un dessin d'une étagère / médiathèque avec la liste des derniers évèvements !</p>
+        <p>
+            Currently {{ nb_users }} users registered, for a total of {{ nb_medias }} medias, youhouhou !
+        </p>
+        <p>
+            <b>Last entered Medias:</b>
+            <ul>
+            {% for media in media_list %}
+                <li>{{ media }} (by {{ media.owner }})</li>
+            {% endfor %}
+            </ul>
+        </p>
     </div>
 
 {% endblock %}
