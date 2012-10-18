@@ -11,6 +11,30 @@
     {{ block.super }}
 
     <div id="user-nav" class="box">
+        <p>
+            <label>MediaRequest list ...</label>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{% trans "Medias que je veux emprunter:" %}</th>
+                        <th>{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for req in requests_medias_i_want %}
+                    <tr>
+                        <td>{{ req }}</td>
+                        <td>{{ req.status }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td>{% trans "Pas de requetes !" %}</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </p>
+    </div>
+
+    <div id="user-nav" class="box">
 
     <p>
         <table>
@@ -21,7 +45,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for req in requests_medias_i_want %}
+            {% for req in myrequests_pending %}
                 <tr>
                     <td>{{ req }}</td>
                     <td>{{ req.status }}</td>
@@ -42,7 +66,27 @@
                 </tr>
             </thead>
             <tbody>
-            {% for req in requests_medias_i_want_and_accepted %}
+            {% for req in myrequests_accepted %}
+                <tr>
+                    <td>{{ req }}</td>
+                    <td>{{ req.status }}</td>
+                </tr>
+            {% empty %}
+                <tr><td>{% trans "Pas de requetes !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+
+    <p>
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans "Medias que je veux emprunter mais qui m'ont été refusés:" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for req in myrequests_declined %}
                 <tr>
                     <td>{{ req }}</td>
                     <td>{{ req.status }}</td>
@@ -63,7 +107,28 @@
                 </tr>
             </thead>
             <tbody>
-            {% for req in medias_i_borrowed %}
+            {% for req in myrequests_borrowed %}
+                <tr>
+                    <td>{{ req.media }}</td>
+                    <td>{{ req.date_return_due }}</td>
+                </tr>
+            {% empty %}
+                <tr><td>{% trans "Pas de requetes !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+
+    <p>
+        <table>
+            <thead>
+                <tr>
+                    <th>{% trans "Historiques des medias que j'ai empruntés:" %}</th>
+
+                </tr>
+            </thead>
+            <tbody>
+            {% for req in myrequests_history %}
                 <tr>
                     <td>{{ req.media }}</td>
                     <td>{{ req.date_return_due }}</td>
@@ -84,10 +149,11 @@
                 <tr><th>{% trans "Mes Medias à moi qu'on veut m'emprunter:" %}</th></tr>
             </thead>
             <tbody>
-            {% for req in requests_for_my_medias_pending %}
+            {% for req in mymedias_pending %}
                 <tr>
                     <td>{{ req }}</td>
-                    <td><a href="{% url mediarequest_accept req.pk %}">{% trans "Accept/Deny" %}</a></td>
+                    <td><a href="{% url mediarequest_accept req.pk %}">{% trans "Accept" %}</a>
+                        / <a href="{% url mediarequest_decline req.pk %}">{% trans "Decline" %}</a></td>
                 </tr>
             {% empty %}
                 <tr><td>{% trans "Pas de requetes !" %}</td></tr>
@@ -102,10 +168,27 @@
                 <tr><th>{% trans "Mes Medias à moi que j'ai accepter de prêter, mais qui sont encore chez moi:" %}</th></tr>
             </thead>
             <tbody>
-            {% for req in requests_ive_accepted_but_still_home %}
+            {% for req in mymedias_accepted %}
                 <tr>
                     <td>{{ req }}</td>
-                    <td><a href="{% url mediarequest_set_borrowed req.pk %}">{% trans "Set to borrowed !" %}</a></td>
+                    <td><a href="{% url mediarequest_borrow req.pk %}">{% trans "Set to borrowed !" %}</a></td>
+                </tr>
+            {% empty %}
+                <tr><td>{% trans "Aucuns !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+
+    <p>
+        <table>
+            <thead>
+                <tr><th>{% trans "Mes Medias à moi que j'ai refuser de prêter:" %}</th></tr>
+            </thead>
+            <tbody>
+            {% for req in mymedias_declined %}
+                <tr>
+                    <td>{{ req }}</td>
                 </tr>
             {% empty %}
                 <tr><td>{% trans "Aucuns !" %}</td></tr>
@@ -120,13 +203,30 @@
                 <tr><th>{% trans "Mes Medias à moi que j'ai prêté ... on doit me les rendre un jour !" %}</th></tr>
             </thead>
             <tbody>
-            {% for req in requests_ive_accepted_and_borrowed %}
+            {% for req in mymedias_borrowed %}
                 <tr>
                     <td>{{ req }}</td>
-                    <td><a href="{% url mediarequest_set_back req.pk %}">{% trans "Say it's back !" %}</a></td>
+                    <td><a href="{% url mediarequest_return req.pk %}">{% trans "Say it's back !" %}</a></td>
                 </tr>
             {% empty %}
                 <tr><td>{% trans "Aucun Media en dehors de chez toi !" %}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </p>
+
+    <p>
+        <table>
+            <thead>
+                <tr><th>{% trans "Historiques de mes Medias à moi que j'ai prêté ... et récupérés !" %}</th></tr>
+            </thead>
+            <tbody>
+            {% for req in mymedias_history %}
+                <tr>
+                    <td>{{ req }}</td>
+                </tr>
+            {% empty %}
+                <tr><td>{% trans "Aucun historique." %}</td></tr>
             {% endfor %}
             </tbody>
         </table>

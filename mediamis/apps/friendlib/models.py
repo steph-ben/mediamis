@@ -86,16 +86,20 @@ class BoardGame(Media):
 class MediaRequest(models.Model):
     """ Symbolize the request of one user to catch another user's Media
     Could have different status:
-        - Pending
-        - Accepted
-        - Declined
+        - (P) Pending
+        - (D) Declined
+        - (A) Accepted but not borrowed yet
+        - (B) Accepted and currently borrowed
+        - (R) Accepted, borrowed and returned back
 
     TODO: If status is Accepted, Media status need to be set as "borrowed"
     """
     STATUS_CHOICES = (
         (u'P', _('Pending')),
-        (u'A', _('Accepted')),
-        (u'D', _('Declined'))
+        (u'D', _('Declined')),
+        (u'A', _('Accepted but not borrowed yet')),
+        (u'B', _('Currently borrowed')),
+        (u'R', _('Returned'))
     )
 
     media = models.ForeignKey(Media, related_name='requests', blank=False, null=False)
@@ -110,31 +114,21 @@ class MediaRequest(models.Model):
 
     def __unicode__(self):
         if self.status == 'P':
-            return u'%s wants to borrow <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
-        elif ( (self.status == 'A') and (self.media.borrowed == False) ):
-            return u'%s is waiting to get <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
-        elif ( (self.status == 'A') and (self.media.borrowed == True) ):
-            return u'%s has borrowed <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
+            return u'%s is asking to borrow <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
         elif self.status == 'D':
             return u'%s has denied <<%s>> from %s' % (self.media.owner, self.media, self.borrower)
+        
+        elif self.status == 'A':
+            return u'%s has accepted to borrow <<%s>> to %s, but not borrowed yet' % \
+                   (self.media.owner, self.media, self.borrower)
+        elif self.status == 'B':
+            return u'%s is currently borrowing <<%s>> from %s' % (self.borrower, self.media, self.media.owner)
+        elif self.status == 'R':
+            return u'%s has returned <<%s>> to %s' % (self.borrower, self.media, self.media.owner)
         else:
-            return u'%s' % self.media
+            return u'Error in the status ...'
 
     @models.permalink
     def get_absolute_url(self):
         return ('myaccount',)
-    
-    """
-    - Toutes les demandes d'emprun d'un user:
-        user.requested_medias.objects.all()
-    - Toutes les demandes d'emprunts sur les medias d'un user:
-        MediaRequest.objects.filter(media__owner=user)
-    - Tous les media à rendre bientot:
-        MediaRequest.objects.filter(borrower=user, date_return_due=soon)
-    - Tous les medias à se faire rendre bientot:
-        MediaRequest.objects.filter(media__owner=user, date_return_due=soon)
-    - Est-ce que l'utilisateur courant a deja fait une requete sur cet object ?
-        MediaRequest.objects.filter(borrower=user, media=media)
-    - Combien de personnes veulents acceder a cet object ?
-    - Est-ce que l'object est deja prete ?
-    """
+   

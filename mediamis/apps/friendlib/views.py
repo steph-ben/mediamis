@@ -71,29 +71,33 @@ def search(request):
 @login_required
 def myaccount(request):
     user = request.user.pk
-    req_on_my_medias = MediaRequest.objects.filter(media__owner=user)
-
-    # Medias people want to borrow from me
-    requests_for_my_medias_pending = req_on_my_medias.filter(status='P')
-    requests_ive_accepted_but_still_home = req_on_my_medias.filter(status='A', media__borrowed=False)
-    requests_ive_accepted_and_borrowed = req_on_my_medias.filter(status='A', media__borrowed=True)
 
     # Medias I want to borrow
-    requests_medias_i_want = MediaRequest.objects.filter(borrower=user, status='P')
-    requests_medias_i_want_and_accepted = MediaRequest.objects.filter(borrower=user, status='A', media__borrowed=False)
-    medias_i_borrowed = MediaRequest.objects.filter(borrower=user, status='A', media__borrowed=True)
+    req_iv_made = MediaRequest.objects.filter(borrower=user)
+    myrequests = {
+        'myrequests_pending': req_iv_made.filter(status='P'),
+        'myrequests_declined': req_iv_made.filter(status='D'),
+        'myrequests_accepted': req_iv_made.filter(status='A'),
+        'myrequests_borrowed': req_iv_made.filter(status='B'),
+        'myrequests_history': req_iv_made.filter(status='R'),
+    }
+
+    # Medias people want to borrow from me
+    req_on_my_medias = MediaRequest.objects.filter(media__owner=user)
+    mymedias = {
+        'mymedias_pending': req_on_my_medias.filter(status='P'),
+        'mymedias_declined': req_on_my_medias.filter(status='D'),
+        'mymedias_accepted': req_on_my_medias.filter(status='A'),
+        'mymedias_borrowed': req_on_my_medias.filter(status='B'),
+        'mymedias_history': req_on_my_medias.filter(status='R'),
+    }
 
     # Media search form & results
     search_context = get_search_context({'owner':user})
     
-    context = {
-        'requests_for_my_medias_pending': requests_for_my_medias_pending,
-        'requests_ive_accepted_but_still_home': requests_ive_accepted_but_still_home,
-        'requests_ive_accepted_and_borrowed': requests_ive_accepted_and_borrowed,
-        'requests_medias_i_want': requests_medias_i_want,
-        'requests_medias_i_want_and_accepted': requests_medias_i_want_and_accepted,
-        'medias_i_borrowed': medias_i_borrowed
-    }
+    context = {}
+    context.update(myrequests)
+    context.update(mymedias)
     context.update(search_context)
  
     return direct_to_template(request, 'friendlib/private/index.html', context)
@@ -147,8 +151,26 @@ class MediaRequestUpdateView(UpdateView):
     pass
 
 @login_required
+def mediarequest_set_accepted(request, reqid):
+    mediarequest = get_object_or_404(MediaRequest, id=reqid)
+    mediarequest.status = 'A'
+    mediarequest.save()
+    return redirect_to(request, '/friendlib/myaccount')
+
+@login_required
+def mediarequest_set_declined(request, reqid):
+    mediarequest = get_object_or_404(MediaRequest, id=reqid)
+    mediarequest.status = 'D'
+    mediarequest.save()
+    return redirect_to(request, '/friendlib/myaccount')
+
+@login_required
 def mediarequest_set_borrowed(request, reqid):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
+    mediarequest.status = 'B'
+    mediarequest.save()
+
+    # Update Media as well
     mediarequest.media.borrower = mediarequest.borrower
     mediarequest.media.borrowed = True
     mediarequest.media.save()
@@ -156,27 +178,14 @@ def mediarequest_set_borrowed(request, reqid):
     return redirect_to(request, '/friendlib/myaccount')
 
 @login_required
-def mediarequest_set_back(request, reqid):
+def mediarequest_set_returned(request, reqid):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
+    mediarequest.status = 'R'
+    mediarequest.save()
+
+    # Update Media as well
     mediarequest.media.borrower = None
     mediarequest.media.borrowed = False
     mediarequest.media.save()
 
     return redirect_to(request, '/friendlib/myaccount')
-
-#@login_required
-#def mediarequest_create(request, media_id):
-#    media = get_object_or_404(Media, id=media_id)
-#    user = request.user
-#
-#    initial = {
-#        'media': media,
-#        'borrower': user,
-#        'status': 'P',
-#    }
-#    form = MediaRequestForm(initial=initial)
-#
-#    context = {
-#        'form': form
-#    }
-#    return direct_to_template(request, 'friendlib/private/mediarequest_create.html', context)
