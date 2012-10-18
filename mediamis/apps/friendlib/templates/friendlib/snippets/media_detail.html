@@ -10,11 +10,14 @@
         <label>{% trans "Owner: " %}</label><span>{{ media.owner }}</span><br>
     </div>
     <div id="actions">
+        <a href="{% url book_detail media.pk %}">{% trans "View" %}</a>
         {% if user.is_authenticated %}
             {% if user == media.owner %}
                 {# TODO: Ici mettre en place le "row-level-permission" #}
+                {# TODO: Faire attention au type du Media !!! Passer par les permalink ? #}
                 {# ---> Le user doit aussi être proprietaire du media pour l'editer ! #}
-                <a href="{% url admin:friendlib_media_change media.pk %}">{% trans "Edit" %}</a>
+                <a href="{% url book_update media.pk %}">{% trans "Edit" %}</a>
+                <a href="{% url book_delete media.pk %}">{% trans "Delete" %}</a>
             {% else %}
                 <a href="{% url mediarequest_create media.pk%}">{% trans "Request this stuff !" %}</a>
             {% endif %}

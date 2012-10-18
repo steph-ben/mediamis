@@ -8,6 +8,16 @@ from django.contrib.auth.models import User
 from friendlib.models import BoardGame, DVD, Book, Media, MediaRequest
 
 
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        widgets = {
+            'specialization_type': HiddenInput(),
+            'owner': HiddenInput(),
+            'borrower': HiddenInput(),
+            'borrowed': HiddenInput(),
+        }
+        
 class MediaRequestForm(forms.ModelForm):
     class Meta:
         model = MediaRequest

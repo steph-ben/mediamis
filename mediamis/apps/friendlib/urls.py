@@ -6,11 +6,11 @@ from friendlib.views import mediarequest_set_accepted, mediarequest_set_declined
     mediarequest_set_borrowed, mediarequest_set_returned
 
 from friendlib.views import MediaRequestCreateView, MediaRequestAcceptView, MediaRequestUpdateView
-from friendlib.views import BookCreateView
+from friendlib.views import BookCreateView, BookDetailView, BookUpdateView, BookDeleteView
 from friendlib.views import DVDCreateView
 from friendlib.views import BoardGameCreateView
 from friendlib.forms import MediaRequestForm
-from friendlib.forms import MediaRequestAcceptForm
+from friendlib.forms import MediaRequestAcceptForm, BookForm
 
 urlpatterns = patterns('',
     url(r'^$', home, name="home"),
@@ -41,7 +41,25 @@ urlpatterns = patterns('',
         MediaRequestUpdateView.as_view(model=MediaRequest, slug_field='id'),
         name='mediarequest_update'),
 
-    url(r'^books/create/$', BookCreateView.as_view(model=Book), name='book_create'),
+    url(r'^books/create/$',
+        BookCreateView.as_view(model=Book,
+                               form_class=BookForm,
+                               template_name='friendlib/book/book_create.html'),
+        name='book_create'),
+    url(r'^books/(?P<pk>[0-9]+)/$',
+        BookDetailView.as_view(model=Book,
+                               template_name='friendlib/book/book_detail.html'),
+        name='book_detail'),
+    url(r'^books/(?P<pk>[0-9]+)/edit/$',
+        BookUpdateView.as_view(model=Book,
+                               form_class=BookForm,
+                               template_name='friendlib/book/book_edit.html'),
+        name='book_update'),
+    url(r'^books/(?P<pk>[0-9]+)/delete/$',
+        BookDeleteView.as_view(model=Book,
+                               template_name='friendlib/book/book_confirm_delete.html',
+                               success_url='/friendlib/myaccount'),
+        name='book_delete'),
 
     url(r'^dvds/create/$', DVDCreateView.as_view(model=DVD), name='dvd_create'),
 

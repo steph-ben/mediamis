@@ -18,12 +18,9 @@ class Media(BaseGeneralizationModel):
     def __unicode__(self):
         return u'%s: %s' % (self.title, self.description)
 
-    def has_been_requested_by(self, user):
-        b = MediaRequest.objects.filter(borrower=user, media=media)
-        if b:
-            return True
-        else:
-            return False
+    @models.permalink
+    def get_absolute_url(self):
+        return ('myaccount',)
 
         
 class Book(Media):
@@ -36,6 +33,10 @@ class Book(Media):
 
     def __unicode__(self):
         return u'%s' % self.title
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ('myaccount',)
 
     @property
     def shortDetails(self):

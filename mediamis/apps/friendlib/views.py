@@ -108,13 +108,31 @@ def add_media(request):
     return direct_to_template(request, 'friendlib/private/index.html', context)
 
 
-#####
-###TODO: How to initialize the view correctly, eg. with predefined Media, Borrower and so on
-#####
 class BookCreateView(CreateView):
+    def get(self, request, *args, **kwargs):
+        # Set up form data from requests
+        user = request.user
+
+        # Define default form data
+        specialization = '/book/'
+
+        # Fill form with correct infos
+        self.initial.update({
+            'owner': user,
+            'specialization_type': specialization
+        })
+        return super(BookCreateView, self).get(request, *args, **kwargs)
+
+class BookDetailView(DetailView):
     pass
+class BookUpdateView(UpdateView):
+    pass
+class BookDeleteView(DeleteView):
+    pass
+
 class DVDCreateView(CreateView):
     pass
+
 class BoardGameCreateView(CreateView):
     pass
 
