@@ -93,7 +93,10 @@ def myaccount(request):
     }
 
     # Media search form & results
-    search_context = get_search_context({'owner':user})
+    search_args = request.GET or {}
+    #Todo: put user as owner
+    #search_args.update({'owner':user})
+    search_context = get_search_context(search_args)
     
     context = {}
     context.update(myrequests)
