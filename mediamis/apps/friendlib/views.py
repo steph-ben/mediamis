@@ -6,7 +6,6 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 
 from friendlib.forms import MediaSearchForm
-from friendlib.filters import MediaFilterSet
 from friendlib.models import Media, MediaRequest
 from friendlib.forms import MediaRequestForm
 
@@ -97,7 +96,7 @@ def myaccount(request):
     # Media search form & results
     search_args = request.GET or {}
     #Todo: put user as owner
-    #search_args.update({'owner':user})
+    search_args.update({'owner':user})
     search_context = get_search_context(search_args)
     
     context = {}
