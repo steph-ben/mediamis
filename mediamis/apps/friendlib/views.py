@@ -93,6 +93,10 @@ def myaccount(request):
         'mymedias_history': req_on_my_medias.filter(status='R'),
     }
 
+
+    # User's last activity
+    last_activity = req_iv_made.order_by('date_status_updated')[:3]
+
     # Media search form & results
     search_args = request.GET or {}
     #Todo: put user as owner
@@ -103,6 +107,7 @@ def myaccount(request):
     context.update(myrequests)
     context.update(mymedias)
     context.update(search_context)
+    context.update({'user_last_activity': last_activity})
  
     return direct_to_template(request, 'friendlib/private/index.html', context)
 

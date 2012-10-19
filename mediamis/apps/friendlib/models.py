@@ -108,6 +108,7 @@ class MediaRequest(models.Model):
     message = models.TextField()
     status = models.CharField(_('status'), max_length=1, blank=False,
                                choices = STATUS_CHOICES)
+    date_status_updated = models.DateTimeField(auto_now=True, )    # Last update of the request
     date_requested = models.DateTimeField(auto_now_add=True)     # Creation of the request
     date_answered = models.DateTimeField(null=True, blank=True)      # When the owner answered yes or no
     date_media_rented = models.DateTimeField(null=True, blank=True)  # (set by owner) When the media could be rented

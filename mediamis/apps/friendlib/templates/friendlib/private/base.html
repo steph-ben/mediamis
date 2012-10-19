@@ -5,34 +5,8 @@
     <h1>Homepage</h1><h2>My account</h2>
 {% endblock %}
 
-{# Base outline for public page(s) #}
-
 {% block container %}
     {{ block.super }}
-
-    <div id="user-nav" class="box">
-        <p>
-            <label>MediaRequest list ...</label>
-            <table>
-                <thead>
-                    <tr>
-                        <th>{% trans "Medias que je veux emprunter:" %}</th>
-                        <th>{% trans "Status" %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for req in requests_medias_i_want %}
-                    <tr>
-                        <td>{{ req }}</td>
-                        <td>{{ req.status }}</td>
-                    </tr>
-                {% empty %}
-                    <tr><td>{% trans "Pas de requetes !" %}</td></tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </p>
-    </div>
 
     <div id="user-nav" class="box">
 

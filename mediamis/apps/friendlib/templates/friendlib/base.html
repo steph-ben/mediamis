@@ -46,6 +46,18 @@
         </form>
     </div>
 
+    {% if user.is_authenticated %}
+        {% if user_last_activity %}
+    <div id="user-news" class="box">
+        <p>{% trans "Last activity" %}</p>
+        <ul>
+        {% for req in user_last_activity %}
+            <li>{{ req }} ({{ req.date_status_updated }})</li>
+        {% endfor %}
+        </ul>
+    </div>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 {% block content-header %}
