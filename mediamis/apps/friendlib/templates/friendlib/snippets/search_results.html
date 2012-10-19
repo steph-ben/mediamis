@@ -1,7 +1,8 @@
 {% load i18n %}
 
+<h2>{% trans "Result list" %}</h2>
+
 {% if media_list %}
-    <h2>{% trans "Result list" %}</h2>
 
     <div id="media-list">
         {% for media in media_list %}
@@ -12,7 +13,7 @@
     <div class="pagination">
         <span class="step-links">
             {% if pager.has_previous %}
-                <a href="?page={{ pager.previous_page_number }}">previous</a>
+                <a href="{{ request.META.PATH_INFO }}?{{ request.META.QUERY_STRING }}&page={{ pager.previous_page_number }}">previous</a>
             {% endif %}
 
             <span class="current">
@@ -20,8 +21,12 @@
             </span>
 
             {% if pager.has_next %}
-                <a href="?page={{ pager.next_page_number }}">next</a>
+                <a href="{{ request.META.PATH_INFO }}?{{ request.META.QUERY_STRING }}&page={{ pager.next_page_number }}">next</a>
             {% endif %}
         </span>
+    </div>
+{% else %}
+    <div id="media-list">
+        <label>{% trans "No results" %}</label>
     </div>
 {% endif %}

@@ -42,8 +42,10 @@ def _search(request):
     return direct_to_template(request, 'friendlib/public/search.html', context)
 
 def get_search_context(my_request):
-    filter = MediaFilterSet(my_request or None)
-    paginator = Paginator(filter.qs, 5) # Show 25 per page
+    search_form = MediaSearchForm(my_request)
+    filter_qs = search_form.filter_queryset()
+
+    paginator = Paginator(filter_qs, 5) # Show 5 per page
 
     # Make sure page request is an int. If not, deliver first page.
     try:
@@ -58,7 +60,7 @@ def get_search_context(my_request):
         qs = paginator.page(paginator.num_pages)
 
     context = {
-        'search_form': filter.form,
+        'search_form': search_form,
         'media_list': qs.object_list,
         'pager': qs,
     }

@@ -5,6 +5,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.auth.models import User
+import friendlib.models
 from friendlib.models import BoardGame, DVD, Book, Media, MediaRequest
 
 
@@ -53,7 +54,7 @@ class MediaRequestAcceptForm(forms.ModelForm):
 
 class MediaSearchForm(forms.Form):
     CHOICES_MEDIATYPE = (
-        (None, _('All types')),
+        ('', _('All types')),
         (Book.__name__, _('Book')),
         (DVD.__name__, _('DVD')),
         (BoardGame.__name__, _('Boardgames')),
@@ -66,33 +67,58 @@ class MediaSearchForm(forms.Form):
                                     queryset=User.objects.all(),
                                     empty_label=_('All users'),
                                     required=False)
-    only_available = forms.BooleanField(label=_('only available media'),
-                                       initial=False,
-                                       required=False,
-                                       help_text=_('If checked, display ' \
-                                                   'only media which are ' \
-                                                   'not currently on loan'))
+#    only_available = forms.BooleanField(label=_('only available media'),
+#                                       initial=False,
+#                                       required=False,
+#                                       help_text=_('If checked, display ' \
+#                                                   'only media which are ' \
+#                                                   'not currently on loan'))
     
     def clean_keywords(self):
         """ Clean data for field 'keywords' when submitting """
         keywords = self.cleaned_data['keywords']
         keywords = re.sub(r'\s+', ' ', keywords) # Replace multiple spaces
         return keywords
-    
-    def clean(self):
-        """ Check form consistency, raise error to user if needed """
-        return self.cleaned_data
-    
+
+    def clean_media_type(self):
+        media_type = self.cleaned_data['media_type']
+        spec = media_type
+        
+        if media_type:
+            #Get class object from media_type
+            media_class = getattr(friendlib.models, media_type)
+            spec = media_class.model_specialization
+
+        return spec
+
     def filter_queryset(self):
         """ Filter QuerySet of Media with user selection"""
         #TODO:
         #   1) Use custom FilterSet applying for all Media models
         #   2) Use QueryJoin to join all queries
 
-        data = self.cleaned_data
+        self.is_valid()     # Init self.cleaned_data ...
+        data = self.clean()
         keywords = data.get('keywords', None)
+        owner = data.get('owner', None)
+        media_type = data.get('media_type', None)
 
-        queryset = Media.objectsAll()
+        print media_type
+        
+        queryset = Media.objects.all()
         if keywords:
             queryset = queryset.filter(title__contains=keywords)
+        if owner:
+            queryset = queryset.filter(owner=owner)
+        if media_type:
+            queryset = queryset.filter(specialization_type=media_type)
+            
         return queryset
+
+"""
+from friendlib.forms import MediaSearchForm
+f = MediaSearchForm()
+f.is_valid()
+f.clean()
+f.filter_queryset()
+"""
