@@ -1,0 +1,12 @@
+{% load i18n %}
+
+<div class="btn-group">
+    <a class="btn btn-success btn-small" href="#"><i class="icon-plus-sign icon-white"></i>{% trans "Add new media" %}</a>
+    <a class="btn btn-success btn-small dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+
+    <ul class="dropdown-menu">
+        <li><a href="{% url book_create %}"><i class="icon-file"></i>Book</a></li>
+        <li><a href="#"><i class="icon-facetime-video"></i>DVD</a></li>
+        <li><a href="#"><i class="icon-road"></i>Boardgame</a></li>
+    </ul>
+</div>

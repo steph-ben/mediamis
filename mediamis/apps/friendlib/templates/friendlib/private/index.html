@@ -9,13 +9,47 @@
 
 
 {% block content %}
-    <div id="news">
-        <h3>Ma bibliothèque !</h3>
-        <p>
-            <a href="{% url book_create %}">{% trans "+ Ajouter un livre" %}</a>
-            <a href="{% url dvd_create %}">{% trans "+ Ajouter un DVD" %}</a>
-            <a href="{% url boardgame_create %}">{% trans "+ Ajouter un board game" %}</a>
-        </p>
-        {% include "friendlib/snippets/search_results.html" %}
-    </div>
+        <div class="span12 well">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="{% url user_home %}">Home</a></li>
+                <li>
+                    <a href="{% url user_medias %}">Medias</a>
+                </li>
+                <li><a href="{% url user_requests_incoming %}">Incoming requests</a></li>
+                <li><a href="{% url user_requests_outgoing %}">My requests</a></li>
+            </ul>
+
+            <div class="row-fluid">
+                <div class="span8 well">
+
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <img src="{{ MEDIA_URL }}img/160x200.gif" alt="">
+                        </div>
+
+                        <div class="span8">
+                            <h3>Hello {{ user.username }} !</h3>
+
+                            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+
+                            <p class="pull-right">
+                                <a href="/admin/auth/user/{{ user.pk }}" class="btn btn-warning">Edit</a>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="span4 well">
+                    {% include "friendlib/snippets/button_add_new_media.html" %}
+                </div>
+
+                <div class="span4 well">
+                    <p>Today, you have 36 books, 10 dvd and 5 boardgames in your library.</p>
+                    <p>Whatch out, you have some new media requests !</p>
+                </div>
+
+            </div>
+        </div>
+
 {% endblock %}

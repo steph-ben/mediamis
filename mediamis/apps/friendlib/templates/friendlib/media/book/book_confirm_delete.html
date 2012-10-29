@@ -1,0 +1,11 @@
+{% extends "friendlib/media/media_confirm_delete.html" %}
+{% load i18n %}
+
+{% block media_confirm %}
+	<form method="POST">{% csrf_token %}
+		<h2>{% trans "You sure to delete ?!" %}</h2>
+		{{ form.as_p }}
+
+		<input class="btn btn-danger" type="submit" value="{% trans "Yes" %}" />
+	</form>
+{% endblock media_confirm %}

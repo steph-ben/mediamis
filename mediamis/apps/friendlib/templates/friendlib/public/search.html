@@ -3,7 +3,9 @@
 
 
 {% block content %}
-    <div id="search-result">
+    <div class="span12 well">
+        <legend>{% trans "Result list" %}</legend>
+        
         {% include "friendlib/snippets/search_results.html" %}
     </div>
 {% endblock content %}

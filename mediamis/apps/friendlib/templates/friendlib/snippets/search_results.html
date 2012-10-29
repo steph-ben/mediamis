@@ -1,32 +1,37 @@
 {% load i18n %}
 
-<h2>{% trans "Result list" %}</h2>
-
 {% if media_list %}
 
-    <div id="media-list">
+    <ul class="thumbnails">
         {% for media in media_list %}
-            {% include "friendlib/snippets/media_detail.html" %}
+            <li class="span12">
+                {% include "friendlib/snippets/search_results_detail.html" %}
+            </li>
         {% endfor %}
+    </ul>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <ul class="pager">
+                {% if pager.has_previous %}
+                    <li class="previous">
+                    <a href="{{ request.META.PATH_INFO }}?{{ request.META.QUERY_STRING }}&page={{ pager.previous_page_number }}">{% trans "Previous" %}</a>
+                    </li>
+                {% endif %}
+
+                <li>
+                    Page {{ pager.number }} of {{ pager.paginator.num_pages }}.
+                </li>
+
+                {% if pager.has_next %}
+                    <li class="next">
+                        <a href="{{ request.META.PATH_INFO }}?{{ request.META.QUERY_STRING }}&page={{ pager.next_page_number }}">{% trans "Next" %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if pager.has_previous %}
-                <a href="{{ request.META.PATH_INFO }}?{{ request.META.QUERY_STRING }}&page={{ pager.previous_page_number }}">previous</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ pager.number }} of {{ pager.paginator.num_pages }}.
-            </span>
-
-            {% if pager.has_next %}
-                <a href="{{ request.META.PATH_INFO }}?{{ request.META.QUERY_STRING }}&page={{ pager.next_page_number }}">next</a>
-            {% endif %}
-        </span>
-    </div>
+    
 {% else %}
-    <div id="media-list">
-        <label>{% trans "No results" %}</label>
-    </div>
+    <label>{% trans "No results" %}</label>
 {% endif %}

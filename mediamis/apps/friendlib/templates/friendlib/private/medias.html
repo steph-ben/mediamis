@@ -1,0 +1,39 @@
+{% extends "friendlib/private/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+    {{ block.super }}
+    | My medias
+{% endblock %}
+
+
+{% block content %}
+        <div class="span12 well">
+            <ul class="nav nav-tabs">
+                <li><a href="{% url user_home %}">Home</a></li>
+                <li class="active">
+                    <a href="{% url user_medias %}">Medias</a>
+                </li>
+                <li><a href="{% url user_requests_incoming %}">Incoming requests</a></li>
+                <li><a href="{% url user_requests_outgoing %}">My requests</a></li>
+            </ul>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span8">
+                            <legend>Your medias</legend>
+                        </div>
+                        <div class="span4">
+                            {% include "friendlib/snippets/button_add_new_media.html" %}
+                        </div>
+                    </div>
+
+                    {% include "friendlib/snippets/search_results.html" %}
+
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

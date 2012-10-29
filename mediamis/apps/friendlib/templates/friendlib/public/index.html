@@ -9,55 +9,21 @@
 
 
 {% block content %}
-    <div id="rack">
+    
+    <div class="span6 well" style="height: 400px">
+        <legend>Last stuffs:</legend>
         <p>Ici un dessin d'une étagère / médiathèque avec la liste des derniers évèvements !</p>
         <p>
             Currently {{ nb_users }} users registered, for a total of {{ nb_medias }} medias, youhouhou !
         </p>
-        <p>
-            <b>Last entered Medias:</b>
-            <ul>
-            {% for media in media_list %}
-                <li>{{ media }} (by {{ media.owner }})</li>
-            {% endfor %}
-            </ul>
-        </p>
+    </div>
+    <div class="span6 well" style="height: 400px">
+        <legend>Last emprunts:</legend>
+        <ul>
+        {% for media in media_list %}
+            <li>{{ media }} (by {{ media.owner }})</li>
+        {% endfor %}
+        </ul>
     </div>
 
 {% endblock %}
-
-
-
-
-{#{% block content-header %}#}
-{#    {{ block.super }}#}
-{##}
-{#	<form method="GET" action="{% url search %}">#}
-{#		<h2>{% trans "Search media" %}</h2>#}
-{#            {% include "friendlib/snippets/search_form.html" %}#}
-{#		<input type="submit" value="{% trans "Search" %}" />#}
-{#	</form>#}
-{#{% endblock content-header %}#}
-{##}
-{##}
-{#{% block content-main %}#}
-{#    {{ block.super }}#}
-{#	<h2>{% trans "Latest list" %}</h2>#}
-{##}
-{#    <div id="lastmedia">#}
-{#        <table>#}
-{#        {% for media in lastmedia_list %}#}
-{#            <tr>#}
-{#            {% include "friendlib/snippets/media_detail.html" %}#}
-{#            </tr>#}
-{#        {% endfor %}#}
-{#        </table>#}
-{#    </div>#}
-{##}
-{#    {% block custom-content %}#}
-{#    <div id="welcome">#}
-{#        <p>On this box you will see latest news for your media, when authenticated !</p>#}
-{#    </div>#}
-{#    {% endblock %}#}
-{##}
-{#{% endblock content-main %}#}

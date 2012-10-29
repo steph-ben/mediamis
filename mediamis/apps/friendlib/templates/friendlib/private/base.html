@@ -5,7 +5,8 @@
     <h1>Homepage</h1><h2>My account</h2>
 {% endblock %}
 
-{% block container %}
+{% comment %}
+{% block container_old %}
     {{ block.super }}
 
     <div id="user-nav" class="box">
@@ -228,11 +229,9 @@
 {#        </p>#}
 {#    </div>#}
     
-    <div id="content" class="box">
-        {% block content %}
-        {% endblock %}
-    </div>
+
 {% endblock %}
+{% endcomment %}
 
 {% block content-header %}
     {{ block.super }}

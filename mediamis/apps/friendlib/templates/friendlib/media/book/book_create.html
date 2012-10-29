@@ -1,0 +1,11 @@
+{% extends "friendlib/media/media_create.html" %}
+{% load i18n %}
+
+{% block media_create %}
+	<form method="POST" action="{% url book_create %}">{% csrf_token %}
+		<h2>{% trans "Create new book" %}</h2>
+		{{ form.as_p }}
+
+		<input class="btn" type="submit" value="{% trans "Create" %}" />
+	</form>
+{% endblock media_create %}

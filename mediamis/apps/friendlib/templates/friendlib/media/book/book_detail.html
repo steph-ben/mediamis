@@ -1,0 +1,15 @@
+{% extends "friendlib/media/media_detail.html" %}
+{% load i18n %}
+
+{% block media_detail %}
+                <dl class="dl-horizontal">
+                    <dt>{% trans "Author" %}</dt>
+                    <dd>{{ book.author }}</dd>
+
+                    <dt>Nb de pages</dt>
+                    <dd>{{ book.nb_pages }}</dd>
+
+                    <dt>Resume</dt>
+                    <dd>{{ book.description }} / Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</dd>
+                </dl>
+{% endblock %}

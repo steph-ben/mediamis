@@ -1,0 +1,11 @@
+{% load i18n %}
+
+{% if user == media.owner %}
+                    <p class="pull-left alert alert-success">
+                        {% trans "You're the owner." %}
+                    </p>
+                {% else %}
+                    <p class="pull-left">
+                        {% trans "Owner is" %} <a href="#">{{ media.owner }}</a>
+                    </p>
+{% endif %}

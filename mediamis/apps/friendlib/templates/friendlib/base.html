@@ -9,55 +9,81 @@
 
 {% block container %}
 
-    <div id="main-title" class="box">
-        <a href="{% url home %}">{% trans "Back to Home" %}</a>
-        <p>Une belle image avec le nom du site, etc?</p>
-    </div>
+    <div class="row-fluid">
+        <div class="span8">
+            <div class="row-fluid">
+                <div class="span12 hero-unit">
+                    <a href="{% url home %}" class="disabled">
+                    <h1>Baniere ici</h1>
+                    </a>
+                </div>
+            </div>
 
-    <div id="login" class="box">
-    {% if user.is_authenticated %}
-        <p>
-            {% trans "You are connected as" %}<br>
-            <strong>{{ user.username }}</strong><br>
-            <span id="hostname"></span><br>
-{#            <a href="{% url registration:logout %}">{% trans "Logout" %}</a>#}
-            <a href="{% url myaccount %}">{% trans "View my stuffs" %}</a>
-            <a href="{% url registration:logout %}">{% trans "Logout" %}</a>
+            <div class="row-fluid">
+                <div class="span12 ">
+                    <form class="well form-search" method="GET" action="{% url search %}">
+                        <label>{% trans "Search all media" %}</label>
+                        {{ search_form.keywords }}
+                        <button type="submit" class="btn">{% trans "Search" %}</button>
+                    </form>
+                </div>
+            </div>
 
-
-        </p>
-    {% else %}
-{#        {% include "friendlib/snippets/login_box.html" %}#}
-        <div>
-        {% include "registration/registration_form.html" %}
+            <div class="row-fluid">
+                {% block content %}
+                {% endblock %}
+            </div>
         </div>
-    {% endif %}
+
+
+        <div class="span4">
+            <div class="row-fluid">
+                <div class="span12 well">
+
+                    {% if user.is_authenticated %}
+                        <div class="row-fluid">
+                            <div class="span12">
+                                {% trans "You are connected as" %} <strong>{{ user.username }}</strong>
+                            </div>
+                        </div>
+                       <div class="row-fluid">
+                            <div class="span12">
+                                <a class="btn btn-info" href="{% url user_home %}">{% trans "View my stuffs" %}</a>
+                                <a class="btn btn-warning pull-right" href="{% url registration:logout %}">{% trans "Logout" %}</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <form class="form-inline" method="post">{% csrf_token %}
+                            <input type="text" class="input-small" placeholder="Username" name="username">
+                            <input type="password" class="input-small" placeholder="Password" name="password">
+                            <button type="submit" class="btn">Sign in</button>
+
+                            <label class="checkbox">
+                                <input type="checkbox"> Remember me
+                            </label>
+                        </form>
+                    {% endif %}
+
+
+                </div>
+            </div>
+            <div class="row-fluid">
+                {% if user.is_authenticated %}
+                    <div class="span12 well">
+                        <legend>Last activity</legend>
+                        <ul>
+                            <li>Ploping ...</li>
+                            <li>Plopoung ...</li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="span12 well" style="height: 100px">Texte d'introduction</div>
+                {% endif %}
+            </div>
+
+        </div>
     </div>
 
-    <div id="introduction" class="box">
-        <p>Un text qui explique le principe du site, etc ...</p>
-    </div>
-
-    <div id="search" class="box">
-        <form method="GET" action="{% url search %}">
-            <label>{% trans "Search in all media !" %}</label>
-                {% include "friendlib/snippets/search_form.html" %}
-            <input type="submit" value="{% trans "Search" %}" />
-        </form>
-    </div>
-
-    {% if user.is_authenticated %}
-        {% if user_last_activity %}
-    <div id="user-news" class="box">
-        <p>{% trans "Last activity" %}</p>
-        <ul>
-        {% for req in user_last_activity %}
-            <li>{{ req }} ({{ req.date_status_updated }})</li>
-        {% endfor %}
-        </ul>
-    </div>
-        {% endif %}
-    {% endif %}
 {% endblock %}
 
 {% block content-header %}
