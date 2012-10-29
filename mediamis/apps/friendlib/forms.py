@@ -102,9 +102,7 @@ class MediaSearchForm(forms.Form):
         keywords = data.get('keywords', None)
         owner = data.get('owner', None)
         media_type = data.get('media_type', None)
-
-        print media_type
-        
+    
         queryset = Media.objects.all()
         if keywords:
             queryset = queryset.filter(title__contains=keywords)

@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 
 from friendlib.models import Book, MediaRequest, DVD, BoardGame
+from friendlib.views import *
 from friendlib.views import home, search, myaccount
 from friendlib.views import mediarequest_set_accepted, mediarequest_set_declined,\
     mediarequest_set_borrowed, mediarequest_set_returned
@@ -15,7 +16,12 @@ from friendlib.forms import MediaRequestAcceptForm, BookForm
 urlpatterns = patterns('',
     url(r'^$', home, name="home"),
     url(r'^search/$', search, name="search"),
-    url(r'^myaccount/$', myaccount, name="myaccount"),
+    url(r'^account/$', myaccount, name="user_home"),
+    url(r'^account/medias$', user_medias, name="user_medias"),
+    url(r'^account/requests/incoming', user_requests_incoming, name="user_requests_incoming"),
+    url(r'^account/requests/outgoing', user_requests_outgoing, name="user_requests_outgoing"),
+
+
 
     url(r'requestmedia/(?P<mediaid>[0-9]+)/$',
         MediaRequestCreateView.as_view(model=MediaRequest,
@@ -44,21 +50,21 @@ urlpatterns = patterns('',
     url(r'^books/create/$',
         BookCreateView.as_view(model=Book,
                                form_class=BookForm,
-                               template_name='friendlib/book/book_create.html'),
+                               template_name='friendlib/media/book/book_create.html'),
         name='book_create'),
     url(r'^books/(?P<pk>[0-9]+)/$',
         BookDetailView.as_view(model=Book,
-                               template_name='friendlib/book/book_detail.html'),
+                               template_name='friendlib/media/book/book_detail.html'),
         name='book_detail'),
     url(r'^books/(?P<pk>[0-9]+)/edit/$',
         BookUpdateView.as_view(model=Book,
                                form_class=BookForm,
-                               template_name='friendlib/book/book_edit.html'),
+                               template_name='friendlib/media/book/book_edit.html'),
         name='book_update'),
     url(r'^books/(?P<pk>[0-9]+)/delete/$',
         BookDeleteView.as_view(model=Book,
-                               template_name='friendlib/book/book_confirm_delete.html',
-                               success_url='/friendlib/myaccount'),
+                               template_name='friendlib/media/book/book_confirm_delete.html',
+                               success_url='/friendlib/account'),
         name='book_delete'),
 
     url(r'^dvds/create/$', DVDCreateView.as_view(model=DVD), name='dvd_create'),

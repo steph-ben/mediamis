@@ -73,6 +73,7 @@ def search(request):
 def myaccount(request):
     user = request.user.pk
 
+    """
     # Medias I want to borrow
     req_iv_made = MediaRequest.objects.filter(borrower=user)
     myrequests = {
@@ -93,9 +94,9 @@ def myaccount(request):
         'mymedias_history': req_on_my_medias.filter(status='R'),
     }
 
-
     # User's last activity
     last_activity = req_iv_made.order_by('date_status_updated')[:3]
+    """
 
     # Media search form & results
     search_args = request.GET or {}
@@ -104,12 +105,72 @@ def myaccount(request):
     search_context = get_search_context(search_args)
     
     context = {}
-    context.update(myrequests)
-    context.update(mymedias)
+    #context.update(myrequests)
+    #context.update(mymedias)
     context.update(search_context)
-    context.update({'user_last_activity': last_activity})
+    #context.update({'user_last_activity': last_activity})
  
     return direct_to_template(request, 'friendlib/private/index.html', context)
+
+@login_required
+def user_medias(request):
+    user = request.user.pk
+
+    # Media search form & results
+    search_args = request.GET or {}
+    search_args.update({'owner':user})
+    search_context = get_search_context(search_args)
+
+    context = {}
+    context.update(search_context)
+
+    return direct_to_template(request, 'friendlib/private/medias.html', context)
+
+@login_required
+def user_requests_incoming(request):
+    user = request.user.pk
+
+    # Medias people want to borrow from me
+    #TODO: pending = filter on status in {Pending, Accepted, Borrowed}
+    pending_requests = MediaRequest.objects.filter(media__owner=user).order_by('-date_status_updated')
+    history_requests = MediaRequest.objects.filter(media__owner=user).order_by('date_status_updated')
+
+    # Media search form & results
+    search_args = request.GET or {}
+    search_args.update({'owner':user})
+    search_context = get_search_context(search_args)
+
+    context = {
+        'requests_incoming_pending': pending_requests,
+        'requests_incoming_history': history_requests
+    }
+    context.update(search_context)
+
+    return direct_to_template(request, 'friendlib/private/requests_incoming.html', context)
+
+@login_required
+def user_requests_outgoing(request):
+    user = request.user.pk
+
+    # Medias I want to borrow
+    #TODO: pending filter on status in {Pending, Accepted, Borrowed}
+    pending_requests = MediaRequest.objects.filter(borrower=user)
+    #TODO: History = all CHANGES of this object .. check this out !
+    history_requests = MediaRequest.objects.filter(borrower=user)
+
+    # Media search form & results
+    search_args = request.GET or {}
+    #Todo: put user as owner
+    search_args.update({'owner':user})
+    search_context = get_search_context(search_args)
+
+    context = {
+        'requests_outgoing_pending': pending_requests,
+        'requests_outgoing_history': history_requests
+    }
+    context.update(search_context)
+
+    return direct_to_template(request, 'friendlib/private/requests_outgoing.html', context)
 
 def add_media(request):
     context = {}
@@ -182,14 +243,14 @@ def mediarequest_set_accepted(request, reqid):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
     mediarequest.status = 'A'
     mediarequest.save()
-    return redirect_to(request, '/friendlib/myaccount')
+    return redirect_to(request, '/friendlib/account')
 
 @login_required
 def mediarequest_set_declined(request, reqid):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
     mediarequest.status = 'D'
     mediarequest.save()
-    return redirect_to(request, '/friendlib/myaccount')
+    return redirect_to(request, '/friendlib/account')
 
 @login_required
 def mediarequest_set_borrowed(request, reqid):
@@ -202,7 +263,7 @@ def mediarequest_set_borrowed(request, reqid):
     mediarequest.media.borrowed = True
     mediarequest.media.save()
 
-    return redirect_to(request, '/friendlib/myaccount')
+    return redirect_to(request, '/friendlib/account')
 
 @login_required
 def mediarequest_set_returned(request, reqid):
@@ -215,4 +276,4 @@ def mediarequest_set_returned(request, reqid):
     mediarequest.media.borrowed = False
     mediarequest.media.save()
 
-    return redirect_to(request, '/friendlib/myaccount')
+    return redirect_to(request, '/friendlib/account')

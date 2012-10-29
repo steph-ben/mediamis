@@ -22,7 +22,14 @@ class Media(BaseGeneralizationModel):
     def get_absolute_url(self):
         return ('myaccount',)
 
-        
+    @property
+    def borrowed_status(self):
+        status = u"At home"
+        if self.borrowed:
+            status = u"Borrowed"
+
+        return status
+
 class Book(Media):
     author = models.CharField(_('author name'), max_length=255, null=True, blank=True)
     size = models.CharField(_('size of the book'), max_length=255, null=True, blank=True)
@@ -36,7 +43,7 @@ class Book(Media):
     
     @models.permalink
     def get_absolute_url(self):
-        return ('myaccount',)
+        return ('book_detail', [self.pk,])
 
     @property
     def shortDetails(self):
@@ -132,5 +139,4 @@ class MediaRequest(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('myaccount',)
-   
+        return ('user_requests_outgoing',)
