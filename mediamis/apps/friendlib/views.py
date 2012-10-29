@@ -11,48 +11,24 @@ from friendlib.models import Media, MediaRequest
 from friendlib.forms import MediaRequestForm
 from friendlib.models import BoardGame, Divx, Book, DVD
 
-def home(request):
-    media_list = Media.objects.all().order_by('-pk')[:5]
+def home(request, **kwargs):
+    lastmedia_list = Media.objects.all().order_by('-pk')[:5]
     nb_users = User.objects.all().count()
     nb_medias = Media.objects.all().count()
-    search_context = get_search_context({})       # Media search form & results
 
-    # If user's registered
-    # TODO: put that otherwise ... middleware ?!
-    user_activity = {}
-    if request.user.is_authenticated():
-        user = request.user
-        query = Q(borrower=user) | Q(media__owner=user)
-        user_activity = MediaRequest.objects.filter(query).order_by('-date_status_updated')
-
-    print user_activity
     context = {
-        'media_list': media_list,
+        'lastmedia_list': lastmedia_list,
         'nb_users': nb_users,
         'nb_medias': nb_medias,
-        'user_activity': user_activity
     }
-    context.update(search_context)
-
+    
+    context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/public/index.html', context)
 
-def _search(request):
-    qs = None
-    
-    if not request.GET:
-        form = MediaSearchForm()
-    else:
-        form = MediaSearchForm(request.GET)
-        if form.is_valid():
-            qs = form.filter_queryset()
-            
-    context = {
-        'search_form': form,
-        'media_list': qs,
-    }
-    return direct_to_template(request, 'friendlib/public/search.html', context)
-
 def get_search_context(my_request):
+    """
+    Get extra context to be added to the template for search form
+    """
     search_form = MediaSearchForm(my_request)
     filter_qs = search_form.filter_queryset()
 
@@ -77,12 +53,28 @@ def get_search_context(my_request):
     }
     return context
 
-def search(request):
-    context = get_search_context(request.GET or None)
+def get_user_context(user):
+    """
+    Get extra context to display user activity and so on all pages
+    when the user is logged in
+    """
+    user_activity = {}
+    if user.is_authenticated():
+        query = Q(borrower=user) | Q(media__owner=user)
+        user_activity = MediaRequest.objects.filter(query).order_by('-date_status_updated')
+    
+    user_context = {
+        'user_activity': user_activity
+    }
+    return user_context
+
+def search(request, **kwargs):
+    context = {}
+    context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/public/search.html', context)
 
 @login_required
-def myaccount(request):
+def myaccount(request, **kwargs):
     user = request.user.pk
 
     """
@@ -117,37 +109,30 @@ def myaccount(request):
         'nb_divx': Divx.objects.filter(owner=user).count(),
         'nb_boardgame': BoardGame.objects.filter(owner=user).count()
     }
-    # Media search form & results
-    search_args = request.GET or {}
-    #Todo: put user as owner
-    search_args.update({'owner':user})
-    search_context = get_search_context(search_args)
+
 
     context = {}
-    #context.update(myrequests)
-    #context.update(mymedias)
-    context.update(search_context)
     context.update(counting)
-    #context.update({'user_last_activity': last_activity})
 
+    context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/private/index.html', context)
 
 @login_required
-def user_medias(request):
+def user_medias(request, **kwargs):
     user = request.user.pk
 
-    # Media search form & results
-    search_args = request.GET or {}
-    search_args.update({'owner':user})
-    search_context = get_search_context(search_args)
+#   TODO: Set current user as proper filter for search
+#    # Media search form & results
+#    search_args = request.GET or {}
+#    search_args.update({'owner':user})
+#    search_context = get_search_context(search_args)
 
     context = {}
-    context.update(search_context)
-
+    context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/private/medias.html', context)
 
 @login_required
-def user_requests_incoming(request):
+def user_requests_incoming(request, **kwargs):
     user = request.user.pk
 
     # Medias people want to borrow from me
@@ -156,21 +141,15 @@ def user_requests_incoming(request):
     history_requests = MediaRequest.objects.filter(media__owner=user)\
                             .order_by('-date_status_updated')
 
-    # Media search form & results
-    search_args = request.GET or {}
-    search_args.update({'owner':user})
-    search_context = get_search_context(search_args)
-
     context = {
         'requests_incoming_pending': pending_requests,
         'requests_incoming_history': history_requests
     }
-    context.update(search_context)
-
+    context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/private/requests_incoming.html', context)
 
 @login_required
-def user_requests_outgoing(request):
+def user_requests_outgoing(request, **kwargs):
     user = request.user.pk
 
     # Medias I want to borrow
@@ -178,23 +157,16 @@ def user_requests_outgoing(request):
     #TODO: History = all CHANGES of this object .. check this out !
     history_requests = MediaRequest.objects.filter(borrower=user).order_by('-date_status_updated')
 
-    # Media search form & results
-    search_args = request.GET or {}
-    #Todo: put user as owner
-    search_args.update({'owner':user})
-    search_context = get_search_context(search_args)
-
     context = {
         'requests_outgoing_pending': pending_requests,
         'requests_outgoing_history': history_requests
     }
-    context.update(search_context)
-
+    context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/private/requests_outgoing.html', context)
 
-def add_media(request):
+def add_media(request, **kwargs):
     context = {}
-    context.update(search_context)
+    context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/private/index.html', context)
 
 
