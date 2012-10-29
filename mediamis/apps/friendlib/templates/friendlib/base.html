@@ -72,8 +72,11 @@
                     <div class="span12 well">
                         <legend>Last activity</legend>
                         <ul>
-                            <li>Ploping ...</li>
-                            <li>Plopoung ...</li>
+                        {% for activity in user_activity %}
+                            <li>{{ activity }}</li>
+                        {% empty %}
+                            <li>{% trans "No activity." %}</li>
+                        {% endfor %}
                         </ul>
                     </div>
                 {% else %}

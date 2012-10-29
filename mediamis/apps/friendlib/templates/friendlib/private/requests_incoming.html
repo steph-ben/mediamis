@@ -42,18 +42,9 @@
                                             <td>{{ req.date_status_updated }}</td>
                                             <td>{{ req.media }}</td>
                                             <td>{{ req.borrower }}</td>
-                                            <td>{{ req.status }} ({{ req }})</td>
+                                            <td>{{ req.owner_short_status }}</td>
                                             <td>
-                                            {% if req.status == 'P' %}
-                                                <a href="{% url mediarequest_accept req.pk %}" class="btn btn-small btn-block btn-success">Yes</a>
-                                                <a href="{% url mediarequest_decline req.pk %}" class="btn btn-small btn-block btn-danger">No</a>
-                                            {% endif %}
-                                            {% if req.status == 'A' %}
-                                                <a href="{% url mediarequest_borrow req.pk %}" class="btn btn-block btn-success">Set as borrowed</a>
-                                            {% endif %}
-                                            {% if req.status == 'B' %}
-                                                <a href="{% url mediarequest_return req.pk %}" class="btn btn-block btn-success">Set as returned</a>
-                                            {% endif %}
+                                            {% include "friendlib/snippets/mediarequest_actions.html" %}
                                             </td>
                                         </tr>
                                     {% empty %}

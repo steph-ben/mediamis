@@ -5,21 +5,21 @@
     <div class="span12 well">
         <div class="row-fluid">
             <div class="span8">
-                <legend>{{ book.title }}</legend>
+                <legend>{{ media.title }}</legend>
             </div>
             <div class="span2">
-                {% if user == book.owner %}
+                {% if user == media.owner %}
                     <p class="pull-left alert alert-success">
                         {% trans "You're the owner." %}
                     </p>
                 {% else %}
                     <p class="pull-left">
-                        {% trans "Owner is" %} <a href="#">{{ book.owner }}</a>
+                        {% trans "Owner is" %} <a href="#">{{ media.owner }}</a>
                     </p>
                 {% endif %}
             </div>
             <div class="span2 alert alert-info">
-                {{ book.borrowed_status }}
+                {{ media.borrowed_status }}
             </div>
         </div>
 
@@ -37,15 +37,85 @@
                 <p class="pull-right">
 
                     {% if user.is_authenticated %}
-                        {% if user == book.owner %}
-                            <a href="{% url book_delete book.pk %}" class="btn btn-danger">Delete</a>
-                            <a href="{% url book_update book.pk %}" class="btn btn-warning">Edit</a>
+                        {% if user == media.owner %}
+                            <a href="{{ media.get_delete_url }}" class="btn btn-danger">Delete</a>
+                            <a href="{{ media.get_update_url }}" class="btn btn-warning">Edit</a>
                         {% endif %}
                     {% endif %}
-                
-                    <a href="{% url mediarequest_create book.pk %}" class="btn btn-success">Request</a>
+
+                    {% if user != media.owner %}
+                        <a href="{% url mediarequest_create media.pk %}" class="btn btn-success">Request</a>
+                    {% endif %}
                 </p>
             </div>
         </div>
+
+
+    {% if user == media.owner %}
+
+        <div class="row-fluid">
+            <div class="span12">
+                <legend>{% trans "Pending requests" %}</legend>
+
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Comment</th>
+                            <th>Answer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for req in media_pending_request %}
+                        <tr>
+                            <td>{{ req.date_status_updated }}</td>
+                            <td>{{ req.borrower }}</td>
+                            <td>{{ req.message }}</td>
+                            <td>
+                                {% include "friendlib/snippets/mediarequest_actions.html" %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan=4>{% trans "No requests" %}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="row-fluid">
+            <div class="span12">
+                <legend>{% trans "Activity" %}</legend>
+
+                <table class="table table-condensed table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for req in media_history_request %}
+                        <tr>
+                            <td>{{ req.date_status_updated }}</td>
+                            <td>{{ req.borrower }}</td>
+                            <td>{{ req.owner_short_status }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan=3>{% trans "No history." %}</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+              </div>
+        </div>
+    {% endif %}
+
     </div>
+
+
+
+
 {% endblock content %}

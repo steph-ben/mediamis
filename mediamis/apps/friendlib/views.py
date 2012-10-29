@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models.query_utils import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic.simple import direct_to_template, redirect_to
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -8,17 +9,28 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from friendlib.forms import MediaSearchForm
 from friendlib.models import Media, MediaRequest
 from friendlib.forms import MediaRequestForm
+from friendlib.models import BoardGame, Divx, Book, DVD
 
 def home(request):
-    media_list = Media.objects.all()[:5]
+    media_list = Media.objects.all().order_by('-pk')[:5]
     nb_users = User.objects.all().count()
     nb_medias = Media.objects.all().count()
     search_context = get_search_context({})       # Media search form & results
 
+    # If user's registered
+    # TODO: put that otherwise ... middleware ?!
+    user_activity = {}
+    if request.user.is_authenticated():
+        user = request.user
+        query = Q(borrower=user) | Q(media__owner=user)
+        user_activity = MediaRequest.objects.filter(query).order_by('-date_status_updated')
+
+    print user_activity
     context = {
         'media_list': media_list,
         'nb_users': nb_users,
-        'nb_medias': nb_medias
+        'nb_medias': nb_medias,
+        'user_activity': user_activity
     }
     context.update(search_context)
 
@@ -98,18 +110,26 @@ def myaccount(request):
     last_activity = req_iv_made.order_by('date_status_updated')[:3]
     """
 
+    # Number of Media
+    counting = {
+        'nb_book': Book.objects.filter(owner=user).count(),
+        'nb_dvd': DVD.objects.filter(owner=user).count(),
+        'nb_divx': Divx.objects.filter(owner=user).count(),
+        'nb_boardgame': BoardGame.objects.filter(owner=user).count()
+    }
     # Media search form & results
     search_args = request.GET or {}
     #Todo: put user as owner
     search_args.update({'owner':user})
     search_context = get_search_context(search_args)
-    
+
     context = {}
     #context.update(myrequests)
     #context.update(mymedias)
     context.update(search_context)
+    context.update(counting)
     #context.update({'user_last_activity': last_activity})
- 
+
     return direct_to_template(request, 'friendlib/private/index.html', context)
 
 @login_required
@@ -131,9 +151,10 @@ def user_requests_incoming(request):
     user = request.user.pk
 
     # Medias people want to borrow from me
-    #TODO: pending = filter on status in {Pending, Accepted, Borrowed}
-    pending_requests = MediaRequest.objects.filter(media__owner=user).order_by('-date_status_updated')
-    history_requests = MediaRequest.objects.filter(media__owner=user).order_by('date_status_updated')
+    pending_requests = MediaRequest.objects.filter(media__owner=user, status__in=['P','A','B'])\
+                            .order_by('-date_status_updated')
+    history_requests = MediaRequest.objects.filter(media__owner=user)\
+                            .order_by('-date_status_updated')
 
     # Media search form & results
     search_args = request.GET or {}
@@ -153,10 +174,9 @@ def user_requests_outgoing(request):
     user = request.user.pk
 
     # Medias I want to borrow
-    #TODO: pending filter on status in {Pending, Accepted, Borrowed}
-    pending_requests = MediaRequest.objects.filter(borrower=user)
+    pending_requests = MediaRequest.objects.filter(borrower=user, status__in=['P','A','B'])
     #TODO: History = all CHANGES of this object .. check this out !
-    history_requests = MediaRequest.objects.filter(borrower=user)
+    history_requests = MediaRequest.objects.filter(borrower=user).order_by('-date_status_updated')
 
     # Media search form & results
     search_args = request.GET or {}
@@ -193,8 +213,29 @@ class BookCreateView(CreateView):
         })
         return super(BookCreateView, self).get(request, *args, **kwargs)
 
-class BookDetailView(DetailView):
+class MediaDetailView(DetailView):
+    def get_context_data(self, **kwargs):
+        context = super(MediaDetailView, self).get_context_data(**kwargs)
+
+        # With this we can add some stuff in template context
+
+        # Add media requests activity
+        media = self.get_object()
+        media_pending_request = MediaRequest.objects.filter(media=media, status__in=['P','A','B'])\
+                                    .order_by('-date_status_updated')
+        media_history_request = MediaRequest.objects.filter(media=media).order_by('-date_status_updated')
+
+        context['media_pending_request'] = media_pending_request
+        context['media_history_request'] = media_history_request
+
+        # Object can be called by {{ media }} in every templates
+        context['media'] = media
+        
+        return context
+
+class BookDetailView(MediaDetailView):
     pass
+
 class BookUpdateView(UpdateView):
     pass
 class BookDeleteView(DeleteView):

@@ -20,35 +20,17 @@
             </ul>
 
             <div class="row-fluid">
-                <div class="span8 well">
+                <div class="span8">
+                    <h3>Hello {{ user.username }} !</h3>
 
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <img src="{{ MEDIA_URL }}img/160x200.gif" alt="">
-                        </div>
-
-                        <div class="span8">
-                            <h3>Hello {{ user.username }} !</h3>
-
-                            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-
-                            <p class="pull-right">
-                                <a href="/admin/auth/user/{{ user.pk }}" class="btn btn-warning">Edit</a>
-                            </p>
-                        </div>
-                    </div>
-
+                    <p>Today, you have {{ nb_book }} books, {{ nb_dvd }} dvd and {{ nb_boardgame }} boardgames in your library.</p>
                 </div>
-
-                <div class="span4 well">
+                <div class="span4">
+                    <div class="pull-right">
                     {% include "friendlib/snippets/button_add_new_media.html" %}
-                </div>
-
-                <div class="span4 well">
-                    <p>Today, you have 36 books, 10 dvd and 5 boardgames in your library.</p>
-                    <p>Whatch out, you have some new media requests !</p>
-                </div>
-
+                    </div>
+                    <a href="/admin/auth/user/{{ user.pk }}" class="btn btn-warning pull-right">Edit profile</a>
+                 </div>
             </div>
         </div>
 

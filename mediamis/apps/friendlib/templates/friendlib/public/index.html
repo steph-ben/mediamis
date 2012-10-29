@@ -11,14 +11,15 @@
 {% block content %}
     
     <div class="span6 well" style="height: 400px">
-        <legend>Last stuffs:</legend>
-        <p>Ici un dessin d'une étagère / médiathèque avec la liste des derniers évèvements !</p>
+        <legend>Status</legend>
         <p>
-            Currently {{ nb_users }} users registered, for a total of {{ nb_medias }} medias, youhouhou !
+            Currently <strong>{{ nb_users }} users</strong> registered,
+            for a total of <strong>{{ nb_medias }} medias</strong>, youhouhou !
         </p>
+        <p>Ici un dessin d'une étagère / médiathèque avec la liste des derniers évèvements !</p>
     </div>
     <div class="span6 well" style="height: 400px">
-        <legend>Last emprunts:</legend>
+        <legend>Last medias:</legend>
         <ul>
         {% for media in media_list %}
             <li>{{ media }} (by {{ media.owner }})</li>
