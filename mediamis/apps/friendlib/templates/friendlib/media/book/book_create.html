@@ -2,10 +2,44 @@
 {% load i18n %}
 
 {% block media_create %}
-	<form method="POST" action="{% url book_create %}">{% csrf_token %}
-		<h2>{% trans "Create new book" %}</h2>
-		{{ form.as_p }}
+	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
+		<legend>{% trans "Create new book" %}</legend>
 
-		<input class="btn" type="submit" value="{% trans "Create" %}" />
+        <div class="control-group">
+            <label class="control-label">{{ form.title.label }}</label>
+            <div class="controls">
+                {{ form.title }}
+            </div>
+          </div>
+
+          <div class="control-group">
+              <label class="control-label">{{ form.description.label }}</label>
+            <div class="controls">
+                {{ form.description }}
+            </div>
+          </div>
+        
+          <div class="control-group">
+              <label class="control-label">{{ form.author.label }}</label>
+            <div class="controls">
+                {{ form.author }}
+            </div>
+          </div>
+
+          <div class="control-group">
+              <label class="control-label">{{ form.size.label }}</label>
+            <div class="controls">
+                {{ form.size }}
+            </div>
+          </div>
+
+          <div class="control-group">
+              <label class="control-label">{{ form.nb_pages.label }}</label>
+            <div class="controls">
+                {{ form.nb_pages }}
+            </div>
+          </div>
+
+		<input class="btn btn-primary" type="submit" value="{% trans "Create" %}" />
 	</form>
 {% endblock media_create %}

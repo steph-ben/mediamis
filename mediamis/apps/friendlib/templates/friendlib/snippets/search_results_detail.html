@@ -1,16 +1,24 @@
 {% load i18n %}
 
-<div class="thumbnail">
+<div class="thumbnail thumbnail-media">
     <div class="row-fluid">
         <div class="span4 pagination-centered">
             <img src="{{ MEDIA_URL }}/img/160x200.gif" alt="">
         </div>
-        <div class="span8">
-            <div class="caption">
+        <div class="span8 caption">
+            <div class="description">
                 <h3>{{ media.title }}</h3>
-                <p>{{ media.description }}</p>
+                <p>
+                {% if media.description %}
+                    {{ media.description }}
+                {% else %}
+                    {% trans "No description." %}
+                {% endif %}
+                </p>
+            </div>
+            <div>
                 {% include "friendlib/snippets/media_owner_badge.html" %}
-                
+
                 <p class="pull-right">
                     {% if user.is_authenticated %}
                         {% if user == media.owner %}

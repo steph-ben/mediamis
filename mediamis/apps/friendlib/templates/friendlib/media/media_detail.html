@@ -4,22 +4,17 @@
 {% block content %}
     <div class="span12 well">
         <div class="row-fluid">
-            <div class="span8">
-                <legend>{{ media.title }}</legend>
-            </div>
-            <div class="span2">
-                {% if user == media.owner %}
-                    <p class="pull-left alert alert-success">
-                        {% trans "You're the owner." %}
-                    </p>
-                {% else %}
-                    <p class="pull-left">
-                        {% trans "Owner is" %} <a href="#">{{ media.owner }}</a>
-                    </p>
-                {% endif %}
-            </div>
-            <div class="span2 alert alert-info">
-                {{ media.borrowed_status }}
+            <div class="span12">
+                <span class="lead">{{ media.title }}</span>
+
+                <span class="pull-right">
+                    {% include "friendlib/snippets/media_owner_badge.html" %}
+
+                    <span class="alert alert-info">
+                        {{ media.borrowed_status }}
+                    </span>
+                </span>
+                <hr>
             </div>
         </div>
 
@@ -28,26 +23,33 @@
                 <img src="{{ MEDIA_URL }}img/160x200.gif" alt="">
             </div>
             <div class="span8">
-                {% block media_detail %}
+                <div class="row-fluid">
+                    <div class="span12">
+                        {% block media_detail %}
 
-                {% endblock %}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <p class="pull-right">
+
+                            {% if user.is_authenticated %}
+                                {% if user == media.owner %}
+                                    <a href="{{ media.get_delete_url }}" class="btn btn-danger">Delete</a>
+                                    <a href="{{ media.get_update_url }}" class="btn btn-warning">Edit</a>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if user != media.owner %}
+                                <a href="{% url mediarequest_create media.pk %}" class="btn btn-success">Request</a>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="span12">
-                <p class="pull-right">
-
-                    {% if user.is_authenticated %}
-                        {% if user == media.owner %}
-                            <a href="{{ media.get_delete_url }}" class="btn btn-danger">Delete</a>
-                            <a href="{{ media.get_update_url }}" class="btn btn-warning">Edit</a>
-                        {% endif %}
-                    {% endif %}
-
-                    {% if user != media.owner %}
-                        <a href="{% url mediarequest_create media.pk %}" class="btn btn-success">Request</a>
-                    {% endif %}
-                </p>
-            </div>
         </div>
 
 
