@@ -11,6 +11,9 @@ from friendlib.models import Media, MediaRequest
 from friendlib.forms import MediaRequestForm
 from friendlib.models import BoardGame, Divx, Book, DVD
 
+################################################################################
+# Views for public pages
+
 def home(request, **kwargs):
     lastmedia_list = Media.objects.all().order_by('-pk')[:5]
     nb_users = User.objects.all().count()
@@ -24,6 +27,15 @@ def home(request, **kwargs):
     
     context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/public/index.html', context)
+
+def search(request, **kwargs):
+    context = {}
+    context.update(kwargs.get('extra_context', {}))
+    return direct_to_template(request, 'friendlib/public/search.html', context)
+
+
+################################################################################
+# Additional context, through middleware
 
 def get_search_context(my_request):
     """
@@ -68,39 +80,13 @@ def get_user_context(user):
     }
     return user_context
 
-def search(request, **kwargs):
-    context = {}
-    context.update(kwargs.get('extra_context', {}))
-    return direct_to_template(request, 'friendlib/public/search.html', context)
+
+################################################################################
+# Views for private user pages
 
 @login_required
 def myaccount(request, **kwargs):
     user = request.user.pk
-
-    """
-    # Medias I want to borrow
-    req_iv_made = MediaRequest.objects.filter(borrower=user)
-    myrequests = {
-        'myrequests_pending': req_iv_made.filter(status='P'),
-        'myrequests_declined': req_iv_made.filter(status='D'),
-        'myrequests_accepted': req_iv_made.filter(status='A'),
-        'myrequests_borrowed': req_iv_made.filter(status='B'),
-        'myrequests_history': req_iv_made.filter(status='R'),
-    }
-
-    # Medias people want to borrow from me
-    req_on_my_medias = MediaRequest.objects.filter(media__owner=user)
-    mymedias = {
-        'mymedias_pending': req_on_my_medias.filter(status='P'),
-        'mymedias_declined': req_on_my_medias.filter(status='D'),
-        'mymedias_accepted': req_on_my_medias.filter(status='A'),
-        'mymedias_borrowed': req_on_my_medias.filter(status='B'),
-        'mymedias_history': req_on_my_medias.filter(status='R'),
-    }
-
-    # User's last activity
-    last_activity = req_iv_made.order_by('date_status_updated')[:3]
-    """
 
     # Number of Media
     counting = {
@@ -109,7 +95,6 @@ def myaccount(request, **kwargs):
         'nb_divx': Divx.objects.filter(owner=user).count(),
         'nb_boardgame': BoardGame.objects.filter(owner=user).count()
     }
-
 
     context = {}
     context.update(counting)
@@ -164,26 +149,14 @@ def user_requests_outgoing(request, **kwargs):
     context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/private/requests_outgoing.html', context)
 
-def add_media(request, **kwargs):
-    context = {}
-    context.update(kwargs.get('extra_context', {}))
-    return direct_to_template(request, 'friendlib/private/index.html', context)
+#def add_media(request, **kwargs):
+#    context = {}
+#    context.update(kwargs.get('extra_context', {}))
+#    return direct_to_template(request, 'friendlib/private/index.html', context)
 
 
-class BookCreateView(CreateView):
-    def get(self, request, *args, **kwargs):
-        # Set up form data from requests
-        user = request.user
-
-        # Define default form data
-        specialization = '/book/'
-
-        # Fill form with correct infos
-        self.initial.update({
-            'owner': user,
-            'specialization_type': specialization
-        })
-        return super(BookCreateView, self).get(request, *args, **kwargs)
+################################################################################
+# Class-based views for Medias Create/Detail/Update/Delete
 
 class MediaDetailView(DetailView):
     def get_context_data(self, **kwargs):
@@ -205,9 +178,23 @@ class MediaDetailView(DetailView):
         
         return context
 
+class BookCreateView(CreateView):
+    def get(self, request, *args, **kwargs):
+        # Set up form data from requests
+        user = request.user
+
+        # Define default form data
+        specialization = '/book/'
+
+        # Fill form with correct infos
+        self.initial.update({
+            'owner': user,
+            'specialization_type': specialization
+        })
+        return super(BookCreateView, self).get(request, *args, **kwargs)
+    
 class BookDetailView(MediaDetailView):
     pass
-
 class BookUpdateView(UpdateView):
     pass
 class BookDeleteView(DeleteView):
@@ -219,6 +206,9 @@ class DVDCreateView(CreateView):
 class BoardGameCreateView(CreateView):
     pass
 
+
+################################################################################
+# Views to handle MediaRequest
 
 class MediaRequestCreateView(CreateView):
     def get(self, request, *args, **kwargs):
@@ -247,7 +237,6 @@ class MediaRequestCreateView(CreateView):
 
 class MediaRequestAcceptView(UpdateView):
     pass
-
 class MediaRequestUpdateView(UpdateView):
     pass
 

@@ -9,7 +9,7 @@
             <div class="caption">
                 <h3>{{ media.title }}</h3>
                 <p>{{ media.description }}</p>
-                {% include "friendlib/snippets/text_media_owner.html" %}
+                {% include "friendlib/snippets/media_owner_badge.html" %}
                 
                 <p class="pull-right">
                     {% if user.is_authenticated %}
