@@ -22,7 +22,7 @@ if settings.SERVE_STATIC_FILES:
         url(r'^media/(?P<path>.*)$',
             'django.views.static.serve',
             dict(
-                document_root = settings.MEDIA_ROOT,
+                document_root = settings.STATIC_ROOT,
                 show_indexes = True
             )
         ),
@@ -36,6 +36,6 @@ if settings.SERVE_STATIC_FILES:
 
     )
 
-urlpatterns += patterns('',
-(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
-)
+#urlpatterns += patterns('',
+#(r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+#)
