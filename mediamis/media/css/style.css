@@ -1,6 +1,17 @@
 /* Extra style for Mediamis - extending bootstrap */
 body {
-    background: url("../img/sky.jpg") repeat-x scroll center top #D1EDFF;
+    /*background: url("../img/sky.jpg") repeat-x scroll center top #D1EDFF;*/
+    background: url("../img/noisy_grid.png") #E0E0E0;
+    color: #333;
+    font: 13px/1.5 verdana, sans-serif;
+}
+
+.baniere {
+    margin-bottom: 20px;
+}
+
+.well {
+  background-color: white;
 }
 
 .container {
