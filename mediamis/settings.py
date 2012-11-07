@@ -193,6 +193,7 @@ DATABASES = {
 }
 
 
+
 # Dev server serve /media files
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_URL = 'http://vivid-rain-4083.herokuapp.com/friendlib'
