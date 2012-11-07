@@ -102,15 +102,17 @@ class MediaSearchForm(forms.Form):
         keywords = data.get('keywords', None)
         owner = data.get('owner', None)
         media_type = data.get('media_type', None)
-    
-        queryset = Media.objects.all()
-        if keywords:
-            queryset = queryset.filter(title__contains=keywords)
-        if owner:
-            queryset = queryset.filter(owner=owner)
-        if media_type:
-            queryset = queryset.filter(specialization_type=media_type)
-            
+
+        queryset = Media.objects.all().select_related()
+        if keywords or owner or media_type:
+            #TODO: Find a way here to return the final specialization object
+            if keywords:
+                queryset = queryset.filter(title__contains=keywords)
+            if owner:
+                queryset = queryset.filter(owner=owner)
+            if media_type:
+                queryset = queryset.filter(specialization_type=media_type)
+        
         return queryset
 
 """

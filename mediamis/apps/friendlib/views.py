@@ -15,7 +15,7 @@ from friendlib.models import BoardGame, Divx, Book, DVD
 # Views for public pages
 
 def home(request, **kwargs):
-    lastmedia_list = Media.objects.all().order_by('-pk')[:5]
+    lastmedia_list = Media.objects.all().order_by('-pk').select_related()[:5]
     nb_users = User.objects.all().count()
     nb_medias = Media.objects.all().count()
 
@@ -24,7 +24,7 @@ def home(request, **kwargs):
         'nb_users': nb_users,
         'nb_medias': nb_medias,
     }
-    
+
     context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/public/index.html', context)
 
@@ -73,7 +73,7 @@ def get_user_context(user):
     user_activity = {}
     if user.is_authenticated():
         query = Q(borrower=user) | Q(media__owner=user)
-        user_activity = MediaRequest.objects.filter(query).order_by('-date_status_updated')
+        user_activity = MediaRequest.objects.filter(query).order_by('-date_status_updated').select_related()
     
     user_context = {
         'user_activity': user_activity
@@ -122,9 +122,10 @@ def user_requests_incoming(request, **kwargs):
 
     # Medias people want to borrow from me
     pending_requests = MediaRequest.objects.filter(media__owner=user, status__in=['P','A','B'])\
-                            .order_by('-date_status_updated')
+                            .order_by('-date_status_updated')\
+                            .select_related('media__owner__username')
     history_requests = MediaRequest.objects.filter(media__owner=user)\
-                            .order_by('-date_status_updated')
+                            .order_by('-date_status_updated').select_related()
 
     context = {
         'requests_incoming_pending': pending_requests,
@@ -138,9 +139,10 @@ def user_requests_outgoing(request, **kwargs):
     user = request.user.pk
 
     # Medias I want to borrow
-    pending_requests = MediaRequest.objects.filter(borrower=user, status__in=['P','A','B'])
+    pending_requests = MediaRequest.objects.filter(borrower=user, status__in=['P','A','B'])\
+                            .select_related()
     #TODO: History = all CHANGES of this object .. check this out !
-    history_requests = MediaRequest.objects.filter(borrower=user).order_by('-date_status_updated')
+    history_requests = MediaRequest.objects.filter(borrower=user).order_by('-date_status_updated').select_related()
 
     context = {
         'requests_outgoing_pending': pending_requests,
