@@ -170,7 +170,6 @@ LOGGING = {
 
 ############## heroku_settings.py #################
 
-from default_settings import *
 import os.path
 import logging
 logging.basicConfig(level=logging.DEBUG)
