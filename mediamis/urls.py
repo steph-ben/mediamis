@@ -35,7 +35,7 @@ if settings.SERVE_STATIC_FILES:
         ),
 
     )
-	
+
 urlpatterns += patterns('',
 (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
 )
