@@ -1,1 +1,1 @@
-from heroku_settings import *
+from local_settings import *

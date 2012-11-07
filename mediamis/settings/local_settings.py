@@ -35,3 +35,6 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
     'HIDE_DJANGO_SQL': True,
 }
+
+MIDDLEWARE_CLASSES += ('friendlib.middleware.MediamisContextMiddleware',)
+
