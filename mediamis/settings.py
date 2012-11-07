@@ -199,7 +199,7 @@ PROJECT_URL = 'http://vivid-rain-4083.herokuapp.com/friendlib'
 SERVE_STATIC_FILES = True
 STATIC_ROOT = os.path.join(PROJECT_PATH, 'staticfiles')
 STATIC_URL = PROJECT_URL + '/media/'
-ADMIN_MEDIA_PREFIX = PROJECT_URL + '/admin/'
+ADMIN_MEDIA_PREFIX = '/media/admin/'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, 'media'),
 )
