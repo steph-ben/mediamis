@@ -15,6 +15,8 @@
         <ul>
         {% for media in lastbook_list %}
             <li>{{ media.html_link }} (by {{ media.owner }})</li>
+        {% empty %}
+            <li>{% trans "No entry." %}</li>
         {% endfor %}
         </ul>
         <a href="{% url search %}?media_type=Book" class="pull-right">{% trans "See more ..." %}</a>
@@ -26,6 +28,8 @@
         <ul>
         {% for media in lastdvd_list %}
             <li>{{ media.html_link }} (by {{ media.owner }})</li>
+        {% empty %}
+            <li>{% trans "No entry." %}</li>
         {% endfor %}
         </ul>
         <a href="{% url search %}?media_type=DVD" class="pull-right">{% trans "See more ..." %}</a>
@@ -38,6 +42,8 @@
         <ul>
         {% for media in lastboardgame_list %}
             <li>{{ media.html_link }} (by {{ media.owner }})</li>
+        {% empty %}
+            <li>{% trans "No entry." %}</li>
         {% endfor %}
         </ul>
         <a href="{% url search %}?media_type=BoardGame" class="pull-right">{% trans "See more ..." %}</a>
