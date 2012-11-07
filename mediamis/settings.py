@@ -7,7 +7,6 @@ Heroku add some stuff at the end of the file
 
 ######## default_settings.py #################
 import os
-import settings
 # Django settings for myfriendlylibrary project.
 
 DEBUG = True
