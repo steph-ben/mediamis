@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
 
 from djeneralize.models import BaseGeneralizationModel
 
@@ -61,7 +62,7 @@ class Media(BaseGeneralizationModel):
 
     @property
     def html_link(self):
-        return self.get_as_specialization().html_link
+        return mark_safe(self.get_as_specialization().html_link)
 
 
 class Book(Media):
@@ -97,10 +98,10 @@ class Book(Media):
     
     @property
     def html_link(self):
-        html = u'<a href="%s">%s</a>' % (
+        html = u'<a href="%s" class="btn-link">%s</a>' % (
             self.get_absolute_url(),
             self.title.capitalize())
-        return html
+        return mark_safe(html)
 
     
 class Movie(Media):
@@ -134,6 +135,13 @@ class DVD(Movie):
     @property
     def get_delete_url(self):
         return urlresolvers.reverse('user_home',)
+
+    @property
+    def html_link(self):
+        html = u'<a href="#" class="btn-link">%s</a>' % (
+            #self.get_absolute_url(),
+            self.title.capitalize())
+        return mark_safe(html)
 
 
 class Divx(Movie):
@@ -178,6 +186,13 @@ class BoardGame(Media):
     @property
     def get_delete_url(self):
         return urlresolvers.reverse('user_home',)
+
+    @property
+    def html_link(self):
+        html = u'<a href="#" class="btn-link">%s</a>' % (
+            #self.get_absolute_url(),
+            self.title.capitalize())
+        return mark_safe(html)
 
 
 class MediaRequest(models.Model):

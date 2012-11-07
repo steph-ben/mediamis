@@ -9,22 +9,49 @@
 
 
 {% block content %}
-    
-    <div class="span6 well" style="height: 400px">
-        <legend>Status</legend>
-        <p>
-            Currently <strong>{{ nb_users }} users</strong> registered,
-            for a total of <strong>{{ nb_medias }} medias</strong>, youhouhou !
-        </p>
-        <p>Ici un dessin d'une étagère / médiathèque avec la liste des derniers évèvements !</p>
-    </div>
-    <div class="span6 well" style="height: 400px">
-        <legend>Last medias:</legend>
+<div class="span6">
+    <div class="well">
+        <legend>Last books:</legend>
         <ul>
-        {% for media in lastmedia_list %}
-            <li>{{ media }} (by {{ media.owner }})</li>
+        {% for media in lastbook_list %}
+            <li>{{ media.html_link }} (by {{ media.owner }})</li>
         {% endfor %}
         </ul>
+        <a href="{% url search %}?media_type=Book" class="pull-right">{% trans "See more ..." %}</a>
     </div>
+
+    <div class="well">
+
+        <legend>Last movies:</legend>
+        <ul>
+        {% for media in lastdvd_list %}
+            <li>{{ media.html_link }} (by {{ media.owner }})</li>
+        {% endfor %}
+        </ul>
+        <a href="{% url search %}?media_type=DVD" class="pull-right">{% trans "See more ..." %}</a>
+    </div>
+</div>
+    
+<div class="span6">
+    <div class="well">
+        <legend>Last boardgames:</legend>
+        <ul>
+        {% for media in lastboardgame_list %}
+            <li>{{ media.html_link }} (by {{ media.owner }})</li>
+        {% endfor %}
+        </ul>
+        <a href="{% url search %}?media_type=BoardGame" class="pull-right">{% trans "See more ..." %}</a>
+    </div>
+
+    <div class="well">
+        <legend>Users:</legend>
+        <ul>
+        {% for user in user_list %}
+            <li>{{ user }}</li>
+        {% endfor %}
+        </ul>
+        <a href="#" class="btn-link pull-right">{% trans "See more ..." %}</a>
+    </div>
+</div>
 
 {% endblock %}

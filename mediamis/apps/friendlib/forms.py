@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.auth.models import User
 import friendlib.models
-from friendlib.models import BoardGame, DVD, Book, Media, MediaRequest
+from friendlib.models import Movie, BoardGame, DVD, Book, Media, MediaRequest
 
 
 class BookForm(forms.ModelForm):
@@ -81,6 +81,7 @@ class MediaSearchForm(forms.Form):
         return keywords
 
     def clean_media_type(self):
+        #TODO: Recherche insensible a la casse ...
         media_type = self.cleaned_data['media_type']
         spec = media_type
         

@@ -79,7 +79,13 @@
                         </ul>
                     </div>
                 {% else %}
-                    <div class="span12 well" style="height: 100px">Texte d'introduction</div>
+                    <div class="span12 well">
+                        <p>Texte d'introduction</p>
+                        <p>
+                            Currently <strong>{{ nb_users }} users</strong> registered,
+                            for a total of <strong>{{ nb_medias }} medias</strong>, youhouhou !
+                        </p>
+                    </div>
                 {% endif %}
             </div>
 
