@@ -36,5 +36,6 @@ DEBUG_TOOLBAR_CONFIG = {
     'HIDE_DJANGO_SQL': True,
 }
 
-MIDDLEWARE_CLASSES += ('friendlib.middleware.MediamisContextMiddleware',)
+# In in default_settings now
+#MIDDLEWARE_CLASSES += ('friendlib.middleware.MediamisContextMiddleware',)
 

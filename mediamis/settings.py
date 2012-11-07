@@ -1,3 +1,11 @@
+"""
+Setting file for Heroku
+
+settings.py HAS TO BE a file (not a directory with __init__.py) because
+Heroku add some stuff at the end of the file
+"""
+
+######## default_settings.py #################
 import os
 import settings
 # Django settings for myfriendlylibrary project.
@@ -37,21 +45,18 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/app/mediamis/media/'
+MEDIA_ROOT = 'media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = 'http://soif.arcadio.info/mediamis/media/'
-
-
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_PATH, 'staticfiles')
-
+STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -69,9 +74,6 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'media',
-	os.path.join(PROJECT_PATH, 'static'),
-	os.path.join(PROJECT_PATH, 'media'),
 )
 
 # List of finder classes that know how to find static files in
@@ -111,6 +113,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'registration.middleware.LoginFormMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'friendlib.middleware.MediamisContextMiddleware'
 )
 
 ROOT_URLCONF = 'urls'
@@ -121,7 +124,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+#    'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
 
@@ -162,8 +165,13 @@ LOGGING = {
     }
 }
 
-from default_settings import *
 
+
+
+############## heroku_settings.py #################
+
+from default_settings import *
+import os.path
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
@@ -186,14 +194,34 @@ DATABASES = {
 
 
 # Dev server serve /media files
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+PROJECT_URL = 'http://vivid-rain-4083.herokuapp.com/friendlib'
+
 SERVE_STATIC_FILES = True
+STATIC_ROOT = os.path.join(PROJECT_PATH, 'staticfiles')
+STATIC_URL = PROJECT_URL + '/media/'
+ADMIN_MEDIA_PREFIX = PROJECT_URL + '/admin/'
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_PATH, 'media'),
+)
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'compressor.finders.CompressorFinder',
+)
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_PATH, 'templates'),
+)
+
+
 
 
 # For debug toolbar
-INSTALLED_APPS += ('debug_toolbar',)
-INTERNAL_IPS = ('127.0.0.1',)
-MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-    'HIDE_DJANGO_SQL': True,
-}
+#INSTALLED_APPS += ('debug_toolbar',)
+#INTERNAL_IPS = ('127.0.0.1',)
+#MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+#DEBUG_TOOLBAR_CONFIG = {
+#    'INTERCEPT_REDIRECTS': False,
+#    'HIDE_DJANGO_SQL': True,
+#}

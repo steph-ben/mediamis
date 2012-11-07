@@ -105,6 +105,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'registration.middleware.LoginFormMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'friendlib.middleware.MediamisContextMiddleware'
 )
 
 ROOT_URLCONF = 'urls'
