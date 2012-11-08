@@ -30,13 +30,13 @@ input#id_keywords {
     width: 60%;
 }
 
-/* Search results stuffs ... */
+/* Search results stuffs ... *
 .thumbnail-media {
     height: 200px;
 }
 .thumbnail-media .description {
     height:150px
-}
+}*/
 
 /* Fixing thumbnail grid issue with fluid grid
     cf https://github.com/twitter/bootstrap/issues/3494#issuecomment-7381206
