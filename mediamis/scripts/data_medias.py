@@ -32,7 +32,7 @@ def run():
     friendlib_book_1.author = u''
     friendlib_book_1.size = u''
     friendlib_book_1.nb_pages = None
-    friendlib_book_1.owner = User.objects.get(id=3)
+    friendlib_book_1.owner = User.objects.get(username='steph')
     friendlib_book_1.save()
 
     friendlib_book_2 = Book()
@@ -44,7 +44,7 @@ def run():
     friendlib_book_2.author = u''
     friendlib_book_2.size = u''
     friendlib_book_2.nb_pages = None
-    friendlib_book_2.owner = User.objects.get(id=1)
+    friendlib_book_2.owner = User.objects.get(username='alice')
     friendlib_book_2.save()
 
     friendlib_book_3 = Book()
@@ -56,7 +56,7 @@ def run():
     friendlib_book_3.author = u''
     friendlib_book_3.size = u''
     friendlib_book_3.nb_pages = None
-    friendlib_book_3.owner = User.objects.get(id=1)
+    friendlib_book_3.owner = User.objects.get(username='alice')
     friendlib_book_3.save()
 
     friendlib_book_4 = Book()
@@ -68,7 +68,7 @@ def run():
     friendlib_book_4.author = u''
     friendlib_book_4.size = u''
     friendlib_book_4.nb_pages = None
-    friendlib_book_4.owner = User.objects.get(id=3)
+    friendlib_book_4.owner = User.objects.get(username='steph')
     friendlib_book_4.save()
 
     from friendlib.models import Movie
