@@ -1,11 +1,11 @@
 {% load i18n %}
 
 {% if user == media.owner %}
-    <span class="alert label-success">
+    <span class="pull-right alert label-success">
         {% trans "You're the owner." %}
     </span>
 {% else %}
-    <span class="alert alert-info">
+    <span class="pull-right alert alert-info">
         {% trans "Owner is" %} <a href="#">{{ media.owner }}</a>
     </span>
 {% endif %}

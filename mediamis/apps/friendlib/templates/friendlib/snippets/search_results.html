@@ -2,11 +2,9 @@
 
 {% if media_list %}
 
-    <ul class="thumbnails">
+    <ul class="media-list">
         {% for media in media_list %}
-            <li class="span12">
                 {% include "friendlib/snippets/search_results_detail.html" %}
-            </li>
         {% endfor %}
     </ul>
 

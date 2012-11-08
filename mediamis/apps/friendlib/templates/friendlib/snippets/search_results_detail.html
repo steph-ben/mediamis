@@ -1,33 +1,33 @@
 {% load i18n %}
 
-<div class="thumbnail thumbnail-media">
-    <div class="row-fluid">
-        <div class="span4 pagination-centered">
-            <img src="{{ MEDIA_URL }}/img/160x200.gif" alt="">
-        </div>
-        <div class="span8 caption">
-            <div class="description">
-                <h3>{{ media.title }}</h3>
-                <p>
-                {% if media.description %}
-                    {{ media.description }}
-                {% else %}
-                    {% trans "No description." %}
-                {% endif %}
-                </p>
-            </div>
-            <div>
-                {% include "friendlib/snippets/media_owner_badge.html" %}
 
-                <p class="pull-right">
-                    {% if user.is_authenticated %}
-                        {% if user == media.owner %}
-                            <a href="{{ media.get_update_url }}" class="btn btn-warning">Edit</a>
-                        {% endif %}
-                    {% endif %}
-                    <a href="{{ media.get_detail_url }}" class="btn btn-success">View</a>
-                </p>
-            </div>
+<li class="media well">
+    <a class="pull-left" href="#">
+        <img src="{{ MEDIA_URL }}/img/160x120.gif" alt="">
+    </a>
+
+    <div class="media-body">
+        <div class="media-heading">
+            <span class="lead">{{ media.title }}</span>
+
+            {% include "friendlib/snippets/media_owner_badge.html" %}
         </div>
+
+        <p>
+        {% if media.description %}
+            {{ media.description }}
+        {% else %}
+            {% trans "No description." %}
+        {% endif %}
+        </p>
+
+        <span class="pull-right">
+                {% if user.is_authenticated %}
+                    {% if user == media.owner %}
+                        <a href="{{ media.get_update_url }}" class="btn btn-warning">Edit</a>
+                    {% endif %}
+                {% endif %}
+                <a href="{{ media.get_detail_url }}" class="btn btn-success">View</a>
+        </span>
     </div>
-</div>
+</li>
