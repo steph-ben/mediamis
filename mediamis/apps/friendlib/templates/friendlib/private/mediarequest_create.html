@@ -12,9 +12,34 @@
     <div class="span12 well">
         <legend>{% trans "Request this media" %}</legend>
 
-        <form method="POST" action="{% url mediarequest_create mediaid %}">{% csrf_token %}
-            {{ form.as_p }}
+        <form class="form-horizontal" method="POST" action="{% url mediarequest_create mediaid %}">{% csrf_token %}
+            {# TODO: Put form.media as a "static" field, eg. non-modifiable #}
+        
+            {% with field=form.media %}
+                {% if field.errors %}
+                <div class="control-group error">
+                {% else %}
+                <div class="control-group">
+                {% endif %}
 
+                    <label class="control-label">{{ field.label }}</label>
+                    <div class="controls">{{ field }}
+
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                        <span class="help-inline">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+
+                    </div>
+                </div>
+            {% endwith %}
+
+            {% include "friendlib/snippets/media_form_field.html" with field=form.message %}
+
+            {# Hidden fields #}
+            {{ form.borrower }}
+            {{ form.status }}
             <input class="btn btn-success" type="submit" value="{% trans "Save" %}" />
         </form>
     

@@ -68,7 +68,7 @@
                             <div class="span12">
                                 <legend>Requests history</legend>
 
-                            <table class="table table-condensed table-hover table-bordered">
+                            <table class="table table-condensed table-hover">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -79,7 +79,7 @@
                             </thead>
                             <tbody>
                             {% for req in requests_incoming_history %}
-                                <tr class="info">
+                                <tr>
                                     <td>{{ req.date_status_updated }}</td>
                                     <td>{{ req.media }}</td>
                                     <td>{{ req.borrower }}</td>

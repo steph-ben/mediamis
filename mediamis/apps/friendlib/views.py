@@ -148,6 +148,7 @@ def user_requests_outgoing(request, **kwargs):
 
     # Medias I want to borrow
     pending_requests = MediaRequest.objects.filter(borrower=user, status__in=['P','A','B'])\
+                            .order_by('-date_status_updated')\
                             .select_related()
     #TODO: History = all CHANGES of this object .. check this out !
     history_requests = MediaRequest.objects.filter(borrower=user).order_by('-date_status_updated').select_related()
