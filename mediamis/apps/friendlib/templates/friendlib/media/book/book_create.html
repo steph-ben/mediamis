@@ -5,41 +5,20 @@
 	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
 		<legend>{% trans "Create new book" %}</legend>
 
-        <div class="control-group">
-            <label class="control-label">{{ form.title.label }}</label>
-            <div class="controls">
-                {{ form.title }}
-            </div>
-          </div>
+        {% include "friendlib/snippets/media_form_field.html" with field=form.title %}
 
-          <div class="control-group">
-              <label class="control-label">{{ form.description.label }}</label>
-            <div class="controls">
-                {{ form.description }}
-            </div>
-          </div>
-        
-          <div class="control-group">
-              <label class="control-label">{{ form.author.label }}</label>
-            <div class="controls">
-                {{ form.author }}
-            </div>
-          </div>
+        {% include "friendlib/snippets/media_form_field.html" with field=form.description %}
 
-          <div class="control-group">
-              <label class="control-label">{{ form.size.label }}</label>
-            <div class="controls">
-                {{ form.size }}
-            </div>
-          </div>
+        {% include "friendlib/snippets/media_form_field.html" with field=form.author %}
 
-          <div class="control-group">
-              <label class="control-label">{{ form.nb_pages.label }}</label>
-            <div class="controls">
-                {{ form.nb_pages }}
-            </div>
-          </div>
+        {% include "friendlib/snippets/media_form_field.html" with field=form.size %}
 
+        {% include "friendlib/snippets/media_form_field.html" with field=form.nb_pages %}
+
+    
+        {# Hidden fields #}
+        {{ form.specialization_type }}
+        {{ form.owner }}
 		<input class="btn btn-primary" type="submit" value="{% trans "Create" %}" />
 	</form>
 {% endblock media_create %}
