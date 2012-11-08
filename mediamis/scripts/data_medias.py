@@ -61,7 +61,7 @@ def run():
 
     friendlib_book_4 = Book()
     friendlib_book_4.specialization_type = '/book/'
-    friendlib_book_4.title = u'Bernard l'herbite'
+    friendlib_book_4.title = u'Bernard l\'herbite'
     friendlib_book_4.description = u''
     friendlib_book_4.borrower = None
     friendlib_book_4.borrowed = False
