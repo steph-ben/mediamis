@@ -188,6 +188,14 @@ class MediaDeleteView(DeleteView):
 
     
 class MediaDetailView(DetailView):
+    def post(self, request, *args, **kwargs):
+        """
+        Only useful because when we log-in on Media detail pages
+        The request is a POST, but handled by the registration Middleware
+        TODO: Maybe there's a better solution for this ?!
+        """
+        return self.get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(MediaDetailView, self).get_context_data(**kwargs)
 
