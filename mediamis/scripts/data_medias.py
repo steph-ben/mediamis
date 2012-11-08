@@ -25,15 +25,51 @@ def run():
 
     friendlib_book_1 = Book()
     friendlib_book_1.specialization_type = '/book/'
-    friendlib_book_1.title = u'Plouf'
-    friendlib_book_1.description = u'plouf'
+    friendlib_book_1.title = u'Alice au pays des merveilles'
+    friendlib_book_1.description = u''
     friendlib_book_1.borrower = None
     friendlib_book_1.borrowed = False
     friendlib_book_1.author = u''
     friendlib_book_1.size = u''
     friendlib_book_1.nb_pages = None
-    friendlib_book_1.owner = User.objects.get(id=1)
+    friendlib_book_1.owner = User.objects.get(id=3)
     friendlib_book_1.save()
+
+    friendlib_book_2 = Book()
+    friendlib_book_2.specialization_type = '/book/'
+    friendlib_book_2.title = u'Les milles et unes nuits'
+    friendlib_book_2.description = u''
+    friendlib_book_2.borrower = None
+    friendlib_book_2.borrowed = False
+    friendlib_book_2.author = u''
+    friendlib_book_2.size = u''
+    friendlib_book_2.nb_pages = None
+    friendlib_book_2.owner = User.objects.get(id=1)
+    friendlib_book_2.save()
+
+    friendlib_book_3 = Book()
+    friendlib_book_3.specialization_type = '/book/'
+    friendlib_book_3.title = u'Alicette à phuket'
+    friendlib_book_3.description = u''
+    friendlib_book_3.borrower = None
+    friendlib_book_3.borrowed = False
+    friendlib_book_3.author = u''
+    friendlib_book_3.size = u''
+    friendlib_book_3.nb_pages = None
+    friendlib_book_3.owner = User.objects.get(id=1)
+    friendlib_book_3.save()
+
+    friendlib_book_4 = Book()
+    friendlib_book_4.specialization_type = '/book/'
+    friendlib_book_4.title = u'Bernard l'herbite'
+    friendlib_book_4.description = u''
+    friendlib_book_4.borrower = None
+    friendlib_book_4.borrowed = False
+    friendlib_book_4.author = u''
+    friendlib_book_4.size = u''
+    friendlib_book_4.nb_pages = None
+    friendlib_book_4.owner = User.objects.get(id=3)
+    friendlib_book_4.save()
 
     from friendlib.models import Movie
 
