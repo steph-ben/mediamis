@@ -32,6 +32,7 @@ def run():
     friendlib_book_1.author = u''
     friendlib_book_1.size = u''
     friendlib_book_1.nb_pages = None
+    friendlib_book_1.owner = User.objects.get(id=1)
     friendlib_book_1.save()
 
     from friendlib.models import Movie
@@ -44,6 +45,4 @@ def run():
 
 
 
-    friendlib_book_1.owner = User.objects.get(id=1)
-    friendlib_book_1.save()
 
