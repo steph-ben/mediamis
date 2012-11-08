@@ -42,16 +42,20 @@ $ ./manage.py runserver_plus
 ####################
 Cf. http://devcenter.heroku.com/articles/django
 
-#!!! Make sure mediamis/settings.py exist and IS a file, because heroku add some stuff
+!!! Make sure mediamis/settings.py exist and IS a file, because heroku add some stuff
 
 $ git init
 $ git add .
-$ git commit -m "plouf"
+$ git commit -m "Initial commit"
 
 $ heroku create --stack cedar
 $ git push heroku master
 
-#### Create and sync tables ?!
+#### Create and sync tables
+$ heroku run python mediamis/manage.py schemamigration friendlib --initial      #### No need, should be commited ....
+$ heroku run python mediamis/manage.py syncdb
+$ heroku run python mediamis/manage.py migrate
+
 
 # Check process
 $ heroku ps
@@ -63,15 +67,96 @@ $ heroku open
 
 
 
+# Making backup of existing data
+# and export locally database
+# See https://devcenter.heroku.com/articles/pgbackups
+##################################
+
+*** With backup solution (must run a Postgres locally)
+# Make backup
+  $ heroku pgbackups:capture
+# Download it
+  $ heroku pgbackups:url
+# Import it locally (or load it with pgAdmin Tools/Retore)
+  $ pg_restore --verbose --clean --no-acl --no-owner -h myhost -U myuser -d mydb my_backup.dump
+
+*** With direct export (slow)
+  $ heroku pg:pull sqlite://plop.db
+  $ heroku pg:pull "jdbc:postgresql://localhost/mediamis"
+
+*** With dumpscript
+    $ heroku run python mediamis/manage.py dumpscript auth.User
+    $ heroku run python mediamis/manage.py dumpscript friendlib
+
+    
+
+
 # Update code on Heroku
 ######################
+
+*** Backup the data (cf. up)
+
+*** Make sure you don't fuck up the migrations
+    -> Migrations need to be commited !
+    Go to LOCAL project directory
+    $ heroku run python mediamis/manage.py shemamigration friendlib --auto
+    [COMMIT]
+
+*** Push the new updates to Heroku
 $ git push heroku master
 
-# Update database with South on Heroku
-######################################
- - Go to project directory
-$ heroku run python mediamis/manage.py shemamigration friendlib --auto
-$ heroku run python mediamis/manage.py migrate friendlib
+
+# Update the tables
+#####################
+
+*** Make sure you don't fuck up the migrations
+    -> Migrations need to be commited !
+
+*** Update the tables
+    $ heroku run python mediamis/manage.py syncdb
+    $ heroku run python mediamis/manage.py migrate friendlib
+
+
+
+# Reseting the tables (if something wrong...)
+##################################
+
+*** Clear the tables
+    $ heroku run python mediamis/manage.py sqlclear friendlib south  #######RESET NOT GOOD: CREATE THE TABLES AS WELL !!!
+            DROP TABLE "friendlib_mediarequest";
+            DROP TABLE "friendlib_boardgame";
+            DROP TABLE "friendlib_divx";
+            DROP TABLE "friendlib_dvd";
+            DROP TABLE "friendlib_movie";
+            DROP TABLE "friendlib_book";
+            DROP TABLE "friendlib_media";
+            DROP TABLE "south_migrationhistory";
+    $ heroku pg:psql
+
+*** Make sure you have only initial migration file commited and pushed
+    $ heroku run python mediamis/manage.py shemamigration friendlib --auto
+
+*** Create new ones
+    $ heroku run python mediamis/manage.py syncdb
+    $ heroku run python mediamis/manage.py migrate friendlib
+
+*** Put initial data
+        o Users
+    $ heroku run python mediamis/manage.py runscript data_users
+
+        o Some Medias
+    $ heroku run python mediamis/manage.py runscript data_medias
+
+
+
+
+    
+
+
+
+
+
+
 
 
 # Various tips
@@ -111,3 +196,10 @@ Upgrade a model
 
 $ ./manage.py schemamigration cipsdb --auto
 $ ./manage.py migrate cipsdb
+
+
+
+Les milles et unes nuits (by alice)
+Alicette à phuket (by alice)
+Bernard l'herbite (by steph)
+Alice au pays des merveilles (by steph)
