@@ -39,11 +39,31 @@
                                     <a href="{{ media.get_delete_url }}" class="btn btn-danger">Delete</a>
                                     <a href="{{ media.get_update_url }}" class="btn btn-warning">Edit</a>
                                 {% endif %}
+
+                                {% if user != media.owner %}
+                                    <a href="{% url mediarequest_create media.pk %}" class="btn btn-success">Request</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="#myModal" class="btn btn-success" data-toggle="modal">Request</a>
+
+                                <!-- Modal -->
+                                <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h3 id="myModalLabel">Please register yourself !</h3>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p>One fine body…</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                                    <button class="btn btn-primary">Save changes</button>
+                                  </div>
+                                </div>
                             {% endif %}
 
-                            {% if user != media.owner %}
-                                <a href="{% url mediarequest_create media.pk %}" class="btn btn-success">Request</a>
-                            {% endif %}
+
+
                         </p>
                     </div>
                 </div>

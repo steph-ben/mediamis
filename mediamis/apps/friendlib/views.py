@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views.generic.simple import direct_to_template, redirect_to
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
@@ -167,6 +168,25 @@ def user_requests_outgoing(request, **kwargs):
 ################################################################################
 # Class-based views for Medias Create/Detail/Update/Delete
 
+class MediaCreateView(CreateView):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        """ User need to be logged to access create form """
+        return super(MediaCreateView, self).dispatch(request, *args, **kwargs)
+
+class MediaUpdateView(UpdateView):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        """ User need to be logged to access update form """
+        return super(MediaUpdateView, self).dispatch(request, *args, **kwargs)
+
+class MediaDeleteView(DeleteView):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        """ User need to be logged to access delete form """
+        return super(MediaDeleteView, self).dispatch(request, *args, **kwargs)
+
+    
 class MediaDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(MediaDetailView, self).get_context_data(**kwargs)
@@ -187,7 +207,7 @@ class MediaDetailView(DetailView):
         
         return context
 
-class BookCreateView(CreateView):
+class BookCreateView(MediaCreateView):
     def get(self, request, *args, **kwargs):
         # Set up form data from requests
         user = request.user
@@ -204,15 +224,15 @@ class BookCreateView(CreateView):
     
 class BookDetailView(MediaDetailView):
     pass
-class BookUpdateView(UpdateView):
+class BookUpdateView(MediaUpdateView):
     pass
-class BookDeleteView(DeleteView):
-    pass
-
-class DVDCreateView(CreateView):
+class BookDeleteView(MediaDeleteView):
     pass
 
-class BoardGameCreateView(CreateView):
+class DVDCreateView(MediaCreateView):
+    pass
+
+class BoardGameCreateView(MediaCreateView):
     pass
 
 
@@ -220,6 +240,10 @@ class BoardGameCreateView(CreateView):
 # Views to handle MediaRequest
 
 class MediaRequestCreateView(CreateView):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(MediaRequestCreateView, self).dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         # Set up form data from requests
         user = request.user
@@ -245,9 +269,14 @@ class MediaRequestCreateView(CreateView):
         return context
 
 class MediaRequestAcceptView(UpdateView):
-    pass
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(MediaRequestAcceptView, self).dispatch(request, *args, **kwargs)
+
 class MediaRequestUpdateView(UpdateView):
-    pass
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(MediaRequestUpdateView, self).dispatch(request, *args, **kwargs)
 
 @login_required
 def mediarequest_set_accepted(request, reqid):

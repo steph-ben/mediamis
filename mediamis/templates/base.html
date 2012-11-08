@@ -14,7 +14,8 @@
 {#    <link href="http://soif.arcadio.info/mediamis/media/css/style.css" rel="stylesheet" type="text/css" />#}
 
     <style type="text/css">
-
+        {% block css %}
+        {% endblock %}
     </style>
 
     {% block head %}
@@ -35,6 +36,9 @@
 
     <script type="text/javascript">
 
+
+        
+<!-- Bootstrap fix to align thumbnails list. Check style.css -->
     $(document).ready(function(){
         $('.row-fluid .thumbnails').each(function () {
             var $thumbnails = $(this).children(),
@@ -48,13 +52,17 @@
                 previousOffsetLeft = offsetLeft;
             });
         });
+
+        {% block js %}
+        {% endblock %}
     });
     </script>
+
+    <script src="{{ MEDIA_URL }}js/bootstrap-modal.js"></script>
 
 <!--
     <script src="{{ MEDIA_URL }}js/bootstrap-transition.js"></script>
     <script src="{{ MEDIA_URL }}js/bootstrap-alert.js"></script>
-    <script src="{{ MEDIA_URL }}js/bootstrap-modal.js"></script>
     <script src="{{ MEDIA_URL }}js/bootstrap-scrollspy.js"></script>
     <script src="{{ MEDIA_URL }}js/bootstrap-tab.js"></script>
     <script src="{{ MEDIA_URL }}js/bootstrap-tooltip.js"></script>
