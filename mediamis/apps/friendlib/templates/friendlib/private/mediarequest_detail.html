@@ -1,0 +1,30 @@
+{% extends "friendlib/private/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+    {{ block.super }}
+    | Homepage
+{% endblock %}
+
+
+{% block content %}
+    <div class="span12 well">
+        <legend>{% trans "Request details" %}</legend>
+        {# TODO: Faire un truc joli ici, avec les bouttons pour updater la requete et l'historique ... #}
+        {{ mediarequest }}<hr>
+
+        {{ mediarequest.media }}<br>
+        {{ mediarequest.borrower }}<br>
+        {{ mediarequest.message }}<br>
+        {{ mediarequest.status }}<br>
+        {{ mediarequest.date_status_updated }}<br>
+        {{ mediarequest.date_requested }}<br>
+        {{ mediarequest.date_answered }}<br>
+        {{ mediarequest.date_media_rented }}<br>
+        {{ mediarequest.date_return_due }}<br>
+
+    </div>
+{% endblock %}
+
+

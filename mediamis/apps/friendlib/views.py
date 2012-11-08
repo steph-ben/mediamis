@@ -277,15 +277,10 @@ class MediaRequestCreateView(CreateView):
         context['mediaid'] = self.get_initial().get('media').pk
         return context
 
-class MediaRequestAcceptView(UpdateView):
+class MediaRequestDetailView(DetailView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(MediaRequestAcceptView, self).dispatch(request, *args, **kwargs)
-
-class MediaRequestUpdateView(UpdateView):
-    @method_decorator(login_required)
-    def dispatch(self, request, *args, **kwargs):
-        return super(MediaRequestUpdateView, self).dispatch(request, *args, **kwargs)
+        return super(MediaRequestDetailView, self).dispatch(request, *args, **kwargs)
 
 @login_required
 def mediarequest_set_accepted(request, reqid):
