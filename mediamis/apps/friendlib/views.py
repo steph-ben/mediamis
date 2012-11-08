@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -283,21 +284,21 @@ class MediaRequestDetailView(DetailView):
         return super(MediaRequestDetailView, self).dispatch(request, *args, **kwargs)
 
 @login_required
-def mediarequest_set_accepted(request, reqid):
+def mediarequest_set_accepted(request, reqid, **kwargs):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
     mediarequest.status = 'A'
     mediarequest.save()
     return redirect_to(request, '/friendlib/account')
 
 @login_required
-def mediarequest_set_declined(request, reqid):
+def mediarequest_set_declined(request, reqid, **kwargs):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
     mediarequest.status = 'D'
     mediarequest.save()
     return redirect_to(request, '/friendlib/account')
 
 @login_required
-def mediarequest_set_borrowed(request, reqid):
+def mediarequest_set_borrowed(request, reqid, **kwargs):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
     mediarequest.status = 'B'
     mediarequest.save()
@@ -310,7 +311,7 @@ def mediarequest_set_borrowed(request, reqid):
     return redirect_to(request, '/friendlib/account')
 
 @login_required
-def mediarequest_set_returned(request, reqid):
+def mediarequest_set_returned(request, reqid, **kwargs):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
     mediarequest.status = 'R'
     mediarequest.save()
