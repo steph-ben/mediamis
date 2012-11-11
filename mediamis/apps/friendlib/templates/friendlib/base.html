@@ -72,7 +72,7 @@
                         <legend>Last activity</legend>
                         <ul>
                         {% for activity in user_activity %}
-                            <li>{{ activity }}</li>
+                            <li>{{ activity.html_link }}</li>
                         {% empty %}
                             <li>{% trans "No activity." %}</li>
                         {% endfor %}

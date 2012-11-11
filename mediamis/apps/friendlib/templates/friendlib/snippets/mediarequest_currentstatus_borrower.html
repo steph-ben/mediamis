@@ -1,0 +1,44 @@
+{% load i18n %}
+
+                {% if mediarequest.status == 'P' %}
+                    <p>On the {{ mediarequest.date_requested }}, you asked to borrow:</p>
+                    <p><em>{{ mediarequest.message }}</em></p>
+                {% endif %}
+
+                {% if mediarequest.status == 'A' %}
+                    <p>On the {{ mediarequest.date_answered }}, you agreed to borrow
+                        this media to {{ mediarequest.borrower|capfirst }}.</p>
+
+                    <p>Now you have to meet to borrow it !</p>
+                    <p>Once you've borrowed, click here to update the status.
+                        <span class="pull-right">
+                            {% include "friendlib/snippets/mediarequest_actions.html" with req=mediarequest %}
+                            {# TODO: Add aggreed return date here #}
+                        </span>
+                    </p>
+                {% endif %}
+
+                {% if mediarequest.status == 'D' %}
+                    <p>On the {{ mediarequest.date_answered }}, you denied to borrow
+                        this media to {{ mediarequest.borrower|capfirst }}.</p>
+
+                    <p>That's it !</p>
+                {% endif %}
+
+                {% if mediarequest.status == 'B' %}
+                    <p>{{ mediarequest.borrower|capfirst }} has this media since {{ mediarequest.date_media_rented }}.</p>
+                    {% if mediarequest.date_return_due %}
+                    <p>You're supposed to get it back on {{ mediarequest.date_return_due }}</p>
+                    {% endif %}
+
+                    <p>Once you have it back, clik here to update the status.
+                        <span class="pull-right">
+                            {% include "friendlib/snippets/mediarequest_actions.html" with req=mediarequest %}
+                        </span>
+                    </p>
+                {% endif %}
+
+                {% if mediarequest.status == 'R' %}
+                    <p>{{ mediarequest.borrower|capfirst }} gave it back to you on {{ mediarequest.date_status_updated }} !</p>
+                    <p>Une belle histoire de Mediamis ...</p>
+                {% endif %}
