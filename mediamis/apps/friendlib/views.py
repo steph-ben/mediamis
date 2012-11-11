@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -287,20 +289,27 @@ class MediaRequestDetailView(DetailView):
 def mediarequest_set_accepted(request, reqid, **kwargs):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
     mediarequest.status = 'A'
+    mediarequest.date_answered = datetime.datetime.now()
     mediarequest.save()
-    return redirect_to(request, '/friendlib/account')
+    return redirect_to(request, mediarequest.get_detail_url())
 
 @login_required
 def mediarequest_set_declined(request, reqid, **kwargs):
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
     mediarequest.status = 'D'
+    mediarequest.date_answered = datetime.datetime.now()
     mediarequest.save()
-    return redirect_to(request, '/friendlib/account')
+    return redirect_to(request, mediarequest.get_detail_url())
 
 @login_required
 def mediarequest_set_borrowed(request, reqid, **kwargs):
+    date_return_due = kwargs.get('date_return', None)
+
     mediarequest = get_object_or_404(MediaRequest, id=reqid)
     mediarequest.status = 'B'
+    mediarequest.date_media_rented = datetime.datetime.now()
+    if date_return_due:
+        mediarequest.date_return_due = date_return_due
     mediarequest.save()
 
     # Update Media as well
@@ -308,7 +317,7 @@ def mediarequest_set_borrowed(request, reqid, **kwargs):
     mediarequest.media.borrowed = True
     mediarequest.media.save()
 
-    return redirect_to(request, '/friendlib/account')
+    return redirect_to(request, mediarequest.get_detail_url())
 
 @login_required
 def mediarequest_set_returned(request, reqid, **kwargs):
@@ -321,4 +330,4 @@ def mediarequest_set_returned(request, reqid, **kwargs):
     mediarequest.media.borrowed = False
     mediarequest.media.save()
 
-    return redirect_to(request, '/friendlib/account')
+    return redirect_to(request, mediarequest.get_detail_url())

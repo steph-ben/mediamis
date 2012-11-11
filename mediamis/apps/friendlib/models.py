@@ -3,8 +3,9 @@
 from django.contrib.auth.models import User
 from django.core import urlresolvers
 from django.db import models
+from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
-from django.utils.safestring import mark_safe
+from django.utils.safestring import mark_safe, mark_for_escaping
 
 from djeneralize.models import BaseGeneralizationModel
 
@@ -19,7 +20,7 @@ class Media(BaseGeneralizationModel):
     borrowed = models.BooleanField(_('borrowed'), default=False)
 
     def __unicode__(self):
-        return u'%s: %s' % (self.title, self.description)
+        return u'%s' % self.title
 
     @models.permalink
     def get_absolute_url(self):
@@ -226,37 +227,34 @@ class MediaRequest(models.Model):
     date_return_due = models.DateTimeField(null=True, blank=True)    # (set by owner) When the Media has to be returned
 
     def __unicode__(self):
+        label = u'Error in the status ...'
         if self.status == 'P':
-            return u'%s asks to borrow <<%s>> from %s' % (
+            label = u'%s asks to borrow <%s> from %s' % (
                 self.borrower.__unicode__().capitalize(),
                 self.media,
                 self.media.owner.__unicode__().capitalize())
-        
         elif self.status == 'D':
-            return u'%s has denied <<%s>> from %s' % (
+            label = u'%s has denied <%s> from %s' % (
                 self.media.owner.__unicode__().capitalize(),
                 self.media,
                 self.borrower.__unicode__().capitalize())
-        
         elif self.status == 'A':
-            return u'%s has accepted to borrow <<%s>> to %s, but not borrowed yet' % (
+            label = u'%s has accepted to borrow <%s> to %s, but not borrowed yet' % (
                 self.media.owner.__unicode__().capitalize(),
                 self.media,
                 self.borrower.__unicode__().capitalize())
-        
         elif self.status == 'B':
-            return u'%s is currently borrowing <<%s>> from %s' % (
+            label = u'%s is currently borrowing <%s> from %s' % (
+                self.borrower.__unicode__().capitalize(),
+                self.media,
+                self.media.owner.__unicode__().capitalize())
+        elif self.status == 'R':
+            label = u'%s has returned <%s> to %s' % (
                 self.borrower.__unicode__().capitalize(),
                 self.media,
                 self.media.owner.__unicode__().capitalize())
 
-        elif self.status == 'R':
-            return u'%s has returned %s to %s' % (
-                self.borrower.__unicode__().capitalize(),
-                self.media,
-                self.media.owner.__unicode__().capitalize())
-        else:
-            return u'Error in the status ...'
+        return escape(label)
 
     @property
     def owner_short_status(self):
@@ -272,7 +270,7 @@ class MediaRequest(models.Model):
         elif self.status == 'R':
             status = u'%s returned the book to you' % self.borrower.__unicode__().capitalize()
         return status
-    
+
     @property
     def borrower_short_status(self):
         status = self.__unicode__()
@@ -288,9 +286,68 @@ class MediaRequest(models.Model):
             status = u'You returned it'
         return status
 
+    def owner_activity_history(self):
+        return self.activity_history(for_owner=True)
+
+    def borrower_activity_history(self):
+        return self.activity_history(for_owner=False)
+
+    def activity_history(self, for_owner=True):
+        if for_owner:
+            user_owner = 'you'
+            user_borrower = self.borrower.__unicode__().capitalize()
+        else:
+            user_owner = self.media.owner.__unicode__().capitalize()
+            user_borrower = 'you'
+        
+        history = [{
+            'date': self.date_requested,
+            'label': mark_safe(u'%s asked to borrow.<br><em>%s</em>' % (user_borrower.capitalize(), self.message))
+        }]
+
+        if self.status == 'D':
+            history += [{
+                'date': self.date_answered,
+                'label': u'%s denied to borrow to %s' % (user_owner.capitalize(), user_borrower)
+            }]
+        if self.status in 'RBA':
+            history += [{
+                'date': self.date_answered,
+                'label': u'%s agreed to borrow to %s ' % (user_owner.capitalize(), user_borrower)
+            }]
+        if self.status in 'RB':
+            label = u'%s took this media from %s.' % (user_borrower.capitalize(), user_owner)
+            if self.date_return_due:
+                label += u' Agreed return date was %s' % self.date_return_due
+
+            history += [{
+                'date': self.date_media_rented,
+                'label': label
+            }]
+
+        if self.status in 'R':
+            history += [{
+                'date': self.date_status_updated,
+                'label': u'%s gave it back to %s.' % (user_borrower.capitalize(), user_owner)
+            }]
+
+        history.reverse()
+        return history
+
     @models.permalink
     def get_absolute_url(self):
-        return ('user_requests_outgoing',)
+        return ('mediarequest_detail', [self.pk,])
+
+    @property
+    def get_detail_url(self):
+        return urlresolvers.reverse('mediarequest_detail', args=[self.pk,])
+
+    @property
+    def html_link(self):
+        html = u'%s (<a href="%s" class="btn-link">View</a>)' % (
+            self.__unicode__(),
+            self.get_detail_url)
+        return mark_safe(html)
 
     @property
     def css_class(self):
