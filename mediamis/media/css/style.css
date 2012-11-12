@@ -37,3 +37,8 @@ input#id_keywords {
 .thumbnail-media .description {
     height:150px
 }*/
+
+/* In home page */
+legend small {
+    color: #333333;
+}

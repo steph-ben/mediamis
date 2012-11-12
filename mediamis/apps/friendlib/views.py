@@ -97,8 +97,24 @@ def get_user_context(user):
 
 @login_required
 def myaccount(request, **kwargs):
+    MAX_OBJECTS = 5
     user = request.user.pk
 
+    # Last stuffs ...
+    inc_pending_requests = MediaRequest.objects.filter(media__owner=user, status__in=['P'])\
+                            .order_by('-date_status_updated')\
+                            .select_related('media__owner__username')[:MAX_OBJECTS]
+    inc_accepted_requests = MediaRequest.objects.filter(media__owner=user, status__in=['A'])\
+                            .order_by('-date_status_updated').select_related()[:MAX_OBJECTS]
+    out_accepted_requests = MediaRequest.objects.filter(borrower=user, status__in=['A'])\
+                            .order_by('-date_status_updated')\
+                            .select_related()[:MAX_OBJECTS]
+    last = {
+        'requests_incoming_pending': inc_pending_requests,
+        'requests_incoming_accepted': inc_accepted_requests,
+        'requests_outgoing_accepted': out_accepted_requests,
+    }
+    
     # Number of Media
     counting = {
         'nb_book': Book.objects.filter(owner=user).count(),
@@ -109,6 +125,7 @@ def myaccount(request, **kwargs):
 
     context = {}
     context.update(counting)
+    context.update(last)
 
     context.update(kwargs.get('extra_context', {}))
     return direct_to_template(request, 'friendlib/private/index.html', context)
@@ -233,7 +250,15 @@ class BookCreateView(MediaCreateView):
             'specialization_type': specialization
         })
         return super(BookCreateView, self).get(request, *args, **kwargs)
-    
+
+def book_websearch(request, **kwargs):
+    """
+    TODO: Retrieve data from those URLs
+        https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
+        https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
+    """
+    pass
+
 class BookDetailView(MediaDetailView):
     pass
 class BookUpdateView(MediaUpdateView):

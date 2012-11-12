@@ -2,9 +2,24 @@
 {% load i18n %}
 
 {% block media_create %}
-	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
-		<legend>{% trans "Create new book" %}</legend>
+    <legend>{% trans "Create new book" %}</legend>
 
+    <hr>
+        <form class="form-search" method="GET" action="{% url book_websearch %}">
+            <label>Search a book on internet ...</label>
+
+            <input type="input-search">
+            <button type="submit" class="btn">Search</button>
+        </form>
+
+        <ul class="media-list">
+            <li class="media">plop</li>
+            <li class="media">plip</li>
+        </ul>
+    
+    <hr>
+	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
+        <legend>Edit</legend>
         {% include "friendlib/snippets/media_form_field.html" with field=form.title %}
 
         {% include "friendlib/snippets/media_form_field.html" with field=form.description %}

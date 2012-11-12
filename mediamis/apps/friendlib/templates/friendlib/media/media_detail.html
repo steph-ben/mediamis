@@ -72,7 +72,7 @@
 
 
     {% if user == media.owner %}
-
+        <br>
         <div class="row-fluid">
             <div class="span12">
                 <legend>{% trans "Pending requests" %}</legend>
@@ -122,7 +122,7 @@
                         <tr>
                             <td>{{ req.date_status_updated }}</td>
                             <td>{{ req.borrower }}</td>
-                            <td>{{ req.owner_short_status }}</td>
+                            <td>{{ req.owner_short_status }} {{ req.html_link }}</td>
                         </tr>
                     {% empty %}
                         <tr><td colspan=3>{% trans "No history." %}</td></tr>

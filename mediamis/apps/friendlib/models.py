@@ -266,9 +266,9 @@ class MediaRequest(models.Model):
         elif self.status == 'A':
             status = u'You accepted.'
         elif self.status == 'B':
-            status = u'You actually borrow the book'
+            status = u'You actually borrow it'
         elif self.status == 'R':
-            status = u'%s returned the book to you' % self.borrower.__unicode__().capitalize()
+            status = u'%s returned it to you' % self.borrower.__unicode__().capitalize()
         return status
 
     @property
@@ -328,7 +328,7 @@ class MediaRequest(models.Model):
         if self.status in 'R':
             history += [{
                 'date': self.date_status_updated,
-                'label': u'%s gave it back to %s.' % (user_borrower.capitalize(), user_owner)
+                'label': u'%s returned it to %s.' % (user_borrower.capitalize(), user_owner)
             }]
 
         history.reverse()

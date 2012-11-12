@@ -2,13 +2,13 @@
 
 
 <li class="media well">
-    <a class="pull-left" href="#">
+    <a class="pull-left" href="{{ media.get_detail_url }}">
         <img src="{{ MEDIA_URL }}/img/160x120.gif" alt="">
     </a>
 
     <div class="media-body">
         <div class="media-heading">
-            <span class="lead">{{ media.title }}</span>
+            <span class="lead"><a href="{{ media.get_detail_url }}">{{ media.title }}</a></span>
 
             {% include "friendlib/snippets/media_owner_badge.html" %}
         </div>
