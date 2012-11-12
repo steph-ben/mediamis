@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.generic.simple import direct_to_template, redirect_to
@@ -257,7 +258,9 @@ def book_websearch(request, **kwargs):
         https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
         https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
     """
-    pass
+    html = '<ul class="media-list"><li class="media">plop</li><li class="media">plip</li></ul>'
+    response = HttpResponse(html)
+    return response
 
 class BookDetailView(MediaDetailView):
     pass

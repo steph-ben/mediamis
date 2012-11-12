@@ -5,17 +5,15 @@
     <legend>{% trans "Create new book" %}</legend>
 
     <hr>
-        <form class="form-search" method="GET" action="{% url book_websearch %}">
+        <form id="websearch" class="form-search" method="GET" action="{% url book_websearch %}">{% csrf_token %}
             <label>Search a book on internet ...</label>
 
-            <input type="input-search">
-            <button type="submit" class="btn">Search</button>
+            <input id="query" type="input-search">
+            <a id="go" class="btn">Search</a>
         </form>
 
-        <ul class="media-list">
-            <li class="media">plop</li>
-            <li class="media">plip</li>
-        </ul>
+        <div id="websearch_result"></div>
+
     
     <hr>
 	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
@@ -37,3 +35,22 @@
 		<input class="btn btn-primary" type="submit" value="{% trans "Create" %}" />
 	</form>
 {% endblock media_create %}
+
+{% block js %}
+    $('form#websearch > a#go').click(function() {
+        query = $('form#websearch > input#query').val();
+        csrf = $('form#websearch input[name=csrfmiddlewaretoken]').val();
+        alert(csrf);
+        $('#websearch_result').load(
+            '{% url book_websearch %}',
+            {
+                'query': query,
+                'csrfmiddlewaretoken': csrf,
+            },
+            function() {
+                m = 'Load was performed with ' + query;
+            }
+        );
+    });
+
+{% endblock %}
