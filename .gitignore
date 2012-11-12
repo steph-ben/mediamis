@@ -6,3 +6,4 @@ logs/
 vrac/
 *.egg-info
 *.pyc
+*.svn
