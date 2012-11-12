@@ -4,5 +4,6 @@ build/
 dist/
 logs/
 vrac/
+data/friendlib.db
 *.egg-info
 *.pyc
