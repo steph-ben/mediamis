@@ -24,6 +24,7 @@ New features:
 - Add public user profile
 - Add user profile edit page
 - Add boardcrum (fils / tabs, kkchose pour qu'on s'y retrouve entre les pages / faire un plan de site)
+- Check for form errors in the login box
 
 - Add some logos
 - Add some goood colors / banner / etc.
