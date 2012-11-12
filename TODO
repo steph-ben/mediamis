@@ -1,0 +1,29 @@
+Bugs:
+----
+- Error when updating MediaRequest status       OK
+
+New features:
+-------------
+- Add Django Sentry
+- Add private messages system
+- Add self registration
+- Add user profile information
+- Add geographic information (eg. map of users)
+- Add helper to find media by their id (eg. from Allocine by movie name, from amazone by code bar, etc.)
+    https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
+    https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
+
+- Facebook authentication
+- Gmail authentication
+
+- Create a new branche: trunk and production (heroku)
+- Make sure it's easy to save / update data from Heroku (not loosing user's data each update...)
+
+- Add MediaRequestDetail pages
+- Add pages for DVD and Boardgames
+- Add public user profile
+- Add user profile edit page
+- Add boardcrum (fils / tabs, kkchose pour qu'on s'y retrouve entre les pages / faire un plan de site)
+
+- Add some logos
+- Add some goood colors / banner / etc.
