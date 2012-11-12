@@ -24,7 +24,8 @@ DATABASES = {
 # Dev server serve /media files
 INSTALLED_APPS += ('django.contrib.staticfiles',)
 SERVE_STATIC_FILES = True
-MEDIA_ROOT = "C:\Users\steph\Docs perso\Code\dev\perso\mediamis\mediamis\media"
+#MEDIA_ROOT = "C:\Users\steph\Docs perso\Code\dev\perso\mediamis\mediamis\media"
+STATIC_ROOT = "C:\Users\steph\Docs perso\Code\dev\perso\mediamis\mediamis\media"
 
 
 # For debug toolbar
@@ -39,3 +40,22 @@ DEBUG_TOOLBAR_CONFIG = {
 # In in default_settings now
 #MIDDLEWARE_CLASSES += ('friendlib.middleware.MediamisContextMiddleware',)
 
+## Dev server serve /media files
+#PROJECT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),'..')
+#PROJECT_URL = 'http://127.0.0.1/friendlib'
+#
+#SERVE_STATIC_FILES = True
+#STATIC_ROOT = os.path.join(PROJECT_PATH, 'staticfiles')
+#STATIC_URL = PROJECT_URL + '/media/'
+#ADMIN_MEDIA_PREFIX = PROJECT_URL + '/admin/'
+#STATICFILES_DIRS = (
+#    os.path.join(PROJECT_PATH, 'media'),
+#)
+#STATICFILES_FINDERS = (
+#    'django.contrib.staticfiles.finders.FileSystemFinder',
+#    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+##    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+#)
+#TEMPLATE_DIRS = (
+#    os.path.join(PROJECT_PATH, 'templates'),
+#)
