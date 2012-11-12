@@ -8,4 +8,3 @@ data/friendlib.db
 *.egg-info
 *.pyc
 *.svn
-/data/friendlib.db
