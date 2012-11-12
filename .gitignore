@@ -7,3 +7,4 @@ vrac/
 data/friendlib.db
 *.egg-info
 *.pyc
+*.svn
