@@ -30,9 +30,6 @@
 
                     <p>Today, you have {{ nb_book }} books, {{ nb_dvd }} dvd and {{ nb_boardgame }} boardgames in your library.</p>
                 </div>
-                <div class="span4">
-
-                 </div>
             </div>
 
             <br>
@@ -45,7 +42,7 @@
                             {% for req in requests_incoming_pending %}
                                 <li>{{ req.html_link }}</li>
                             {% empty %}
-                                <li>{% trans "No entry." %}</li>
+                                <li><em>{% trans "No entry." %}</em></li>
                             {% endfor %}
                             </ul>
                             {% if requests_incoming_pending %}
@@ -60,7 +57,7 @@
                             {% for req in requests_incoming_accepted %}
                                 <li>{{ req.html_link }}</li>
                             {% empty %}
-                                <li>{% trans "No entry." %}</li>
+                                <li><em>{% trans "No entry." %}</em></li>
                             {% endfor %}
                             </ul>
                             {% if requests_incoming_accepted %}
@@ -76,7 +73,7 @@
                             {% for req in requests_outgoing_accepted %}
                                 <li>{{ req.html_link }}</li>
                             {% empty %}
-                                <li>{% trans "No entry." %}</li>
+                                <li><em>{% trans "No entry." %}</em></li>
                             {% endfor %}
                             </ul>
                             {% if requests_outgoing_accepted %}
@@ -90,7 +87,7 @@
                             {% for req in requests_outgoing_to_be_returned %}
                                 <li>{{ req.html_link }}</li>
                             {% empty %}
-                                <li>{% trans "No entry." %}</li>
+                                <li><em>{% trans "No entry." %}</em></li>
                             {% endfor %}
                            </ul>
                         </div>

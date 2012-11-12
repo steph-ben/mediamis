@@ -38,21 +38,27 @@
         <legend>Owned medias</legend>
         <ul>
         {% for media in u.owned_medias.all %}
-            <li>{{ media }}</li>
+            <li>{{ media.html_link }}</li>
+        {% empty %}
+            <li><em>{% trans "No medias." %}</em></li>
         {% endfor %}
         </ul>
 
         <legend>Borrowed medias</legend>
         <ul>
         {% for media in u.borrowed_medias.all %}
-            <li>{{ media }}</li>
+            <li>{{ media.html_link }}</li>
+        {% empty %}
+            <li><em>{% trans "No medias." %}</em></li>
         {% endfor %}
         </ul>
 
         <legend>Requested medias</legend>
         <ul>
         {% for media in u.requested_medias.all %}
-            <li>{{ media }}</li>
+            <li>{{ media.html_link }}</li>
+        {% empty %}
+            <li><em>{% trans "No requests." %}</em></li>
         {% endfor %}
         </ul>
 

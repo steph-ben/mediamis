@@ -16,7 +16,7 @@
         {% for media in lastbook_list %}
             <li>{{ media.html_link }} (by {{ media.owner }})</li>
         {% empty %}
-            <li>{% trans "No entry." %}</li>
+            <li><em>{% trans "No entry." %}</em></li>
         {% endfor %}
         </ul>
         {% if lastbook_list %}
@@ -31,7 +31,7 @@
         {% for media in lastdvd_list %}
             <li>{{ media.html_link }} (by {{ media.owner }})</li>
         {% empty %}
-            <li>{% trans "No entry." %}</li>
+            <li><em>{% trans "No entry." %}</em></li>
         {% endfor %}
         </ul>
         {% if lastdvd_list %}
@@ -47,7 +47,7 @@
         {% for media in lastboardgame_list %}
             <li>{{ media.html_link }} (by {{ media.owner }})</li>
         {% empty %}
-            <li>{% trans "No entry." %}</li>
+            <li><em>{% trans "No entry." %}</em></li>
         {% endfor %}
         </ul>
         {% if lastboardgame_list %}
