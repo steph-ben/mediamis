@@ -18,7 +18,7 @@ body {
     padding-top: 20px;
 }
 
-/* Owner and stuff look better*/
+/* Owner and media location on search result look better*/
 .alert {
     margin-left:5px;
     margin-right:5px;
@@ -30,15 +30,16 @@ input#id_keywords {
     width: 60%;
 }
 
-/* Search results stuffs ... *
-.thumbnail-media {
-    height: 200px;
-}
-.thumbnail-media .description {
-    height:150px
-}*/
-
-/* In home page */
+/* In user home page, for boxes title */
 legend small {
     color: #333333;
+}
+/* In user home page, for View Public and Add new media buttons */
+#user_home_actions {
+    padding-top: 15px;
+}
+
+/* Nice padding between search results */
+.media {
+    padding: 20px;
 }

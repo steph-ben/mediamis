@@ -20,17 +20,18 @@
             </ul>
 
             <div class="row-fluid">
-                <div class="span8">
-                    <h3>Hello {{ user.username }} !</h3>
+                <div class="span12">
+                    <span class="pull-right" id="user_home_actions">
+                        <a href="{% url user_detail user.username %}" class="btn btn-small btn-warning">View public profile</a>
+                        {% include "friendlib/snippets/media_create_button.html" %}
+                    </span>
+
+                    <h3>Hello {{ user.username|capfirst }} !</h3>
 
                     <p>Today, you have {{ nb_book }} books, {{ nb_dvd }} dvd and {{ nb_boardgame }} boardgames in your library.</p>
                 </div>
                 <div class="span4">
-                    <div class="pull-right">
-                    {% include "friendlib/snippets/media_create_button.html" %}
-                    </div>
-                    
-                    <a href="/admin/auth/user/{{ user.pk }}" class="btn btn-warning pull-right">Edit profile</a>
+
                  </div>
             </div>
 

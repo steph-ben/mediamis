@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import *
+from django.contrib.auth.models import User
 
 from friendlib.models import Book, MediaRequest, DVD, BoardGame
 from friendlib.views import *
@@ -12,6 +13,7 @@ from friendlib.views import DVDCreateView
 from friendlib.views import BoardGameCreateView
 from friendlib.forms import MediaRequestForm
 from friendlib.forms import MediaRequestAcceptForm, BookForm
+from django.views.generic import DetailView, UpdateView
 
 urlpatterns = patterns('',
     url(r'^$', home, name="home"),
@@ -36,6 +38,19 @@ urlpatterns = patterns('',
     url(r'request/(?P<reqid>[0-9]+)/decline/$', mediarequest_set_declined, name='mediarequest_decline'),
     url(r'request/(?P<reqid>[0-9]+)/borrow/$', mediarequest_set_borrowed, name='mediarequest_borrow'),
     url(r'request/(?P<reqid>[0-9]+)/return/$', mediarequest_set_returned, name='mediarequest_return'),
+
+    url(r'^users/(?P<slug>[a-zA-Z]+)/$',
+        DetailView.as_view(model=User,
+                           slug_field='username',
+                           template_name='friendlib/user/user_detail.html'),
+        name='user_detail'),
+    url(r'^users/(?P<slug>[a-zA-Z]+)/edit$',
+        UpdateView.as_view(model=User,
+                           slug_field='username',
+                           success_url='./',
+                           template_name='friendlib/user/user_edit.html'),
+        name='user_update'),
+
 
     url(r'^books/create/$',
         BookCreateView.as_view(model=Book,

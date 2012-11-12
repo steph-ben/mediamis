@@ -1,0 +1,63 @@
+{% extends "friendlib/public/base.html" %}
+{% load i18n %}
+
+{% block title %}
+    {{ block.super }}
+    | {{ object.username|capfirst }}'s profile
+{% endblock %}
+
+{% block content %}
+<div class="span12">
+{% with u=object current_user=user %}
+    <div class="well">
+        <legend>{{ u.username|capfirst }}'s profile</legend>
+
+        {% if current_user == u %}
+            <a href="{% url user_update u.username %}" class="btn btn-warning pull-right">Edit profile</a>
+        {% endif %}
+
+        <dl class="dl-horizontal">
+            <dt>{% trans "Username" %}</dt>
+            <dd>{{ u.username }}</dd>
+
+            <dt>First name</dt>
+            <dd>{{ u.first_name|default:"<em>Empty</em>" }}</dd>
+
+            <dt>Last name</dt>
+            <dd>{{ u.last_name|default:"<em>Empty</em>" }}</dd>
+            <dt>Email</dt>
+            <dd>{{ u.email|default:"<em>Empty</em>" }}</dd>
+
+            <dt>Last login</dt>
+            <dd>{{ u.last_login|default:"<em>Empty</em>" }}</dd>
+
+            <dt>Date joined</dt>
+            <dd>{{ u.date_joined|default:"<em>Empty</em>" }}</dd>
+        </dl>
+
+        <legend>Owned medias</legend>
+        <ul>
+        {% for media in u.owned_medias.all %}
+            <li>{{ media }}</li>
+        {% endfor %}
+        </ul>
+
+        <legend>Borrowed medias</legend>
+        <ul>
+        {% for media in u.borrowed_medias.all %}
+            <li>{{ media }}</li>
+        {% endfor %}
+        </ul>
+
+        <legend>Requested medias</legend>
+        <ul>
+        {% for media in u.requested_medias.all %}
+            <li>{{ media }}</li>
+        {% endfor %}
+        </ul>
+
+    </div>
+{% endwith %}
+</div>
+
+{% endblock %}

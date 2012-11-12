@@ -59,7 +59,7 @@
         <legend>Users:</legend>
         <ul>
         {% for user in user_list %}
-            <li>{{ user|capfirst }}</li>
+            <li>{{ user|capfirst }} (<a href="{% url user_detail user.username %}">View profile</a>)</li>
         {% endfor %}
         </ul>
         <a href="#" class="btn-link pull-right">{% trans "See more ..." %}</a>

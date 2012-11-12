@@ -1,0 +1,32 @@
+{% extends "friendlib/public/base.html" %}
+{% load i18n %}
+
+{% block title %}
+    {{ block.super }}
+    | {{ object.username|capfirst }}'s profile | Edit
+{% endblock %}
+
+{% block content %}
+<div class="span12">
+    <div class="well">
+
+        <form class="form-horizontal" method="POST" action="{% url user_update user.username %}">{% csrf_token %}
+            <legend>Edit {{ user.username|capfirst }}'s profile</legend>
+
+            {% include "friendlib/snippets/media_form_field.html" with field=form.username %}
+            {% include "friendlib/snippets/media_form_field.html" with field=form.password %}
+
+            {% include "friendlib/snippets/media_form_field.html" with field=form.first_name %}
+            {% include "friendlib/snippets/media_form_field.html" with field=form.last_name %}
+            {% include "friendlib/snippets/media_form_field.html" with field=form.email %}
+
+            {% include "friendlib/snippets/media_form_field.html" with field=form.last_login %}
+            {% include "friendlib/snippets/media_form_field.html" with field=form.date_joined %}
+
+            <input class="btn btn-success" type="submit" value="{% trans "Save" %}" />
+        </form>
+        
+    </div>
+</div>
+
+{% endblock %}
