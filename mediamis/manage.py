@@ -10,7 +10,7 @@ sys.path = [os.path.join(BASE_PATH, 'apps'),
             ] + sys.path
 try:
     imp.find_module('settings') # Assumed to be in the same directory.
-    import settings
+    from settings import settings
 except ImportError:
     import sys
     sys.stderr.write("Error: Can't find the file 'settings.py' in the directory containing %r. It appears you've customized things.\nYou'll have to run django-admin.py, passing it your settings module.\n" % __file__)

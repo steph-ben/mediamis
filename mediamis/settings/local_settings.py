@@ -22,7 +22,7 @@ DATABASES = {
 
 
 # Dev server serve /media files
-INSTALLED_APPS += ('django.contrib.staticfiles',)
+#INSTALLED_APPS += ('django.contrib.staticfiles',)
 SERVE_STATIC_FILES = True
 MEDIA_ROOT = "C:\Users\steph\Docs perso\Code\dev\perso\mediamis\mediamis\media"
 

@@ -22,7 +22,7 @@ if settings.SERVE_STATIC_FILES:
         url(r'^media/(?P<path>.*)$',
             'django.views.static.serve',
             dict(
-                document_root = settings.STATIC_ROOT,
+                document_root = settings.MEDIA_ROOT,
                 show_indexes = True
             )
         ),
