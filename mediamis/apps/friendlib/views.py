@@ -273,9 +273,7 @@ class BoardGameCreateView(MediaCreateView):
 # Views and helpers to make book search from internet database (eg. Google Books, Amazone, etc.)
 
 def book_websearch(request, **kwargs):
-    """
-    TODO: Retrieve data from those URLs
-        https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
+    """ Return a <ul> list with search result from the woueb
     """
     DUMMY = True     # Dev offline ...
     
@@ -335,10 +333,16 @@ def _read_gbooks_search(r):
         # If no title and stuff, try next entry
         return {}
     title = infos.get('title', 'Unknown')
+    description = infos.get('description', None)
     authors = infos.get('authors', 'Unknown')
     if type(authors) == list:
         # Only the first one
         authors = authors[0]
+
+    nb_pages = infos.get('pageCount', None)
+    size = infos.get('dimensions', None)
+    if size:
+        size = str(size)
 
     image_links = infos.get('imageLinks', None)
     thumbnail = DEFAULT_PICTURE
@@ -348,17 +352,56 @@ def _read_gbooks_search(r):
 
     # TODO: get isbn and google identifier
     #isbn = r['volumeInfo']['industryIdentifiers']
-    web_id = '12345'
+    isbn = ''
+    web_id = r.get('id', 'unknown')
 
     return {
         'title': title,
+        'description': description,
+        'nb_pages': nb_pages,
+        'size': size,
         'authors': authors,
         'thumbnail': thumbnail,
         'web_id': web_id
     }
 
 def book_websearch_detail(request, **kwargs):
-    pass
+    """
+    Read this kind of url :  https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
+    """
+    fd = open("C:\Users\steph\Docs perso\Code\dev\perso\mediamis\data\google books\\book.json")
+
+    r = json.load(fd)
+
+    detail = _read_gbooks_search(r)
+
+
+    industryIds = r.get('industryIdentifiers', None)
+    if industryIds:
+        detail.update({'isbn': str(industryIds)})
+    """
+  "industryIdentifiers": [
+   {
+    "type": "ISBN_10",
+    "identifier": "055380457X"
+   },
+   {
+    "type": "ISBN_13",
+    "identifier": "9780553804577"
+   }
+
+    detail = {
+        'title': 'My title',
+        'description': 'This is a fucking short description ...',
+        'authors': 'Bond, James Bond',
+        'size': 'small',
+        'nb_pages': 333
+    }
+    """
+
+    s = json.dumps(detail, indent=4)
+    return HttpResponse(s)
+    
 
 ################################################################################
 # Views to handle MediaRequest

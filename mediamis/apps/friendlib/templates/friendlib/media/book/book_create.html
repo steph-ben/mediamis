@@ -13,6 +13,7 @@
         </div>
 
         <div id="websearch_result">
+<ul class="thumbnails"><li class="span2"><a id="load_details" web_id="hWByX5-c5SIC" href="#"><img src="/media//img/book_default.jpg">Alice's Adventures in Wonderland - Lewis Carroll</a></li><li class="span2"><a id="load_details" web_id="4S9lqLKg2A0C" href="#"><img src="/media//img/book_default.jpg">Alice Munro - Coral Ann Howells</a></li><li class="span2"><a id="load_details" web_id="teTS-_J6dskC" href="#"><img src="/media//img/book_default.jpg">Alice - Stacy A. Cordery</a></li><li class="span2"><a id="load_details" web_id="IvFkk1JSxz4C" href="#"><img src="/media//img/book_default.jpg">Alice Hamilton - Barbara Sicherman</a></li><li class="span2"><a id="load_details" web_id="uztS1-M40uQC" href="#"><img src="/media//img/book_default.jpg">Alice Walker - Maria Lauret</a></li></ul>
 {#            <ul class="thumbnails">#}
 {#                <li class="span2">#}
 {#                    <a id="load_details" web_id="7680123456" href="#"><img src="/gbooks/example/img/medecin.jpg"/></a>#}
@@ -61,10 +62,38 @@
             },
             function() {
                 m = 'Load was performed with ' + query;
+                $('a#load_details').click(function() {
+                    load_details(this);
+                });
             }
         );
     }
 
+       $('a#load_details').click(function() {
+                    load_details(this);
+                });
+    
+    function load_details() {
+        /* Load infos for this particular book ... */
+        url = '{% url book_websearch_detail 0 %}'
+        web_id = $(this).attr('web_id');
+
+        $.getJSON(
+            url,
+            function(json) {
+                console.log(json);
+                $('#id_title').val(json['title']);
+                $('#id_description').val(json['description']);
+                $('#id_author').val(json['authors']);
+                $('#id_size').val(json['size']);
+                $('#id_nb_pages').val(json['nb_pages']);
+            }
+        );
+    };
+
+
+
+    
     $('#websearch > a#go').click(websearch);
     /* TODO: Find how to handle the enter key only for input and use <form> for #websearch */
 {#    $('#websearch > input#query').click(function(event) {#}
@@ -72,20 +101,5 @@
 {#        websearch();#}
 {#    });#}
 
-    $('#load_details').click(function() {
-        /* Load infos for this particular book ... */
-        console.log("Loading info for this book ..." + $(this));
-        web_id = $(this).attr('web_id');
 
-        $.getJSON(
-            '{% url book_websearch_detail 0 %}',
-            { 'action': 'info', 'isbn': isbn,},
-            function(json) {
-                alert("JSON Data: " + json);
-            }
-        );
-        console.log($(this).attr('isbn'));
-
-        $('#id_title').val("Mon titre");
-    });
 {% endblock %}
