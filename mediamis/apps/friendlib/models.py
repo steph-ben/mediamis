@@ -169,7 +169,14 @@ class Divx(Movie):
     def get_delete_url(self):
         return urlresolvers.reverse('user_home',)
 
-    
+    @property
+    def html_link(self):
+        html = u'<a href="#" class="btn-link">%s</a>' % (
+            #self.get_absolute_url(),
+            self.title.capitalize())
+        return mark_safe(html)
+
+
 class BoardGame(Media):
     number_players = models.PositiveSmallIntegerField(_('number of player'), null=True, blank=True)
 
