@@ -5,15 +5,26 @@
     <legend>{% trans "Create new book" %}</legend>
 
     <hr>
-        <form id="websearch" class="form-search" method="GET" action="{% url book_websearch %}">{% csrf_token %}
+        <div id="websearch" class="form-search" style="padding-bottom: 15px;">{% csrf_token %}
             <label>Search a book on internet ...</label>
 
             <input id="query" type="input-search">
             <a id="go" class="btn">Search</a>
-        </form>
+        </div>
 
-        <div id="websearch_result"></div>
-
+        <div id="websearch_result">
+{#            <ul class="thumbnails">#}
+{#                <li class="span2">#}
+{#                    <a id="load_details" web_id="7680123456" href="#"><img src="/gbooks/example/img/medecin.jpg"/></a>#}
+{#                    <a href="#">Le medecin de campagne</a>#}
+{#                </li>#}
+{#                <li class="span2"><img src="/gbooks/example/img/book21.jpg"/><a href="#">The Royal Tour</a></li>#}
+{#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
+{#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
+{#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
+{#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
+{#            </ul>#}
+        </div>
     
     <hr>
 	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
@@ -37,12 +48,14 @@
 {% endblock media_create %}
 
 {% block js %}
-    $('form#websearch > a#go').click(function() {
-        query = $('form#websearch > input#query').val();
-        csrf = $('form#websearch input[name=csrfmiddlewaretoken]').val();
+    function websearch() {
+        query = $('#websearch > input#query').val();
+        csrf = $('#websearch input[name=csrfmiddlewaretoken]').val();
+        console.log("Search with " + query);
         $('#websearch_result').load(
             '{% url book_websearch %}',
             {
+                'action': 'search',
                 'query': query,
                 'csrfmiddlewaretoken': csrf,
             },
@@ -50,6 +63,29 @@
                 m = 'Load was performed with ' + query;
             }
         );
-    });
+    }
 
+    $('#websearch > a#go').click(websearch);
+    /* TODO: Find how to handle the enter key only for input and use <form> for #websearch */
+{#    $('#websearch > input#query').click(function(event) {#}
+{#        event.preventDefault();#}
+{#        websearch();#}
+{#    });#}
+
+    $('#load_details').click(function() {
+        /* Load infos for this particular book ... */
+        console.log("Loading info for this book ..." + $(this));
+        web_id = $(this).attr('web_id');
+
+        $.getJSON(
+            '{% url book_websearch_detail 0 %}',
+            { 'action': 'info', 'isbn': isbn,},
+            function(json) {
+                alert("JSON Data: " + json);
+            }
+        );
+        console.log($(this).attr('isbn'));
+
+        $('#id_title').val("Mon titre");
+    });
 {% endblock %}

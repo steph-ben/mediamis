@@ -12,6 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.simple import direct_to_template, redirect_to
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from settings import settings
 
 from friendlib.forms import MediaSearchForm
 from friendlib.models import Media, MediaRequest
@@ -254,51 +255,6 @@ class BookCreateView(MediaCreateView):
         })
         return super(BookCreateView, self).get(request, *args, **kwargs)
 
-def book_websearch(request, **kwargs):
-    """
-    TODO: Retrieve data from those URLs
-        https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
-        https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
-    """
-    GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes?q="
-    html = '<ul class="media-list">'
-    query = request.POST.get('query', None)
-    if query:
-        query_url = GOOGLE_URL + query
-        url_data = ''
-        data_object = {}
-
-        print query_url
-        
-        # Read url
-        pt = urllib2.urlopen(query_url)
-        #url_data = pt.read()
-        print url_data
-        
-        # Decode json
-        data_object = json.load(pt)
-        print data_object
-
-
-        print data_object
-        for r in data_object['items'][:5]:
-            title = r['volumeInfo']['title']
-            authors = r['volumeInfo']['authors']
-            thumbnail = r['volumeInfo']['imageLinks']['thumbnail']
-            #isbn = r['volumeInfo']['industryIdentifiers']
-            isbn = ''
-
-            html += '<li class="media"><img src="%s"></img><legend>%s<small>%s</small>(%s)</legend>' % (thumbnail, title, authors, isbn)
-
-        pt.close()
-    else:
-        html += '<li class="media">No results</li>'
-
-    html += '</ul>'
-    
-    response = HttpResponse(html)
-    return response
-
 class BookDetailView(MediaDetailView):
     pass
 class BookUpdateView(MediaUpdateView):
@@ -312,6 +268,97 @@ class DVDCreateView(MediaCreateView):
 class BoardGameCreateView(MediaCreateView):
     pass
 
+
+################################################################################
+# Views and helpers to make book search from internet database (eg. Google Books, Amazone, etc.)
+
+def book_websearch(request, **kwargs):
+    """
+    TODO: Retrieve data from those URLs
+        https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
+    """
+    DUMMY = True     # Dev offline ...
+    
+    GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes?q="
+    MAX_ITEMS = 5
+
+    html = '<ul class="thumbnails">'
+    query = request.POST.get('query', None) or request.GET.get('query', None)
+    if query:
+        url_data = ''
+        data_object = {}
+
+        if DUMMY:
+            fd = open('C:\Users\steph\Docs perso\Code\dev\perso\mediamis\data\google books\search_lite.json')
+            data_object = json.load(fd)
+        else:
+            query_url = GOOGLE_URL + query
+            print query_url
+
+            # Read url
+            pt = urllib2.urlopen(query_url)
+
+            print "hello ?!"
+
+            # Decode json
+            data_object = json.load(pt)
+            print data_object
+
+        for r in data_object['items'][:MAX_ITEMS]:
+            details = _read_gbooks_search(r)
+            if not details:
+                continue
+
+            html += '<li class="span2">'
+            html += '<a id="load_details" web_id="%s" href="#">' % details['web_id']
+            html += '<img src="%s" ></img>%s - %s' % \
+                    (details['thumbnail'], details['title'], details['authors'])
+            html += '</a></li>'
+
+        if not DUMMY:
+            pt.close()
+    else:
+        html += '<li class="media">No results.</li>'
+
+    html += '</ul>'
+
+    response = HttpResponse(html)
+    return response
+
+def _read_gbooks_search(r):
+    """ Decode items of https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
+    """
+    DEFAULT_PICTURE = settings.MEDIA_URL + '/img/book_default.jpg'
+
+    infos = r.get('volumeInfo', None)
+    if not infos:
+        # If no title and stuff, try next entry
+        return {}
+    title = infos.get('title', 'Unknown')
+    authors = infos.get('authors', 'Unknown')
+    if type(authors) == list:
+        # Only the first one
+        authors = authors[0]
+
+    image_links = infos.get('imageLinks', None)
+    thumbnail = DEFAULT_PICTURE
+    if image_links:
+        #thumbnail = image_links.get('thumbnail', DEFAULT_PICTURE)
+        pass
+
+    # TODO: get isbn and google identifier
+    #isbn = r['volumeInfo']['industryIdentifiers']
+    web_id = '12345'
+
+    return {
+        'title': title,
+        'authors': authors,
+        'thumbnail': thumbnail,
+        'web_id': web_id
+    }
+
+def book_websearch_detail(request, **kwargs):
+    pass
 
 ################################################################################
 # Views to handle MediaRequest

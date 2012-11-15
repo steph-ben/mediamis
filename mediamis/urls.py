@@ -33,6 +33,10 @@ if settings.SERVE_STATIC_FILES:
                 show_indexes = True
             )
         ),
+        url(r'gbooks/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root':'C:\Users\steph\Docs perso\Code\dev\perso\mediamis\data\google books',
+            'show_indexes': True
+        }),
 
     )
 
