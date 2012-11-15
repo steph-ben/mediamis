@@ -4,18 +4,6 @@
 {% block media_create %}
     <legend>{% trans "Create new book" %}</legend>
 
-    <hr>
-        <form id="websearch" class="form-search" method="GET" action="{% url book_websearch %}">{% csrf_token %}
-            <label>Search a book on internet ...</label>
-
-            <input id="query" type="input-search">
-            <a id="go" class="btn">Search</a>
-        </form>
-
-        <div id="websearch_result"></div>
-
-    
-    <hr>
 	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
         <legend>Edit</legend>
         {% include "friendlib/snippets/media_form_field.html" with field=form.title %}
