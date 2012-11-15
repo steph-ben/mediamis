@@ -40,7 +40,6 @@
     $('form#websearch > a#go').click(function() {
         query = $('form#websearch > input#query').val();
         csrf = $('form#websearch input[name=csrfmiddlewaretoken]').val();
-        alert(csrf);
         $('#websearch_result').load(
             '{% url book_websearch %}',
             {

@@ -1,4 +1,6 @@
 import datetime
+import urllib2
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -258,7 +260,42 @@ def book_websearch(request, **kwargs):
         https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
         https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
     """
-    html = '<ul class="media-list"><li class="media">plop</li><li class="media">plip</li></ul>'
+    GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes?q="
+    html = '<ul class="media-list">'
+    query = request.POST.get('query', None)
+    if query:
+        query_url = GOOGLE_URL + query
+        url_data = ''
+        data_object = {}
+
+        print query_url
+        
+        # Read url
+        pt = urllib2.urlopen(query_url)
+        #url_data = pt.read()
+        print url_data
+        
+        # Decode json
+        data_object = json.load(pt)
+        print data_object
+
+
+        print data_object
+        for r in data_object['items'][:5]:
+            title = r['volumeInfo']['title']
+            authors = r['volumeInfo']['authors']
+            thumbnail = r['volumeInfo']['imageLinks']['thumbnail']
+            #isbn = r['volumeInfo']['industryIdentifiers']
+            isbn = ''
+
+            html += '<li class="media"><img src="%s"></img><legend>%s<small>%s</small>(%s)</legend>' % (thumbnail, title, authors, isbn)
+
+        pt.close()
+    else:
+        html += '<li class="media">No results</li>'
+
+    html += '</ul>'
+    
     response = HttpResponse(html)
     return response
 

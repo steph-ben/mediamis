@@ -12,6 +12,7 @@ New features:
 - Add helper to find media by their id (eg. from Allocine by movie name, from amazone by code bar, etc.)
     https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
     https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
+ebay: triso_1206Ebay
 
 - Facebook authentication
 - Gmail authentication
