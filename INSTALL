@@ -66,6 +66,13 @@ $ heroku scale web=1
 $ heroku open
 
 
+# Init new Postgres base
+#########################
+sql> create user mediamis password 'mediamis'
+sql> create database mediamis with owner = mediamis
+(restore a backup file :
+C:/Program Files (x86)/PostgreSQL/9.2/bin\pg_restore.exe --host localhost --port 5432 --username "postgres" --dbname "mediamis" --role "mediamis" --no-password  --data-only --verbose "C:\Users\steph\Docs perso\Code\dev\perso\mediamis\data\b003.dump")
+
 
 # Making backup of existing data
 # and export locally database
