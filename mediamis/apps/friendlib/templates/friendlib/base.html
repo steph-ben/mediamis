@@ -38,7 +38,6 @@
         <div class="span4">
             <div class="row-fluid">
                 <div class="span12 well">
-
                     {% if user.is_authenticated %}
                         <div class="row-fluid">
                             <div class="span12">
@@ -53,13 +52,21 @@
                         </div>
                     {% else %}
                         <form class="form-inline" method="post">{% csrf_token %}
-                            <input type="text" class="input-small" placeholder="Username" name="username">
+                            <input type="text" class="input-small error" placeholder="Username" name="username">
                             <input type="password" class="input-small" placeholder="Password" name="password">
                             <button type="submit" class="btn">Sign in</button>
 
                             <label class="checkbox">
                                 <input type="checkbox"> Remember me
                             </label>
+
+                            {% if request.auth_form.errors %}
+                            <p class="text-error error">{% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}
+{#                                {{ request.auth_form.non_field_errors.as_text }}#}
+{#                                {{ request.auth_form.username.errors.as_text }}#}
+{#                                {{ request.auth_form.password.errors.as_text }}#}
+                            </p>
+                            {% endif %}
                         </form>
                     {% endif %}
 
