@@ -105,6 +105,13 @@ class Book(Media):
             self.title.capitalize())
         return mark_safe(html)
 
+    @property
+    def html_thumbnail(self):
+        html = u'<a href="%s"><img src="%s"></a>' % (
+            self.get_absolute_url(),
+            self.thumbnail.url)
+        return mark_safe(html)
+
     
 class Movie(Media):
     allocine_id = models.PositiveIntegerField(_('allocine id'), null=True, blank=True)

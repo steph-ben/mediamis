@@ -12,9 +12,16 @@
 <div class="span6">
     <div class="well">
         <legend>Last books:</legend>
-        <ul>
+        <ul class="thumbnails">
         {% for media in lastbook_list %}
-            <li>{{ media.html_link }} (by {{ media.owner }})</li>
+            {% if media.html_thumbnail %}
+                <li class="span4">
+                    <div>{{ media.html_thumbnail }}</div>   {# Using <div> pour retour a la ligne !!! #}
+                    {{ media.html_link }} (by {{ media.owner }})
+                </li>
+            {% else %}
+                <li>{{ media.html_link }} (by {{ media.owner }})</li>
+            {% endif %}
         {% empty %}
             <li><em>{% trans "No entry." %}</em></li>
         {% endfor %}
