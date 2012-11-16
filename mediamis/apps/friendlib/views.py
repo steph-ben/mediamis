@@ -252,6 +252,10 @@ class BookCreateView(MediaCreateView):
         })
         return super(BookCreateView, self).get(request, *args, **kwargs)
 
+    def get_form(self, form_class):
+        r = super(BookCreateView, self).get_form(form_class)
+        return r    
+
 def book_websearch(request, **kwargs):
     """
     TODO: Retrieve data from those URLs

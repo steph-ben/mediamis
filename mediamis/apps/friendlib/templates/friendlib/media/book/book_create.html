@@ -4,11 +4,12 @@
 {% block media_create %}
     <legend>{% trans "Create new book" %}</legend>
 
-	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
-        <legend>Edit</legend>
+	<form enctype="multipart/form-data" class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
         {% include "friendlib/snippets/media_form_field.html" with field=form.title %}
 
         {% include "friendlib/snippets/media_form_field.html" with field=form.description %}
+
+        {% include "friendlib/snippets/media_form_field.html" with field=form.thumbnail %}
 
         {% include "friendlib/snippets/media_form_field.html" with field=form.author %}
 

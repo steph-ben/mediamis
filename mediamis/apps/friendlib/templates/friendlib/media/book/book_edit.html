@@ -2,10 +2,50 @@
 {% load i18n %}
 
 {% block media_edit %}
-	<form method="POST" action="{% url book_update book.pk %}">{% csrf_token %}
+	<form enctype="multipart/form-data" method="POST" action="{% url book_update book.pk %}">{% csrf_token %}
 		<h2>{% trans "Edit book" %}</h2>
-		{{ form.as_p }}
 
+        {% include "friendlib/snippets/media_form_field.html" with field=form.title %}
+
+        {% include "friendlib/snippets/media_form_field.html" with field=form.description %}
+
+        {% with field=form.thumbnail %}
+            {# To choose a new image correctly and handle errors #}
+            {# TODO: create a generice template snippet media_form_imagefield.html #}
+            {% if field.errors %}
+            <div class="control-group error">
+            {% else %}
+            <div class="control-group">
+            {% endif %}
+
+                <label class="control-label">{{ field.label }}</label>
+                <div class="controls">
+
+                    <img src="{{ MEDIA_URL }}/{{ field.value }}"/>
+                    <input type="file" name="thumbnail" id="id_thumbnail">
+
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                    <span class="help-inline">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+
+                </div>
+            </div>
+        {% endwith %}
+    
+        {% include "friendlib/snippets/media_form_field.html" with field=form.author %}
+
+        {% include "friendlib/snippets/media_form_field.html" with field=form.size %}
+
+        {% include "friendlib/snippets/media_form_field.html" with field=form.nb_pages %}
+
+
+        {# Hidden fields #}
+        {{ form.specialization_type }}
+        {{ form.owner }}
 		<input class="btn btn-success pull-right" type="submit" value="{% trans "Save" %}" />
 	</form>
+
+
 {% endblock media_edit %}
