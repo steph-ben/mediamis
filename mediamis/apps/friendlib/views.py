@@ -323,7 +323,7 @@ def mediarequest_set_accepted(request, reqid, **kwargs):
     mediarequest.status = 'A'
     mediarequest.date_answered = datetime.datetime.now()
     mediarequest.save()
-    return redirect_to(request, mediarequest.get_detail_url())
+    return redirect_to(request, mediarequest.get_detail_url)
 
 @login_required
 def mediarequest_set_declined(request, reqid, **kwargs):
@@ -331,7 +331,7 @@ def mediarequest_set_declined(request, reqid, **kwargs):
     mediarequest.status = 'D'
     mediarequest.date_answered = datetime.datetime.now()
     mediarequest.save()
-    return redirect_to(request, mediarequest.get_detail_url())
+    return redirect_to(request, mediarequest.get_detail_url)
 
 @login_required
 def mediarequest_set_borrowed(request, reqid, **kwargs):
@@ -349,7 +349,7 @@ def mediarequest_set_borrowed(request, reqid, **kwargs):
     mediarequest.media.borrowed = True
     mediarequest.media.save()
 
-    return redirect_to(request, mediarequest.get_detail_url())
+    return redirect_to(request, mediarequest.get_detail_url)
 
 @login_required
 def mediarequest_set_returned(request, reqid, **kwargs):
@@ -362,4 +362,4 @@ def mediarequest_set_returned(request, reqid, **kwargs):
     mediarequest.media.borrowed = False
     mediarequest.media.save()
 
-    return redirect_to(request, mediarequest.get_detail_url())
+    return redirect_to(request, mediarequest.get_detail_url)
