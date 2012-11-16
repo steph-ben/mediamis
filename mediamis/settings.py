@@ -194,8 +194,8 @@ DATABASES = {
 
 # Dev server serve /media files
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
-#PROJECT_URL = 'http://vivid-rain-4083.herokuapp.com/friendlib'
-PROJECT_URL = 'http://localhost/friendlib'
+PROJECT_URL = 'http://vivid-rain-4083.herokuapp.com/friendlib'
+#PROJECT_URL = 'http://localhost/friendlib'
 
 SERVE_STATIC_FILES = True
 STATIC_ROOT = os.path.join(PROJECT_PATH, 'staticfiles')
