@@ -194,10 +194,13 @@ DATABASES = {
 
 # Dev server serve /media files
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
-PROJECT_URL = 'http://vivid-rain-4083.herokuapp.com/friendlib'
+#PROJECT_URL = 'http://vivid-rain-4083.herokuapp.com/friendlib'
+PROJECT_URL = 'http://localhost/friendlib'
 
 SERVE_STATIC_FILES = True
 STATIC_ROOT = os.path.join(PROJECT_PATH, 'staticfiles')
+MEDIA_ROOT = STATIC_ROOT
+STATIC_ROOT = None      # MEDIA_ROOT & STATIC_ROOT must have different values, but don't know why ...
 STATIC_URL = PROJECT_URL + '/media/'
 ADMIN_MEDIA_PREFIX = '/media/admin/'
 STATICFILES_DIRS = (
