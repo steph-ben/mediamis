@@ -13,7 +13,8 @@ from djeneralize.models import BaseGeneralizationModel
 class Media(BaseGeneralizationModel):
     title = models.CharField(_('title'), max_length=255)
     description = models.TextField(_('description'), blank=True)
-    thumbnail = models.ImageField(_('thumbnail'), upload_to='upload/medias/')
+    thumbnail = models.ImageField(_('thumbnail'), upload_to='upload/medias/', blank=True, null=True,
+                                  default='img/book_default.jpg')
     
     owner = models.ForeignKey(User, related_name='owned_medias')
     borrower = models.ForeignKey(User, related_name='borrowed_medias',
