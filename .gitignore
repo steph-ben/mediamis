@@ -4,6 +4,7 @@ build/
 dist/
 logs/
 vrac/
+data/
 *.egg-info
 *.pyc
 *.svn
