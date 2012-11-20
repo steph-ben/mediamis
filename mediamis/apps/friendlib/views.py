@@ -1,6 +1,7 @@
 import datetime
 import urllib2
 import json
+import contextlib
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -275,7 +276,7 @@ class BoardGameCreateView(MediaCreateView):
 def book_websearch(request, **kwargs):
     """ Return a <ul> list with search result from the woueb
     """
-    DUMMY = True     # Dev offline ...
+    DUMMY = False     # Dev offline ...
     
     GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes?q="
     MAX_ITEMS = 5
@@ -286,35 +287,24 @@ def book_websearch(request, **kwargs):
         url_data = ''
         data_object = {}
 
-        if DUMMY:
-            fd = open('C:\Users\steph\Docs perso\Code\dev\perso\mediamis\data\google books\search_lite.json')
-            data_object = json.load(fd)
-        else:
-            query_url = GOOGLE_URL + query
-            print query_url
+        query_url = GOOGLE_URL + query
+        print query_url
 
-            # Read url
-            pt = urllib2.urlopen(query_url)
-
-            print "hello ?!"
-
+        with contextlib.closing(urllib2.urlopen(query_url)) as pt:
             # Decode json
             data_object = json.load(pt)
             print data_object
 
-        for r in data_object['items'][:MAX_ITEMS]:
-            details = _read_gbooks_search(r)
-            if not details:
-                continue
+            for r in data_object['items'][:MAX_ITEMS]:
+                details = _read_gbooks_search(r)
+                if not details:
+                    continue
 
-            html += '<li class="span2">'
-            html += '<a id="load_details" web_id="%s" href="#">' % details['web_id']
-            html += '<img src="%s" ></img>%s - %s' % \
-                    (details['thumbnail'], details['title'], details['authors'])
-            html += '</a></li>'
-
-        if not DUMMY:
-            pt.close()
+                html += '<li class="span2">'
+                html += '<a id="load_details" web_id="%s" href="#">' % details['web_id']
+                html += '<img src="%s" ></img>%s - %s' % \
+                        (details['thumbnail'], details['title'], details['authors'])
+                html += '</a></li>'
     else:
         html += '<li class="media">No results.</li>'
 
@@ -347,8 +337,7 @@ def _read_gbooks_search(r):
     image_links = infos.get('imageLinks', None)
     thumbnail = DEFAULT_PICTURE
     if image_links:
-        #thumbnail = image_links.get('thumbnail', DEFAULT_PICTURE)
-        pass
+        thumbnail = image_links.get('thumbnail', DEFAULT_PICTURE)
 
     # TODO: get isbn and google identifier
     #isbn = r['volumeInfo']['industryIdentifiers']
@@ -369,35 +358,26 @@ def book_websearch_detail(request, **kwargs):
     """
     Read this kind of url :  https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
     """
-    fd = open("C:\Users\steph\Docs perso\Code\dev\perso\mediamis\data\google books\\book.json")
+    GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes/"
 
-    r = json.load(fd)
+    print kwargs
 
-    detail = _read_gbooks_search(r)
+    detail = {}
+    web_id = kwargs.get('web_id', None) or request.POST.get('web_id', None) or request.GET.get('web_id', None)
+    if web_id:
+        url_data = GOOGLE_URL + web_id
 
+        # Use contextlib to close correctly
+        # cf. http://stackoverflow.com/questions/1522636/should-i-call-close-after-urllib-urlopen/1522709#1522709
+        with contextlib.closing(urllib2.urlopen(url_data)) as pt:
+            data_object = json.load(pt)
+            print data_object
+            detail = _read_gbooks_search(data_object)
 
-    industryIds = r.get('industryIdentifiers', None)
-    if industryIds:
-        detail.update({'isbn': str(industryIds)})
-    """
-  "industryIdentifiers": [
-   {
-    "type": "ISBN_10",
-    "identifier": "055380457X"
-   },
-   {
-    "type": "ISBN_13",
-    "identifier": "9780553804577"
-   }
-
-    detail = {
-        'title': 'My title',
-        'description': 'This is a fucking short description ...',
-        'authors': 'Bond, James Bond',
-        'size': 'small',
-        'nb_pages': 333
-    }
-    """
+            # TODO: put this in _read_gbooks_search()
+            industryIds = data_object.get('industryIdentifiers', None)
+            if industryIds:
+                detail.update({'isbn': str(industryIds)})
 
     s = json.dumps(detail, indent=4)
     return HttpResponse(s)
