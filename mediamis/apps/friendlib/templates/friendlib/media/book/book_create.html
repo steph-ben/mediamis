@@ -28,8 +28,7 @@ TODO: Make search results align on the bottom, limit length of the title
 {#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
 {#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
 {#            </ul>#}
-        </div>
-    
+
     <hr>
 	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
         <legend>Edit</legend>
@@ -38,7 +37,8 @@ TODO: Make search results align on the bottom, limit length of the title
         {% include "friendlib/snippets/media_form_field.html" with field=form.title %}
 
         {% include "friendlib/snippets/media_form_field.html" with field=form.description %}
-            
+
+        <img id="thumbnail_preview" src=""/>
         {% include "friendlib/snippets/media_form_field.html" with field=form.thumbnail %}
 
         {% include "friendlib/snippets/media_form_field.html" with field=form.author %}
@@ -140,8 +140,11 @@ TODO: Make search results align on the bottom, limit length of the title
             url,
             function(json, textStatus, jqXHR) {
                 console.log(json, textStatus, jqXHR);
+                $('#thumbnail_preview').attr('src', json['thumbnail']);
+
                 $('#id_title').val(json['title']);
                 $('#id_description').val(json['description']);
+                $('#id_thumbnail').val(json['thumbnail']);
                 $('#id_author').val(json['authors']);
                 $('#id_size').val(json['size']);
                 $('#id_nb_pages').val(json['nb_pages']);
