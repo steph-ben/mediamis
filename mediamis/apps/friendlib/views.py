@@ -1,4 +1,7 @@
 import datetime
+import urllib2
+import json
+import contextlib
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -10,6 +13,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.simple import direct_to_template, redirect_to
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from settings import settings
 
 from friendlib.forms import MediaSearchForm
 from friendlib.models import Media, MediaRequest
@@ -256,16 +260,6 @@ class BookCreateView(MediaCreateView):
         r = super(BookCreateView, self).get_form(form_class)
         return r    
 
-def book_websearch(request, **kwargs):
-    """
-    TODO: Retrieve data from those URLs
-        https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
-        https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
-    """
-    html = '<ul class="media-list"><li class="media">plop</li><li class="media">plip</li></ul>'
-    response = HttpResponse(html)
-    return response
-
 class BookDetailView(MediaDetailView):
     pass
 class BookUpdateView(MediaUpdateView):
@@ -279,6 +273,118 @@ class DVDCreateView(MediaCreateView):
 class BoardGameCreateView(MediaCreateView):
     pass
 
+################################################################################
+# Views and helpers to make book search from internet database (eg. Google Books, Amazone, etc.)
+
+def book_websearch(request, **kwargs):
+    """ Return a <ul> list with search result from the woueb
+    """
+    DUMMY = False     # Dev offline ...
+    
+    GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes?q="
+    MAX_ITEMS = 5
+
+    html = '<ul class="thumbnails">'
+    query = request.POST.get('query', None) or request.GET.get('query', None)
+    if query:
+        url_data = ''
+        data_object = {}
+
+        query_url = GOOGLE_URL + query
+        print query_url
+
+        with contextlib.closing(urllib2.urlopen(query_url)) as pt:
+            # Decode json
+            data_object = json.load(pt)
+            print data_object
+
+            for r in data_object['items'][:MAX_ITEMS]:
+                details = _read_gbooks_search(r)
+                if not details:
+                    continue
+
+                html += '<li class="span2">'
+                html += '<a id="load_details" web_id="%s" href="#">' % details['web_id']
+                html += '<img src="%s" ></img>%s - %s' % \
+                        (details['thumbnail'], details['title'], details['authors'])
+                html += '</a></li>'
+    else:
+        html += '<li class="media">No results.</li>'
+
+    html += '</ul>'
+
+    response = HttpResponse(html)
+    return response
+
+def _read_gbooks_search(r):
+    """ Decode items of https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
+    """
+    DEFAULT_PICTURE = settings.MEDIA_URL + '/img/book_default.jpg'
+
+    infos = r.get('volumeInfo', None)
+    if not infos:
+        # If no title and stuff, try next entry
+        return {}
+    title = infos.get('title', 'Unknown')
+    description = infos.get('description', None)
+    authors = infos.get('authors', 'Unknown')
+    if type(authors) == list:
+        # Only the first one
+        authors = authors[0]
+
+    nb_pages = infos.get('pageCount', None)
+    size = infos.get('dimensions', None)
+    if size:
+        size = str(size)
+
+    image_links = infos.get('imageLinks', None)
+    thumbnail = DEFAULT_PICTURE
+    if image_links:
+        thumbnail = image_links.get('thumbnail', DEFAULT_PICTURE)
+
+    # TODO: get isbn and google identifier
+    #isbn = r['volumeInfo']['industryIdentifiers']
+    isbn = ''
+    web_id = r.get('id', 'unknown')
+
+    return {
+        'title': title,
+        'description': description,
+        'nb_pages': nb_pages,
+        'size': size,
+        'authors': authors,
+        'thumbnail': thumbnail,
+        'web_id': web_id
+    }
+
+def book_websearch_detail(request, **kwargs):
+    """
+    Read this kind of url :  https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
+    """
+    GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes/"
+
+    print kwargs
+
+    detail = {}
+    web_id = kwargs.get('web_id', None) or request.POST.get('web_id', None) or request.GET.get('web_id', None)
+    if web_id:
+        url_data = GOOGLE_URL + web_id
+
+        # Use contextlib to close correctly
+        # cf. http://stackoverflow.com/questions/1522636/should-i-call-close-after-urllib-urlopen/1522709#1522709
+        with contextlib.closing(urllib2.urlopen(url_data)) as pt:
+            data_object = json.load(pt)
+            print data_object
+            detail = _read_gbooks_search(data_object)
+
+            # TODO: put this in _read_gbooks_search()
+            industryIds = data_object.get('industryIdentifiers', None)
+            if industryIds:
+                detail.update({'isbn': str(industryIds)})
+
+    s = json.dumps(detail, indent=4)
+    return HttpResponse(s)
+    
 
 ################################################################################
 # Views to handle MediaRequest
@@ -323,7 +429,7 @@ def mediarequest_set_accepted(request, reqid, **kwargs):
     mediarequest.status = 'A'
     mediarequest.date_answered = datetime.datetime.now()
     mediarequest.save()
-    return redirect_to(request, mediarequest.get_detail_url)
+    return redirect_to(request, mediarequest.get_detail_url())
 
 @login_required
 def mediarequest_set_declined(request, reqid, **kwargs):
@@ -331,7 +437,7 @@ def mediarequest_set_declined(request, reqid, **kwargs):
     mediarequest.status = 'D'
     mediarequest.date_answered = datetime.datetime.now()
     mediarequest.save()
-    return redirect_to(request, mediarequest.get_detail_url)
+    return redirect_to(request, mediarequest.get_detail_url())
 
 @login_required
 def mediarequest_set_borrowed(request, reqid, **kwargs):
@@ -349,7 +455,7 @@ def mediarequest_set_borrowed(request, reqid, **kwargs):
     mediarequest.media.borrowed = True
     mediarequest.media.save()
 
-    return redirect_to(request, mediarequest.get_detail_url)
+    return redirect_to(request, mediarequest.get_detail_url())
 
 @login_required
 def mediarequest_set_returned(request, reqid, **kwargs):
@@ -362,4 +468,4 @@ def mediarequest_set_returned(request, reqid, **kwargs):
     mediarequest.media.borrowed = False
     mediarequest.media.save()
 
-    return redirect_to(request, mediarequest.get_detail_url)
+    return redirect_to(request, mediarequest.get_detail_url())

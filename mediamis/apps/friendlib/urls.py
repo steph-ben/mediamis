@@ -58,6 +58,8 @@ urlpatterns = patterns('',
                                template_name='friendlib/media/book/book_create.html'),
         name='book_create'),
     url(r'^books/websearch/$', book_websearch, name='book_websearch'),
+    url(r'^books/websearch/(?P<web_id>[a-zA-Z0-9-]+)/$', book_websearch_detail, name='book_websearch_detail'),
+
     url(r'^books/(?P<pk>[0-9]+)/$',
         BookDetailView.as_view(model=Book,
                                template_name='friendlib/media/book/book_detail.html'),

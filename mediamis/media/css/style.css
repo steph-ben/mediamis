@@ -43,3 +43,10 @@ legend small {
 .media {
     padding: 20px;
 }
+/* Websearch results */
+#websearch_result .media {
+    margin-top: 0px;
+}
+#websearch_result .media-list > li {
+    float: left
+}
