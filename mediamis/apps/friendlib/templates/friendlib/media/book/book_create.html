@@ -4,11 +4,10 @@
 {% block media_create %}
     <legend>{% trans "Create new book" %}</legend>
 
-    <hr>
         <form id="websearch" class="form-search" method="GET" action="{% url book_websearch %}">{% csrf_token %}
             <label>Search a book on internet ...</label>
 
-            <input id="query" type="input-search">
+            <input id="query" type="text">
             <a id="go" class="btn">Search</a>
         </form>
 
@@ -100,11 +99,12 @@ TODO: Make search results align on the bottom, limit length of the title
 
     function websearch() {
         /* Show loading animation */
+        $('#websearch_result').empty().attr('style', 'height:150px');
         $('#websearch_result').spin();
 
         query = $('#websearch > input#query').val();
         csrf = $('#websearch input[name=csrfmiddlewaretoken]').val();
-        console.log("Search with " + query);
+        console.log("Search with: " + query);
         $('#websearch_result').load(
             '{% url book_websearch %}',
             {
@@ -113,10 +113,11 @@ TODO: Make search results align on the bottom, limit length of the title
                 'csrfmiddlewaretoken': csrf,
             },
             function (responseText, textStatus, req) {
+                $(this).removeAttr('style')
                 if (textStatus == "error") {
-                    alert("An error occured ...");
                     $('#websearch_result').spin(false);
-                    return "oh noes!!!!";
+                    $(this).html('<em>{% trans "Sorry, an error has occured" %}</em>');
+                    return false;
                 }
                 m = 'Load was performed with ' + query;
                 $('a#load_details').click(function() {
@@ -130,7 +131,8 @@ TODO: Make search results align on the bottom, limit length of the title
     function load_details(web_id) {
         /* Show loading animation */
         $('#load').show().spin();
-        $('#fields').hide();
+        $('#fields').css({opacity: '0.7'});
+
 
         /* Load infos for this particular book ... */
         base_url = '{% url book_websearch_detail 0 %}'
@@ -151,10 +153,21 @@ TODO: Make search results align on the bottom, limit length of the title
                 $('#fields').show();
                 $('#load').hide();
             }
-        );
+        ).error(function() {
+            $('#load').html('<em>{% trans "Sorry, an error has occured" %}</em>');
+        }).complete(function() {
+            $('#load').spin(false);
+            $('#fields').removeAttr('style')
+        });
     };
 
-    
+
+    $('#websearch > input#query').keypress(function(e) {
+        if(e.which == 10 || e.which == 13) {
+            event.preventDefault();
+            websearch();
+       }
+    });
     $('#websearch > a#go').click(websearch);
     /* TODO: Find how to handle the enter key only for input and use <form> for #websearch */
 {#    $('#websearch > input#query').click(function(event) {#}

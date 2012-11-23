@@ -278,19 +278,32 @@ class BoardGameCreateView(MediaCreateView):
 
 def book_websearch(request, **kwargs):
     """ Return a <ul> list with search result from the woueb
+    Check Google Books API docs for more info
+    cf. https://developers.google.com/books/docs/v1/using#st_params
     """
     DUMMY = False     # Dev offline ...
     
-    GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes?q="
+    GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes"
     MAX_ITEMS = 5
 
     html = '<ul class="thumbnails">'
+    page = request.POST.get('page', None) or request.GET.get('page', None)
     query = request.POST.get('query', None) or request.GET.get('query', None)
     if query:
-        url_data = ''
-        data_object = {}
+        # Take care of pagination
+        startIndex = 0
+        maxResults = MAX_ITEMS
+        if page:
+            # For current search
+            startIndex = int(page) * MAX_ITEMS
+            # For pages links
+            previousPage = int(page) - 1
+            nextPage = int(page) + 1
 
-        query_url = GOOGLE_URL + query
+        query_url = "%s?q=%s&startIndex=%s&maxResults=%s" % (GOOGLE_URL, query, startIndex, maxResults)
+
+        # Make it safe from ' ' and so on, cf. http://stackoverflow.com/a/845595/554374
+        query_url = urllib2.quote(query_url, safe="%/:=&?~#+!$,;'@()*[]")
         print query_url
 
         with contextlib.closing(urllib2.urlopen(query_url)) as pt:
@@ -298,7 +311,10 @@ def book_websearch(request, **kwargs):
             data_object = json.load(pt)
             print data_object
 
-            for r in data_object['items'][:MAX_ITEMS]:
+            items = data_object.get('items', [])
+            if not items:
+                html += '<li class="media">No results.</li>'
+            for r in items:
                 details = _read_gbooks_search(r)
                 if not details:
                     continue
