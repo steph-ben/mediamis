@@ -120,7 +120,8 @@ TODO: Make search results align on the bottom, limit length of the title
                     return false;
                 }
                 m = 'Load was performed with ' + query;
-                $('a#load_details').click(function() {
+                $('a#load_details').click(function(e) {
+                    e.preventDefault();
                     var web_id = $(this).attr('web_id');
                     load_details(web_id);
                 });
