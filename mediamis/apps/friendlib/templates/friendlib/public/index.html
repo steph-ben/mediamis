@@ -15,7 +15,7 @@
         <ul class="thumbnails">
         {% for media in lastbook_list %}
             {% if media.html_thumbnail %}
-                <li class="span4">
+                <li class="span4 media-thumbnail">
                     <div>{{ media.html_thumbnail }}</div>   {# Using <div> pour retour a la ligne !!! #}
                     {{ media.html_link }} (by {{ media.owner }})
                 </li>

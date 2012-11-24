@@ -18,6 +18,10 @@ body {
     padding-top: 20px;
 }
 
+/* Default height for media thumbnail */
+.media-thumbnail {
+    height: 220px;
+}
 /* Owner and media location on search result look better*/
 .alert {
     margin-left:5px;
