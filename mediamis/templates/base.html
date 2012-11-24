@@ -14,8 +14,7 @@
 {#    <link href="http://soif.arcadio.info/mediamis/media/css/style.css" rel="stylesheet" type="text/css" />#}
 
     <style type="text/css">
-        {% block css %}
-        {% endblock %}
+
     </style>
 
     {% block head %}
@@ -35,19 +34,27 @@
     <script src="{{ MEDIA_URL }}js/bootstrap-dropdown.js"></script>
 
     <script type="text/javascript">
+
     $(document).ready(function(){
-        {% block js %}
-        {% endblock %}
+        $('.row-fluid .thumbnails').each(function () {
+            var $thumbnails = $(this).children(),
+                previousOffsetLeft = $thumbnails.first().offset().left;
+            $thumbnails.each(function () {
+                var $thumbnail = $(this),
+                    offsetLeft = $thumbnail.offset().left;
+                if (offsetLeft < previousOffsetLeft) {
+                    $thumbnail.css('margin-left', 0);
+                }
+                previousOffsetLeft = offsetLeft;
+            });
+        });
     });
     </script>
-
-    <script src="{{ MEDIA_URL }}js/bootstrap-modal.js"></script>
-    <script src="{{ MEDIA_URL }}js/spin.js"></script>
-
 
 <!--
     <script src="{{ MEDIA_URL }}js/bootstrap-transition.js"></script>
     <script src="{{ MEDIA_URL }}js/bootstrap-alert.js"></script>
+    <script src="{{ MEDIA_URL }}js/bootstrap-modal.js"></script>
     <script src="{{ MEDIA_URL }}js/bootstrap-scrollspy.js"></script>
     <script src="{{ MEDIA_URL }}js/bootstrap-tab.js"></script>
     <script src="{{ MEDIA_URL }}js/bootstrap-tooltip.js"></script>
