@@ -9,23 +9,60 @@
 
 {% block container %}
     <div class="row-fluid">
+        <div class="span12 baniere">
+            <a href="{% url home %}" class="disabled">
+            </a>
+
+            <span id="login-box" class="pull-right">
+                {% if user.is_authenticated %}
+                    {% trans "You are connected as" %} <strong>{{ user.username }}</strong><br>
+                    <a class="btn btn-info" href="{% url user_home %}">{% trans "My stuffs" %}</a>
+                    <a class="btn btn-warning" href="{% url registration:logout %}">{% trans "Logout" %}</a>
+
+                {% else %}
+                    <form class="form-inline" method="post">{% csrf_token %}
+                        <input type="text" class="input-small error" placeholder="Username" name="username">
+                        <input type="password" class="input-small" placeholder="Password" name="password">
+                        <button type="submit" class="btn">Sign in</button>
+
+{% comment %}                        <label class="checkbox">
+                            <input type="checkbox"> Remember me
+                        </label>{% endcomment %}
+
+                        {% if request.auth_form.errors %}
+                        <p class="text-error error">
+                            {% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}
+                        </p>
+                        {% endif %}
+                    </form>
+                {% endif %}
+
+            </span>
+        </div>
+    </div>
+
+    <div class="row-fluid">
+    <div class="span12" id="main">
+    <div class="row-fluid">
+
         <div class="span8">
             <div class="row-fluid">
-                <div class="span12 baniere">
-                    <a href="{% url home %}" class="disabled">
-                    <img src="{{ MEDIA_URL }}/img/baniere.gif" alt=""></img>
-                    </a>
-                </div>
-            </div>
-
-            <div class="row-fluid">
                 <div class="span12 ">
-                    <form class="well form-search" method="GET" action="{% url search %}">
+                    <form class="mywell form-search" method="GET" action="{% url search %}">
                         <label>{% trans "Search all media" %}</label>
                         {{ search_form.keywords }}
                         <button type="submit" class="btn">{% trans "Search" %}</button>
                     </form>
                 </div>
+            </div>
+
+
+            <div class="row-fluid">
+                   <div class="span12 well">
+                       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+
+                       <p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer</p>
+                   </div>
             </div>
 
             <div class="row-fluid">
@@ -36,43 +73,6 @@
 
 
         <div class="span4">
-            <div class="row-fluid">
-                <div class="span12 well">
-                    {% if user.is_authenticated %}
-                        <div class="row-fluid">
-                            <div class="span12">
-                                {% trans "You are connected as" %} <strong>{{ user.username }}</strong>
-                            </div>
-                        </div>
-                       <div class="row-fluid">
-                            <div class="span12">
-                                <a class="btn btn-info" href="{% url user_home %}">{% trans "View my stuffs" %}</a>
-                                <a class="btn btn-warning pull-right" href="{% url registration:logout %}">{% trans "Logout" %}</a>
-                            </div>
-                        </div>
-                    {% else %}
-                        <form class="form-inline" method="post">{% csrf_token %}
-                            <input type="text" class="input-small error" placeholder="Username" name="username">
-                            <input type="password" class="input-small" placeholder="Password" name="password">
-                            <button type="submit" class="btn">Sign in</button>
-
-                            <label class="checkbox">
-                                <input type="checkbox"> Remember me
-                            </label>
-
-                            {% if request.auth_form.errors %}
-                            <p class="text-error error">{% trans "Please enter a correct username and password. Note that both fields are case-sensitive." %}
-{#                                {{ request.auth_form.non_field_errors.as_text }}#}
-{#                                {{ request.auth_form.username.errors.as_text }}#}
-{#                                {{ request.auth_form.password.errors.as_text }}#}
-                            </p>
-                            {% endif %}
-                        </form>
-                    {% endif %}
-
-
-                </div>
-            </div>
             <div class="row-fluid">
                 {% if user.is_authenticated %}
                     <div class="span12 well">
@@ -87,7 +87,6 @@
                     </div>
                 {% else %}
                     <div class="span12 well">
-                        <p>Texte d'introduction</p>
                         <p>
                             Currently <strong>{{ nb_users }} users</strong> registered,
                             for a total of <strong>{{ nb_medias }} medias</strong>, youhouhou !
@@ -98,7 +97,13 @@
 
         </div>
     </div>
+    </div>
+    </div>
 
+    <hr>
+    <footer>
+            <p>© Mediamis 2012</p>
+      </footer>
 {% endblock %}
 
 {% block content-header %}
