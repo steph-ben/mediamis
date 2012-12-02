@@ -108,7 +108,7 @@ class Book(Media):
 
     @property
     def html_thumbnail(self):
-        html = u'<a href="%s"><img src="%s"></a>' % (
+        html = u'<a href="%s"><img src="%s" width="85" height="150"></a>' % (
             self.get_absolute_url(),
             self.thumbnail.url)
         return mark_safe(html)

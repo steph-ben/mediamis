@@ -8,9 +8,19 @@
 {% endblock %}
 
 
+{% block extraboxes %}
+<div class="row-fluid">
+       <div class="span12 box">
+           <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+
+           <p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer</p>
+       </div>
+</div>
+{% endblock extraboxes %}
+
 {% block content %}
 <div class="span6">
-    <div class="well">
+    <div class="box">
         <legend>Last books:</legend>
         <ul class="thumbnails">
         {% for media in lastbook_list %}
@@ -31,7 +41,7 @@
         {% endif %}
     </div>
 
-    <div class="well">
+    <div class="box">
 
         <legend>Last movies:</legend>
         <ul>
@@ -48,7 +58,7 @@
 </div>
     
 <div class="span6">
-    <div class="well">
+    <div class="box">
         <legend>Last boardgames:</legend>
         <ul>
         {% for media in lastboardgame_list %}
@@ -62,7 +72,7 @@
         {% endif %}
     </div>
 
-    <div class="well">
+    <div class="box">
         <legend>Users:</legend>
         <ul>
         {% for user in user_list %}
