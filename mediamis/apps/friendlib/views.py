@@ -2,6 +2,7 @@ import datetime
 import urllib2
 import json
 import contextlib
+import httplib
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -292,6 +293,8 @@ def book_websearch(request, **kwargs):
     html = '<ul class="thumbnails">'
     page = request.POST.get('page', None) or request.GET.get('page', None)
     query = request.POST.get('query', None) or request.GET.get('query', None)
+
+    ###### Generate URL #########
     if query:
         # Take care of pagination
         startIndex = 0
@@ -303,32 +306,48 @@ def book_websearch(request, **kwargs):
             previousPage = int(page) - 1
             nextPage = int(page) + 1
 
-        query_url = "%s?q=%s&startIndex=%s&maxResults=%s&country=US" % (GOOGLE_URL, query, startIndex, maxResults)
 
         # Make it safe from ' ' and so on, cf. http://stackoverflow.com/a/845595/554374
+        # TODO: handle french chars
         query_url = urllib2.quote(query_url, safe="%/:=&?~#+!$,;'@()*[]")
         print query_url
 
-        con = urllib2.urlopen(query_url)
-        with contextlib.closing(con) as pt:
-            # Decode json
-            data_object = json.load(pt)
-            print data_object
 
-            items = data_object.get('items', [])
-            if not items:
-                html += '<li class="media">No results.</li>'
-            for r in items:
-                details = _read_gbooks_search(r)
-                if not details:
-                    continue
+        ###### Open connexion ###########
+        try:
+            response = urllib2.urlopen(query_url)
+            with contextlib.closing(response) as pt:
+                # Decode json
+                data_object = json.load(pt)
+                print data_object
 
-                html += '<li class="span2">'
-                html += '<a id="load_details" web_id="%s" href="#">' % details['web_id']
-                html += '<img src="%s" ></img>%s - %s' % \
-                        (details['thumbnail'], details['title'], details['authors'])
-                html += '</a></li>'
+                items = data_object.get('items', [])
+                if not items:
+                    html += '<li class="media">No results.</li>'
+                for r in items:
+                    details = _read_gbooks_search(r)
+                    if not details:
+                        continue
+
+                    html += '<li class="span2">'
+                    html += '<a id="load_details" web_id="%s" href="#">' % details['web_id']
+                    html += '<img src="%s" ></img>%s - %s' % \
+                            (details['thumbnail'], details['title'], details['authors'])
+                    html += '</a></li>'
+
+        except urllib2.HTTPError, e:
+            html += '<li class="media">HTTPError: %s</li>' % str(e.code)
+        except urllib2.URLError, e:
+            html += '<li class="media">URLError: %s</li>' % str(e.reason)
+        except httplib.HTTPException, e:
+            html += '<li class="media">HTTPException: %s</li>' % str(e)
+        except ValueError, e:
+            html += '<li class="media">ValueError: %s</li>' % str(e)
+        except Exception:
+            import traceback
+            html += '<li class="media">generic exception: <pre>%s</pre></li>' % traceback.format_exc()
     else:
+        # If query empty
         html += '<li class="media">No results.</li>'
 
     html += '</ul>'
@@ -392,15 +411,26 @@ def book_websearch_detail(request, **kwargs):
 
         # Use contextlib to close correctly
         # cf. http://stackoverflow.com/questions/1522636/should-i-call-close-after-urllib-urlopen/1522709#1522709
-        with contextlib.closing(urllib2.urlopen(url_data)) as pt:
-            data_object = json.load(pt)
-            print data_object
-            detail = _read_gbooks_search(data_object)
+        try:
+            with contextlib.closing(urllib2.urlopen(url_data)) as pt:
+                data_object = json.load(pt)
+                print data_object
+                detail = _read_gbooks_search(data_object)
 
-            # TODO: put this in _read_gbooks_search()
-            industryIds = data_object.get('industryIdentifiers', None)
-            if industryIds:
-                detail.update({'isbn': str(industryIds)})
+                # TODO: put this in _read_gbooks_search()
+                industryIds = data_object.get('industryIdentifiers', None)
+                if industryIds:
+                    detail.update({'isbn': str(industryIds)})
+
+        except urllib2.HTTPError, e:
+            detail = {'error': 'HTTPError: %s' % str(e.code)}
+        except urllib2.URLError, e:
+            detail = {'error': 'URLError: %s' % str(e.reason)}
+        except httplib.HTTPException, e:
+            detail = {'error': 'HTTPException: %s' % str(e)}
+        except Exception:
+            import traceback
+            detail = {'error': 'Generic exception: %s' % traceback.format_exc()}
 
     s = json.dumps(detail, indent=4)
     return HttpResponse(s)
