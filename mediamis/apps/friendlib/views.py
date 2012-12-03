@@ -242,6 +242,9 @@ class MediaDetailView(DetailView):
         return context
 
 class BookCreateView(MediaCreateView):
+    def post(self, request, *args, **kwargs):
+        return super(BookCreateView, self).post(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
         # Set up form data from requests
         user = request.user
@@ -300,13 +303,14 @@ def book_websearch(request, **kwargs):
             previousPage = int(page) - 1
             nextPage = int(page) + 1
 
-        query_url = "%s?q=%s&startIndex=%s&maxResults=%s" % (GOOGLE_URL, query, startIndex, maxResults)
+        query_url = "%s?q=%s&startIndex=%s&maxResults=%s&country=US" % (GOOGLE_URL, query, startIndex, maxResults)
 
         # Make it safe from ' ' and so on, cf. http://stackoverflow.com/a/845595/554374
         query_url = urllib2.quote(query_url, safe="%/:=&?~#+!$,;'@()*[]")
         print query_url
 
-        with contextlib.closing(urllib2.urlopen(query_url)) as pt:
+        con = urllib2.urlopen(query_url)
+        with contextlib.closing(con) as pt:
             # Decode json
             data_object = json.load(pt)
             print data_object
