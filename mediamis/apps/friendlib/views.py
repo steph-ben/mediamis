@@ -13,7 +13,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.simple import direct_to_template, redirect_to
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
-from settings import settings
+import settings
 
 from friendlib.forms import MediaSearchForm
 from friendlib.models import Media, MediaRequest
