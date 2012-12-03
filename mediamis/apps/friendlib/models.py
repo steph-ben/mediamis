@@ -77,7 +77,9 @@ class Media(BaseGeneralizationModel):
     @property
     def html_thumbnail(self):
         if not self.thumbnail.name:
+            # Init default ...
             self.thumbnail.name = self.default_thumbnail
+            self.save()
 
         html = u'<a href="%s"><img src="%s" class="media-mini-thumb"></a>' % (
             self.get_detail_url,

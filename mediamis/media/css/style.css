@@ -99,6 +99,9 @@ footer {
 img.media-mini-thumb {
     max-height: 120px;
 }
+img.media-norm-thumb {
+    max-height: 200px;
+}
 .media-thumbnail {
     height: 180px;
 }

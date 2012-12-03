@@ -4,7 +4,7 @@
 <li class="media well">
     <a class="pull-left" href="{{ media.get_detail_url }}">
         {% if media.thumbnail %}
-            <img src="{{ media.thumbnail.url }}">
+            <img class="media-norm-thumb" src="{{ media.thumbnail.url }}">
         {% else %}
             <img src="{{ MEDIA_URL }}/img/160x120.gif" alt="">
         {% endif %}
