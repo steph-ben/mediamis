@@ -8,3 +8,4 @@ django-extensions==0.8
 djeneralize==1.1rc1
 psycopg2==2.4.4
 wsgiref==0.1.2
+PIL==1.1.7
