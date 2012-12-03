@@ -193,7 +193,7 @@ DATABASES = {
 
 LOCAL = False
 # Dev server serve /media files
-PROJECT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_URL = 'http://vivid-rain-4083.herokuapp.com/friendlib'
 if LOCAL:
     PROJECT_URL = 'http://localhost/friendlib'
