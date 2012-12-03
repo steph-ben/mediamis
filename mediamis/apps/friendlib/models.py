@@ -74,17 +74,29 @@ class Media(BaseGeneralizationModel):
             self.title.capitalize())
         return mark_safe(html)
 
-    @property
-    def html_thumbnail(self):
+    def get_html_picture(self, small=False):
         if not self.thumbnail.name:
             # Init default ...
             self.thumbnail.name = self.default_thumbnail
             self.save()
 
-        html = u'<a href="%s"><img src="%s" class="media-mini-thumb"></a>' % (
+        css_class = "media-thumb-norm"
+        if small:
+            css_class = "media-thumb-small"
+
+        html = u'<a href="%s"><img src="%s" class="%s"></a>' % (
             self.get_detail_url,
-            self.thumbnail.url)
+            self.thumbnail.url,
+            css_class)
         return mark_safe(html)
+
+    @property
+    def html_thumbnail_small(self):
+        return self.get_html_picture(small=True)
+
+    @property
+    def html_thumbnail(self):
+        return self.get_html_picture(small=False)
 
 class Book(Media):
     author = models.CharField(_('author name'), max_length=255, null=True, blank=True)
