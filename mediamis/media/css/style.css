@@ -11,6 +11,9 @@ body {
     font: 13px/1.5 verdana, sans-serif;
 }
 
+/*
+    Apply on all pages
+*/
 .baniere {
     margin-bottom: 20px;
     background-color: #f8af43;
@@ -93,8 +96,11 @@ footer {
 
 
 /* Default height for media thumbnail */
+img.media-mini-thumb {
+    height: 120px;
+}
 .media-thumbnail {
-    height: 220px;
+    height: 180px;
 }
 
 /* Owner and media location on search result look better*/

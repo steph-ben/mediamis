@@ -14,7 +14,7 @@ class Media(BaseGeneralizationModel):
     title = models.CharField(_('title'), max_length=255)
     description = models.TextField(_('description'), blank=True)
     thumbnail = models.ImageField(_('thumbnail'), upload_to='upload/medias/', blank=True, null=True,
-                                  default='img/book_default.jpg')
+                                  default=None)
     
     owner = models.ForeignKey(User, related_name='owned_medias')
     borrower = models.ForeignKey(User, related_name='borrowed_medias',
@@ -65,8 +65,24 @@ class Media(BaseGeneralizationModel):
 
     @property
     def html_link(self):
-        return mark_safe(self.get_as_specialization().html_link)
+        html = u'<a href="%s" class="btn-link">%s</a>' % (
+            self.get_absolute_url(),
+            self.title.capitalize())
+        return mark_safe(html)
 
+    @property
+    def default_thumbnail(self):
+        return u'img/media_default.jpg'
+
+    @property
+    def html_thumbnail(self):
+        if not self.thumbnail.name:
+            self.thumbnail.name = self.default_thumbnail
+
+        html = u'<a href="%s"><img src="%s" class="media-mini-thumb"></a>' % (
+            self.get_absolute_url(),
+            self.thumbnail.url)
+        return mark_safe(html)
 
 class Book(Media):
     author = models.CharField(_('author name'), max_length=255, null=True, blank=True)
@@ -98,22 +114,11 @@ class Book(Media):
     @property
     def shortDetails(self):
         return self.description
-    
-    @property
-    def html_link(self):
-        html = u'<a href="%s" class="btn-link">%s</a>' % (
-            self.get_absolute_url(),
-            self.title.capitalize())
-        return mark_safe(html)
 
     @property
-    def html_thumbnail(self):
-        html = u'<a href="%s"><img src="%s" width="85" height="150"></a>' % (
-            self.get_absolute_url(),
-            self.thumbnail.url)
-        return mark_safe(html)
+    def default_thumbnail(self):
+        return u'img/book_default.jpg'
 
-    
 class Movie(Media):
     allocine_id = models.PositiveIntegerField(_('allocine id'), null=True, blank=True)
 
@@ -127,6 +132,9 @@ class Movie(Media):
     def shortDetails(self):
         return self.synopsis
 
+    @property
+    def default_thumbnail(self):
+        return u'img/dvd_default.jpg'
 
 class DVD(Movie):
     number_of_disc = models.PositiveSmallIntegerField(_('number of disc'), null=True, blank=True)
@@ -145,14 +153,6 @@ class DVD(Movie):
     @property
     def get_delete_url(self):
         return urlresolvers.reverse('user_home',)
-
-    @property
-    def html_link(self):
-        html = u'<a href="#" class="btn-link">%s</a>' % (
-            #self.get_absolute_url(),
-            self.title.capitalize())
-        return mark_safe(html)
-
 
 class Divx(Movie):
     QUALITY_CHOICES = (
@@ -178,14 +178,6 @@ class Divx(Movie):
     def get_delete_url(self):
         return urlresolvers.reverse('user_home',)
 
-    @property
-    def html_link(self):
-        html = u'<a href="#" class="btn-link">%s</a>' % (
-            #self.get_absolute_url(),
-            self.title.capitalize())
-        return mark_safe(html)
-
-
 class BoardGame(Media):
     number_players = models.PositiveSmallIntegerField(_('number of player'), null=True, blank=True)
 
@@ -205,12 +197,8 @@ class BoardGame(Media):
         return urlresolvers.reverse('user_home',)
 
     @property
-    def html_link(self):
-        html = u'<a href="#" class="btn-link">%s</a>' % (
-            #self.get_absolute_url(),
-            self.title.capitalize())
-        return mark_safe(html)
-
+    def default_thumbnail(self):
+        return u'img/boardgame_default.jpg'
 
 class MediaRequest(models.Model):
     """ Symbolize the request of one user to catch another user's Media
