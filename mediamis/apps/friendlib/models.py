@@ -64,15 +64,15 @@ class Media(BaseGeneralizationModel):
         return status
 
     @property
-    def html_link(self):
-        html = u'<a href="%s" class="btn-link">%s</a>' % (
-            self.get_absolute_url(),
-            self.title.capitalize())
-        return mark_safe(html)
+    def default_thumbnail(self):
+        return self.get_as_specialization().default_thumbnail
 
     @property
-    def default_thumbnail(self):
-        return u'img/media_default.jpg'
+    def html_link(self):
+        html = u'<a href="%s" class="btn-link">%s</a>' % (
+            self.get_detail_url,
+            self.title.capitalize())
+        return mark_safe(html)
 
     @property
     def html_thumbnail(self):
@@ -80,7 +80,7 @@ class Media(BaseGeneralizationModel):
             self.thumbnail.name = self.default_thumbnail
 
         html = u'<a href="%s"><img src="%s" class="media-mini-thumb"></a>' % (
-            self.get_absolute_url(),
+            self.get_detail_url,
             self.thumbnail.url)
         return mark_safe(html)
 

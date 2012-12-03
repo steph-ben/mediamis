@@ -97,7 +97,7 @@ footer {
 
 /* Default height for media thumbnail */
 img.media-mini-thumb {
-    height: 120px;
+    max-height: 120px;
 }
 .media-thumbnail {
     height: 180px;
