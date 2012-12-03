@@ -2,6 +2,7 @@ import platform
 import settings_conf
 
 if platform.node() == 'steph-laptop':
-    import settings_conf.local_settings as settings
+    from settings_conf.local_settings import *
 else:
-    import settings_conf.heroku_settings as settings
+    from settings_conf.heroku_settings import *
+
