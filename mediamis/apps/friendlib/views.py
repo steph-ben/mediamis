@@ -20,6 +20,7 @@ from friendlib.forms import MediaSearchForm
 from friendlib.models import Media, MediaRequest
 from friendlib.forms import MediaRequestForm
 from friendlib.models import BoardGame, Divx, Book, DVD, Movie
+from models import get_upload_path
 
 ################################################################################
 # Views for public pages
@@ -260,9 +261,35 @@ class BookCreateView(MediaCreateView):
         })
         return super(BookCreateView, self).get(request, *args, **kwargs)
 
-    def get_form(self, form_class):
-        r = super(BookCreateView, self).get_form(form_class)
-        return r    
+    def form_valid(self, form):
+        media = form.instance
+        thumb_type = form.data.get('thumbnail_type')
+        thumb_url = form.data.get('thumbnail_url')
+        thumb_file = form.data.get('thumbnail')
+        if thumb_type == 'url':
+            print "download the file here !"
+            print media.thumbnail
+            print media.thumbnail.field.upload_to
+            print thumb_url
+
+            from django.core.files import File
+            from django.core.files.temp import NamedTemporaryFile
+
+            img_temp = NamedTemporaryFile()
+            try:
+                # Set user agent, gbook doesn't like bots
+                headers = { 'User-Agent' : 'Mozilla/5.0' }
+                req = urllib2.Request(thumb_url, None, headers)
+                con = urllib2.urlopen(req)
+                img_temp.write(con.read())
+            except Exception, e:
+                print str(e)
+            img_temp.flush()
+
+            media.thumbnail.save('dummy', File(img_temp))
+
+        return super(BookCreateView, self).form_valid(form)
+
 
 class BookDetailView(MediaDetailView):
     pass

@@ -4,32 +4,17 @@
 {% block media_create %}
     <legend>{% trans "Create new book" %}</legend>
 
-        <form id="websearch" class="form-search" method="GET" action="{% url book_websearch %}">{% csrf_token %}
-            <label>Search a book on internet ...</label>
+    <form id="websearch" class="form-search" method="GET" action="{% url book_websearch %}">{% csrf_token %}
+        <label>Search a book on internet ...</label>
 
-            <input id="query" type="text">
-            <a id="go" class="btn">Search</a>
-        </form>
+        <input id="query" type="text">
+        <a id="go" class="btn">Search</a>
+    </form>
 
-        <div id="websearch_result"></div>
-{% comment %}
-TODO: Make search results align on the bottom, limit length of the title
-<ul class="thumbnails"><li class="span2"><a id="load_details" web_id="hWByX5-c5SIC" href="#"><img src="/media//img/book_default.jpg">Alice's Adventures in Wonderland - Lewis Carroll</a></li><li class="span2"><a id="load_details" web_id="4S9lqLKg2A0C" href="#"><img src="/media//img/book_default.jpg">Alice Munro - Coral Ann Howells</a></li><li class="span2"><a id="load_details" web_id="teTS-_J6dskC" href="#"><img src="/media//img/book_default.jpg">Alice - Stacy A. Cordery</a></li><li class="span2"><a id="load_details" web_id="IvFkk1JSxz4C" href="#"><img src="/media//img/book_default.jpg">Alice Hamilton - Barbara Sicherman</a></li><li class="span2"><a id="load_details" web_id="uztS1-M40uQC" href="#"><img src="/media//img/book_default.jpg">Alice Walker - Maria Lauret</a></li></ul>
-{% endcomment %}
-{#            <ul class="thumbnails">#}
-{#                <li class="span2">#}
-{#                    <a id="load_details" web_id="7680123456" href="#"><img src="/gbooks/example/img/medecin.jpg"/></a>#}
-{#                    <a href="#">Le medecin de campagne</a>#}
-{#                </li>#}
-{#                <li class="span2"><img src="/gbooks/example/img/book21.jpg"/><a href="#">The Royal Tour</a></li>#}
-{#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
-{#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
-{#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
-{#                <li class="span2"><img src="/gbooks/example/img/books18.jpg"/><a href="#">Balzac</a></li>#}
-{#            </ul>#}
+    <div id="websearch_result"></div>
 
     <hr>
-	<form class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
+	<form enctype="multipart/form-data" class="form-horizontal" method="POST" action="{% url book_create %}">{% csrf_token %}
         <legend>Edit</legend>
         <div id="load"></div>
         <div id="fields">
@@ -38,7 +23,27 @@ TODO: Make search results align on the bottom, limit length of the title
         {% include "friendlib/snippets/media_form_field.html" with field=form.description %}
 
         <img id="thumbnail_preview" src=""/>
-        {% include "friendlib/snippets/media_form_field.html" with field=form.thumbnail %}
+        {% with field=form.thumbnail %}
+            {% if field.errors %}
+            <div class="control-group error">
+            {% else %}
+            <div class="control-group">
+            {% endif %}
+
+                <label class="control-label">{{ field.label }}</label>
+                <div class="controls">
+                    <input type="radio" name="thumbnail_type" value="url"><input name="thumbnail_url" id="id_thumbnail_url" type="text"><br>
+                    <input type="radio" name="thumbnail_type" value="local">{{ field }}
+
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                    <span class="help-inline">{{ error }}</span>
+                    {% endfor %}
+                {% endif %}
+
+                </div>
+            </div>
+        {% endwith %}
 
         {% include "friendlib/snippets/media_form_field.html" with field=form.author %}
 
@@ -93,7 +98,13 @@ TODO: Make search results align on the bottom, limit length of the title
     $.ajaxSetup({
         timeout: 5000,
         error: function(event, request, settings){
-            alert("Oops!");
+            alert("{% trans "Sorry, an error has occured" %}");
+            console.log(event, request, settings);
+
+            $('#load').spin(false);
+            $('#fields').removeAttr('style')
+            $('#websearch_result').spin(false);
+
         }
     });
 
@@ -144,10 +155,11 @@ TODO: Make search results align on the bottom, limit length of the title
             function(json, textStatus, jqXHR) {
                 console.log(json, textStatus, jqXHR);
                 $('#thumbnail_preview').attr('src', json['thumbnail']);
+                $('input:radio[name="thumbnail_type"][value="url"]').prop('checked', true);
 
                 $('#id_title').val(json['title']);
                 $('#id_description').val(json['description']);
-                $('#id_thumbnail').val(json['thumbnail']);
+                $('#id_thumbnail_url').val(json['thumbnail']);
                 $('#id_author').val(json['authors']);
                 $('#id_size').val(json['size']);
                 $('#id_nb_pages').val(json['nb_pages']);
