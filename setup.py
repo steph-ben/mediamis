@@ -19,7 +19,7 @@ setup(
     install_requires = ['setuptools',
                         # Core
                         'django',
-			'psycopg2',
+			            'psycopg2',
 
                         # Dev tools
                         'django-extensions',
@@ -30,6 +30,7 @@ setup(
                         # Thirds apps
                         'South',
                         'djeneralize',
+                        'pil',  # For ImageField
 
                         # Others apps
                         #'django-crumbs',
