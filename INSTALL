@@ -74,6 +74,9 @@ sql> create database mediamis with owner = mediamis
 C:/Program Files (x86)/PostgreSQL/9.2/bin\pg_restore.exe --host localhost --port 5432 --username "postgres" --dbname "mediamis" --role "mediamis" --no-password  --data-only --verbose "C:\Users\steph\Docs perso\Code\dev\perso\mediamis\data\b003.dump")
 
 
+
+
+
 # Making backup of existing data
 # and export locally database
 # See https://devcenter.heroku.com/articles/pgbackups
@@ -97,6 +100,17 @@ C:/Program Files (x86)/PostgreSQL/9.2/bin\pg_restore.exe --host localhost --port
 
     
 
+# Try modif locally
+####################
+* Checkout remote heroku/master to local heroku_master
+* Run it locally to simulate production environnement
+* Merge local trunk or master with current local checkout of heroku/master heroku
+* Apply possible migrations (South)
+* Run collectstatic (for ... static files)
+* Run app and check everything's alrights
+
+* Then, merge heroku_master to master
+* Then, push local master to heroku/master
 
 # Update code on Heroku
 ######################
