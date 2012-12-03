@@ -25,7 +25,7 @@
         <ul class="thumbnails">
         {% for media in lastbook_list %}
             <li class="span4 media-thumbnail">
-                <div>{{ media.html_thumbnail }}</div>   {# Using <div> pour retour a la ligne !!! #}
+                <div>{{ media.html_thumbnail_small }}</div>   {# Using <div> pour retour a la ligne !!! #}
                 {{ media.html_link }} (by {{ media.owner }})
             </li>
         {% empty %}
@@ -43,7 +43,7 @@
         <ul class="thumbnails">
         {% for media in lastdvd_list %}
             <li class="span4 media-thumbnail">
-                <div>{{ media.html_thumbnail }}</div>
+                <div>{{ media.html_thumbnail_small }}</div>
                 {{ media.html_link }} (by {{ media.owner }})
             </li>
         {% empty %}
@@ -62,7 +62,7 @@
         <ul class="thumbnails">
         {% for media in lastboardgame_list %}
             <li class="span4 media-thumbnail">
-                <div>{{ media.html_thumbnail }}</div>
+                <div>{{ media.html_thumbnail_small }}</div>
                 {{ media.html_link }} (by {{ media.owner }})
             </li>
         {% empty %}
