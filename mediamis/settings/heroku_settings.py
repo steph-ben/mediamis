@@ -227,3 +227,13 @@ TEMPLATE_DIRS = (
 #    'INTERCEPT_REDIRECTS': False,
 #    'HIDE_DJANGO_SQL': True,
 #}
+
+import dj_database_url
+
+if 'DATABASES' not in locals():
+    DATABASES = {}
+
+if not 'default' in DATABASES:
+    DATABASES['default'] = {}
+
+DATABASES['default'].update(dj_database_url.config(default='postgres://'))
