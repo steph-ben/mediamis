@@ -1,18 +1,8 @@
 import platform
 import settings_conf
 
-if platform.node() == 'steph-laptop':
-    import settings_conf.local_settings as settings
+if platform.node() == 'steph-laptopp':
+    from settings_conf.local_settings import *
 else:
-    import settings_conf.heroku_settings as settings
+    from settings_conf.heroku_settings import *
 
-
-import dj_database_url
-
-if 'DATABASES' not in locals():
-    DATABASES = {}
-
-if not 'default' in DATABASES:
-    DATABASES['default'] = {}
-
-DATABASES['default'].update(dj_database_url.config(default='postgres://'))
