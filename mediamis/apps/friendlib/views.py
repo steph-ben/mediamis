@@ -306,6 +306,7 @@ def book_websearch(request, **kwargs):
             previousPage = int(page) - 1
             nextPage = int(page) + 1
 
+        query_url = "%s?q=%s&startIndex=%s&maxResults=%s&country=US" % (GOOGLE_URL, query, startIndex, maxResults)
 
         # Make it safe from ' ' and so on, cf. http://stackoverflow.com/a/845595/554374
         # TODO: handle french chars
