@@ -1,5 +1,5 @@
-# Install the app
-#################
+# Install the application
+#########################
 
 # Create a virtualenv 
 $  virtualenv --no-site-packages ve

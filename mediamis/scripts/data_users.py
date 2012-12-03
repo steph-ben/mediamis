@@ -23,8 +23,10 @@ def run():
     auth_user_1.is_superuser = False
     auth_user_1.last_login = datetime.datetime(2012, 11, 7, 18, 11, 56, 627668)
     auth_user_1.date_joined = datetime.datetime(2012, 10, 19, 4, 33, 45, 501602)
-
-    auth_user_1.save()
+    try:
+        auth_user_1.save()
+    except:
+        pass
 
     auth_user_2 = User()
     auth_user_2.username = u'admin'
@@ -37,7 +39,10 @@ def run():
     auth_user_2.is_superuser = True
     auth_user_2.last_login = datetime.datetime(2012, 11, 7, 20, 24, 35, 821631)
     auth_user_2.date_joined = datetime.datetime(2011, 7, 30, 12, 14, 49)
-    auth_user_2.save()
+    try:
+        auth_user_2.save()
+    except:
+        pass
 
     auth_user_3 = User()
     auth_user_3.username = u'steph'
@@ -50,6 +55,8 @@ def run():
     auth_user_3.is_superuser = False
     auth_user_3.last_login = datetime.datetime(2012, 11, 7, 20, 25, 23, 952727)
     auth_user_3.date_joined = datetime.datetime(2012, 10, 19, 2, 49, 44, 681549)
-
-    auth_user_3.save()
+    try:
+        auth_user_3.save()
+    except:
+        pass
 

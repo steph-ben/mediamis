@@ -12,6 +12,7 @@ New features:
 - Add helper to find media by their id (eg. from Allocine by movie name, from amazone by code bar, etc.)
     https://www.googleapis.com/books/v1/volumes?q=isbn:9781905686247&projection=lite
     https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC
+    ebay: triso_1206Ebay
 
 - Facebook authentication
 - Gmail authentication
@@ -21,9 +22,11 @@ New features:
 
 - Add MediaRequestDetail pages
 - Add pages for DVD and Boardgames
-- Add public user profile
+- [OK] Add public user profile
 - Add user profile edit page
 - Add boardcrum (fils / tabs, kkchose pour qu'on s'y retrouve entre les pages / faire un plan de site)
+- Check for form errors in the login box
+- Add image for media ...
 - Check for form errors in the login box
 
 - Add some logos

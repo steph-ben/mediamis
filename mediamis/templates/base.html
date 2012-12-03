@@ -35,13 +35,29 @@
     <script src="{{ MEDIA_URL }}js/bootstrap-dropdown.js"></script>
 
     <script type="text/javascript">
+
     $(document).ready(function(){
+        $('.row-fluid .thumbnails').each(function () {
+            var $thumbnails = $(this).children(),
+                previousOffsetLeft = $thumbnails.first().offset().left;
+            $thumbnails.each(function () {
+                var $thumbnail = $(this),
+                    offsetLeft = $thumbnail.offset().left;
+                if (offsetLeft < previousOffsetLeft) {
+                    $thumbnail.css('margin-left', 0);
+                }
+                previousOffsetLeft = offsetLeft;
+            });
+        });
+
         {% block js %}
         {% endblock %}
     });
     </script>
 
     <script src="{{ MEDIA_URL }}js/bootstrap-modal.js"></script>
+    <script src="{{ MEDIA_URL }}js/spin.js"></script>
+
 
 <!--
     <script src="{{ MEDIA_URL }}js/bootstrap-transition.js"></script>
