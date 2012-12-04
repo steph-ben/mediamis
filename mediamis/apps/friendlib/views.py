@@ -458,7 +458,7 @@ def book_websearch_detail(request, **kwargs):
     detail = {}
     web_id = kwargs.get('web_id', None) or request.POST.get('web_id', None) or request.GET.get('web_id', None)
     if web_id:
-        url_data = GOOGLE_URL + web_id
+        url_data = GOOGLE_URL + web_id + "?country=US"
 
         # Use contextlib to close correctly
         # cf. http://stackoverflow.com/questions/1522636/should-i-call-close-after-urllib-urlopen/1522709#1522709
