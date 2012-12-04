@@ -18,7 +18,7 @@ class BookForm(forms.ModelForm):
             'borrower': HiddenInput(),
             'borrowed': HiddenInput(),
         }
-        
+
 class MediaRequestForm(forms.ModelForm):
     class Meta:
         model = MediaRequest

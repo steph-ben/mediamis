@@ -34,6 +34,7 @@ def home(request, **kwargs):
         'lastbook_list': lastbook_list,
         'lastboardgame_list': lastgames_list,
         'lastdvd_list': lastdvd_list,
+        'user_list': user_list
     }
 
     context.update(kwargs.get('extra_context', {}))
@@ -462,6 +463,11 @@ def book_websearch_detail(request, **kwargs):
 
         # Use contextlib to close correctly
         # cf. http://stackoverflow.com/questions/1522636/should-i-call-close-after-urllib-urlopen/1522709#1522709
+        try:
+            with contextlib.closing(urllib2.urlopen(url_data)) as pt:
+                data_object = json.load(pt)
+                print data_object
+                detail = _read_gbooks_search(data_object)
         try:
            # Set user agent, gbook doesn't like bots
             headers = { 'User-Agent' : 'Mozilla/5.0' }

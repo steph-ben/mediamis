@@ -1,4 +1,7 @@
 # -*- coding: latin-1 -*-
+import os
+import random
+import string
 
 from django.contrib.auth.models import User
 from django.core import urlresolvers
@@ -6,14 +9,23 @@ from django.db import models
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 from django.utils.safestring import mark_safe, mark_for_escaping
+from django.template.defaultfilters import slugify
 
 from djeneralize.models import BaseGeneralizationModel
 
+def get_upload_path(book, filename='dummy'):
+    path = os.path.join('upload','medias')
+
+    # Make it unique
+    unique = string.join(random.sample(string.letters + string.digits, 8), '')
+
+    name = u'book_%s_%s.png' % (book.title[:10], unique)
+    return os.path.join(path, name)
 
 class Media(BaseGeneralizationModel):
     title = models.CharField(_('title'), max_length=255)
     description = models.TextField(_('description'), blank=True)
-    thumbnail = models.ImageField(_('thumbnail'), upload_to='upload/medias/', blank=True, null=True,
+    thumbnail = models.ImageField(_('thumbnail'), upload_to=get_upload_path, blank=True, null=True,
                                   default=None)
     
     owner = models.ForeignKey(User, related_name='owned_medias')
