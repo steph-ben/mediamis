@@ -286,7 +286,7 @@ class BookCreateView(MediaCreateView):
             from django.core.files import File
             from django.core.files.temp import NamedTemporaryFile
 
-            img_temp = NamedTemporaryFile()
+            img_temp = NamedTemporaryFile(dir='/tmp')
             try:
                 # Set user agent, gbook doesn't like bots
                 headers = { 'User-Agent' : 'Mozilla/5.0' }
