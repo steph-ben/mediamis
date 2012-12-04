@@ -34,7 +34,6 @@ def home(request, **kwargs):
         'lastbook_list': lastbook_list,
         'lastboardgame_list': lastgames_list,
         'lastdvd_list': lastdvd_list,
-        'user_list': user_list
     }
 
     context.update(kwargs.get('extra_context', {}))
