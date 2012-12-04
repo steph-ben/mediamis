@@ -37,3 +37,14 @@
         </div>
 
 {% endblock %}
+
+{% block js %}
+
+    $('a#link_prev, a#link_next').each(function() {
+        current_href = $(this).attr('href');
+        href = current_href + "&owner={{ user.pk }}";
+        $(this).attr('href', href);
+        console.log(this, href)
+    });
+
+{% endblock %}

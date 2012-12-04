@@ -15,12 +15,11 @@ from django.views.generic.simple import direct_to_template, redirect_to
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from django.conf import settings
+from django.template.defaultfilters import truncatewords
 
-from friendlib.forms import MediaSearchForm
-from friendlib.models import Media, MediaRequest
-from friendlib.forms import MediaRequestForm
-from friendlib.models import BoardGame, Divx, Book, DVD, Movie
-from models import get_upload_path
+from forms import MediaSearchForm, MediaRequestForm
+from models import Media, MediaRequest
+from models import BoardGame, Divx, Book, DVD, Movie
 
 ################################################################################
 # Views for public pages
@@ -317,8 +316,9 @@ def book_websearch(request, **kwargs):
     GOOGLE_URL = "https://www.googleapis.com/books/v1/volumes"
     MAX_ITEMS = 5
 
+    pagination = '<ul class="pager">'
     html = '<ul class="thumbnails">'
-    page = request.POST.get('page', None) or request.GET.get('page', None)
+    page = request.POST.get('page', '0') or request.GET.get('page', '0')
     query = request.POST.get('query', None) or request.GET.get('query', None)
 
     ###### Generate URL #########
@@ -326,12 +326,16 @@ def book_websearch(request, **kwargs):
         # Take care of pagination
         startIndex = 0
         maxResults = MAX_ITEMS
-        if page:
+        page = int(page) or 0
+        nextPage = page + 1
+        link_next = '<a id="webresult_next" href="#" data-query="%s" data-page="%s">Next</a>' % (query, nextPage)
+
+        if page != 0:
             # For current search
-            startIndex = int(page) * MAX_ITEMS
-            # For pages links
-            previousPage = int(page) - 1
-            nextPage = int(page) + 1
+            startIndex = page * MAX_ITEMS
+            previousPage = page - 1
+            link_prev = '<li class="previous"><a id="webresult_prev" href="#" data-query="%s" data-page="%s">Previous</a></li>' % (query, previousPage)
+            pagination += '<li class="previous">%s</li>' % link_prev
 
         query_url = "%s?q=%s&startIndex=%s&maxResults=%s&country=US" % (GOOGLE_URL, query, startIndex, maxResults)
 
@@ -350,6 +354,9 @@ def book_websearch(request, **kwargs):
                 print data_object
 
                 items = data_object.get('items', [])
+                nb_items = data_object.get('totalItems', None)
+                if nb_items != None:
+                    pagination += ('<li>%s items found</li>' % nb_items)
                 if not items:
                     html += '<li class="media">No results.</li>'
                 for r in items:
@@ -360,7 +367,7 @@ def book_websearch(request, **kwargs):
                     html += '<li class="span2">'
                     html += '<a id="load_details" web_id="%s" href="#">' % details['web_id']
                     html += '<img src="%s" ></img>%s - %s' % \
-                            (details['thumbnail'], details['title'], details['authors'])
+                            (details['thumbnail'], truncatewords(details['title'], 4), truncatewords(details['authors'], 2))
                     html += '</a></li>'
 
         except urllib2.HTTPError, e:
@@ -374,11 +381,15 @@ def book_websearch(request, **kwargs):
         except Exception:
             import traceback
             html += '<li class="media">generic exception: <pre>%s</pre></li>' % traceback.format_exc()
+
+        pagination += '<li class="next">%s</li>' % link_next
     else:
         # If query empty
         html += '<li class="media">No results.</li>'
 
     html += '</ul>'
+    pagination += '</ul>'
+    html +=  pagination
 
     response = HttpResponse(html)
     return response
