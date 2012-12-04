@@ -33,6 +33,9 @@ body {
 
 .container {
     padding-top: 20px;
+    width: auto;
+    margin-left: 13%;
+    margin-right: 13%;
 }
 
 /* Put big margins only on big screen ! */
