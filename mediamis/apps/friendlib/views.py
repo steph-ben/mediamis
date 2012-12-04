@@ -53,10 +53,20 @@ def get_search_context(my_request):
     """
     Get extra context to be added to the template for search form
     """
+    items_per_page = 5
     search_form = MediaSearchForm(my_request)
     filter_qs = search_form.filter_queryset()
 
-    paginator = Paginator(filter_qs, 5) # Show 5 per page
+    # Type of view
+    view_type = my_request.get('view_type', 'classic')
+    if view_type == 'list':
+        items_per_page = 20
+    elif view_type == 'icon':
+        items_per_page = 12
+    elif view_type == 'classic':
+        items_per_page = 5
+
+    paginator = Paginator(filter_qs, items_per_page) # Show 5 per page
 
     # Make sure page request is an int. If not, deliver first page.
     try:
@@ -74,6 +84,7 @@ def get_search_context(my_request):
         'search_form': search_form,
         'media_list': qs.object_list,
         'pager': qs,
+        'view_type': view_type,
     }
     return context
 
