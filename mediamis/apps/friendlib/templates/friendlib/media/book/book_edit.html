@@ -9,9 +9,8 @@
 
         {% include "friendlib/snippets/media_form_field.html" with field=form.description %}
 
+        <img id="thumbnail_preview" src=""/>
         {% with field=form.thumbnail %}
-            {# To choose a new image correctly and handle errors #}
-            {# TODO: create a generice template snippet media_form_imagefield.html #}
             {% if field.errors %}
             <div class="control-group error">
             {% else %}
@@ -20,9 +19,8 @@
 
                 <label class="control-label">{{ field.label }}</label>
                 <div class="controls">
-
-                    <img src="{{ MEDIA_URL }}/{{ field.value }}"/>
-                    <input type="file" name="thumbnail" id="id_thumbnail">
+                    <input type="radio" name="thumbnail_type" value="url"><input name="thumbnail_url" id="id_thumbnail_url" type="text"><br>
+                    <input type="radio" name="thumbnail_type" value="local">{{ field }}
 
                 {% if field.errors %}
                     {% for error in field.errors %}
