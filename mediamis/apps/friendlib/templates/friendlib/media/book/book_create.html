@@ -97,20 +97,23 @@ TODO: Make search results align on the bottom, limit length of the title
         }
     });
 
-    function websearch() {
+    function websearch(page) {
+        page = typeof page !== 'undefined' ? page : 0;
+
         /* Show loading animation */
         $('#websearch_result').empty().attr('style', 'height:150px');
         $('#websearch_result').spin();
 
         query = $('#websearch > input#query').val();
         csrf = $('#websearch input[name=csrfmiddlewaretoken]').val();
-        console.log("Search with: " + query);
+        console.log("Search with: " + query + ", " + page);
         $('#websearch_result').load(
             '{% url book_websearch %}',
             {
                 'action': 'search',
                 'query': query,
                 'csrfmiddlewaretoken': csrf,
+                'page': page
             },
             function (responseText, textStatus, req) {
                 $(this).removeAttr('style')
@@ -120,10 +123,18 @@ TODO: Make search results align on the bottom, limit length of the title
                     return false;
                 }
                 m = 'Load was performed with ' + query;
+
+                /* Activate links */
                 $('a#load_details').click(function(e) {
                     e.preventDefault();
                     var web_id = $(this).attr('web_id');
                     load_details(web_id);
+                });
+                $('a#webresult_next, a#webresult_prev').click(function(e) {
+                    e.preventDefault();
+                    /* Get page number */
+                    page = $(this).attr('data-page');
+                    websearch(page);
                 });
             }
         );
@@ -169,6 +180,10 @@ TODO: Make search results align on the bottom, limit length of the title
             websearch();
        }
     });
-    $('#websearch > a#go').click(websearch);
+    $('#websearch > a#go').click(function() {
+        websearch();
+    });
+
+
 
 {% endblock %}

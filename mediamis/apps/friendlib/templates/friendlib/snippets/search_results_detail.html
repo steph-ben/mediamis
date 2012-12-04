@@ -15,7 +15,7 @@
 
         <p>
         {% if media.description %}
-            {{ media.description }}
+            {{ media.description|truncatewords_html:30 }}
         {% else %}
             {% trans "No description." %}
         {% endif %}

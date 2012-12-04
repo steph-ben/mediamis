@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block media_detail %}
-                <dl class="dl-horizontal">
+                <dl class="">
                     <dt>{% trans "Author" %}</dt>
                     <dd>{{ book.author }}</dd>
 
@@ -10,6 +10,6 @@
                     <dd>{{ book.nb_pages }}</dd>
 
                     <dt>Resume</dt>
-                    <dd>{{ book.description }}</dd>
+                    <dd>{{ book.description|safe }}</dd>
                 </dl>
 {% endblock %}
