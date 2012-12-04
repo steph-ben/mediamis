@@ -31,6 +31,7 @@ setup(
                         'South',
                         'djeneralize',
                         'pil',  # For ImageField
+                        'django-storages',
 
                         # Others apps
                         #'django-crumbs',

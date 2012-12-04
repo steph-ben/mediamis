@@ -126,6 +126,7 @@ INSTALLED_APPS = (
 
     # Thirds apps
     'djeneralize',
+    'storages',
 
     # Reusable apps
     'registration',
