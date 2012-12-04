@@ -70,7 +70,7 @@
         <div class="span4">
             <div class="row-fluid">
                 {% if user.is_authenticated %}
-                    <div class="span12 box">
+                    <div class="box">
                         <legend>Last activity</legend>
                         <ul>
                         {% for activity in user_activity %}
@@ -81,13 +81,23 @@
                         </ul>
                     </div>
                 {% else %}
-                    <div class="span12 box">
+                    <div class="box">
                         <p>
                             Currently <strong>{{ nb_users }} users</strong> registered,
                             for a total of <strong>{{ nb_medias }} medias</strong>, youhouhou !
                         </p>
                     </div>
                 {% endif %}
+
+                <div class="box">
+                    <legend>Users:</legend>
+                    <ul>
+                    {% for user in user_list %}
+                        <li>{{ user|capfirst }} (<a href="{% url user_detail user.username %}">View profile</a>)</li>
+                    {% endfor %}
+                    </ul>
+                    <a href="#" class="btn-link pull-right">{% trans "See more ..." %}</a>
+                </div>
             </div>
 
         </div>

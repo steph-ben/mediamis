@@ -25,16 +25,15 @@ from models import BoardGame, Divx, Book, DVD, Movie
 # Views for public pages
 
 def home(request, **kwargs):
-    lastbook_list = Book.objects.all().order_by('-pk').select_related()[:10]
-    lastgames_list = BoardGame.objects.all().order_by('-pk').select_related()[:10]
-    lastdvd_list = DVD.objects.all().order_by('-pk').select_related()[:10]
-    user_list = User.objects.all()
+    max_items = 5
+    lastbook_list = Book.objects.all().order_by('-pk').select_related()[:max_items]
+    lastgames_list = BoardGame.objects.all().order_by('-pk').select_related()[:max_items]
+    lastdvd_list = DVD.objects.all().order_by('-pk').select_related()[:max_items]
 
     context = {
         'lastbook_list': lastbook_list,
         'lastboardgame_list': lastgames_list,
         'lastdvd_list': lastdvd_list,
-        'user_list': user_list
     }
 
     context.update(kwargs.get('extra_context', {}))
@@ -98,11 +97,13 @@ def get_user_context(user):
         query = Q(borrower=user) | Q(media__owner=user)
         user_activity = MediaRequest.objects.filter(query).order_by('-date_status_updated').select_related()
 
-    nb_users = User.objects.all().count()
+    user_list = User.objects.all()
+    nb_users = user_list.count()
     nb_medias = Media.objects.all().count()
     
     user_context = {
         'user_activity': user_activity,
+        'user_list': user_list,
         'nb_users': nb_users,
         'nb_medias': nb_medias,
     }

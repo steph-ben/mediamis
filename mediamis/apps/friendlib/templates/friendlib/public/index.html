@@ -37,26 +37,28 @@
         {% endif %}
     </div>
 
+
+</div>
+
+<div class="span6">
     <div class="box">
 
-        <legend>Last movies:</legend>
-        <ul class="thumbnails">
-        {% for media in lastdvd_list %}
-            <li class="span4 media-thumbnail">
-                <div>{{ media.html_thumbnail_small }}</div>
-                {{ media.html_link }} (by {{ media.owner }})
-            </li>
-        {% empty %}
-            <li><em>{% trans "No entry." %}</em></li>
-        {% endfor %}
-        </ul>
-        {% if lastdvd_list %}
-            <a href="{% url search %}?media_type=DVD" class="pull-right">{% trans "See more ..." %}</a>
-        {% endif %}
+            <legend>Last movies:</legend>
+            <ul class="thumbnails">
+            {% for media in lastdvd_list %}
+                <li class="span4 media-thumbnail">
+                    <div>{{ media.html_thumbnail_small }}</div>
+                    {{ media.html_link }} (by {{ media.owner }})
+                </li>
+            {% empty %}
+                <li><em>{% trans "No entry." %}</em></li>
+            {% endfor %}
+            </ul>
+            {% if lastdvd_list %}
+                <a href="{% url search %}?media_type=DVD" class="pull-right">{% trans "See more ..." %}</a>
+            {% endif %}
     </div>
-</div>
-    
-<div class="span6">
+
     <div class="box">
         <legend>Last boardgames:</legend>
         <ul class="thumbnails">
@@ -74,15 +76,6 @@
         {% endif %}
     </div>
 
-    <div class="box">
-        <legend>Users:</legend>
-        <ul>
-        {% for user in user_list %}
-            <li>{{ user|capfirst }} (<a href="{% url user_detail user.username %}">View profile</a>)</li>
-        {% endfor %}
-        </ul>
-        <a href="#" class="btn-link pull-right">{% trans "See more ..." %}</a>
-    </div>
 </div>
 
 {% endblock %}
