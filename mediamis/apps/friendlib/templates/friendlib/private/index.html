@@ -23,7 +23,6 @@
                 <div class="span12">
                     <span class="pull-right" id="user_home_actions">
                         <a href="{% url user_detail user.username %}" class="btn btn-small btn-warning">View public profile</a>
-                        {% include "friendlib/snippets/media_create_button.html" %}
                     </span>
 
                     <h3>Hello {{ user.username|capfirst }} !</h3>
@@ -33,66 +32,43 @@
             </div>
 
             <br>
-        
+
             <div class="row-fluid">
-                    <div class="span6">
-                        <div class="">
-                            <legend><small>People want your stuffs:</small></legend>
-                            <ul>
-                            {% for req in requests_incoming_pending %}
-                                <li>{{ req.html_link }}</li>
-                            {% empty %}
-                                <li><em>{% trans "No entry." %}</em></li>
-                            {% endfor %}
-                            </ul>
-                            {% if requests_incoming_pending %}
-                                <a href="#" class="pull-right">{% trans "See more ..." %}</a>
-                            {% endif %}
-                        </div>
+                <div class="span12">
+                    <legend>{% trans "Mes derniers ajouts:" %}</legend>
+                    <a class="btn btn-success btn-small" href="{% url book_create %}"><i class="icon-plus icon-white"></i>{% trans "Add new Book" %}</a></li>
 
-                        <div class="">
-
-                            <legend><small>Check with those people to borrow your stuff:</small></legend>
-                            <ul>
-                            {% for req in requests_incoming_accepted %}
-                                <li>{{ req.html_link }}</li>
-                            {% empty %}
-                                <li><em>{% trans "No entry." %}</em></li>
-                            {% endfor %}
-                            </ul>
-                            {% if requests_incoming_accepted %}
-                                <a href="#" class="pull-right">{% trans "See more ..." %}</a>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class="span6">
-                        <div class="">
-                            <legend><small>Accepted requests:</small></legend>
-                            <ul>
-                            {% for req in requests_outgoing_accepted %}
-                                <li>{{ req.html_link }}</li>
-                            {% empty %}
-                                <li><em>{% trans "No entry." %}</em></li>
-                            {% endfor %}
-                            </ul>
-                            {% if requests_outgoing_accepted %}
-                                <a href="#" class="pull-right">{% trans "See more ..." %}</a>
-                            {% endif %}
-                        </div>
-
-                        <div class="">
-                            <legend><small>Stuffs you should have back soon:</small></legend>
-                            <ul>
-                            {% for req in requests_outgoing_to_be_returned %}
-                                <li>{{ req.html_link }}</li>
-                            {% empty %}
-                                <li><em>{% trans "No entry." %}</em></li>
-                            {% endfor %}
-                           </ul>
-                        </div>
-                    </div>
+                    <ul class="thumbnails">
+                        {% for media in last_medias %}
+                            <li class="span4 media-thumbnail">
+                               <div>{{ media.html_thumbnail_small }}</div>   {# Using <div> pour retour a la ligne !!! #}
+                               {{ media.html_link }} (by {{ media.owner }})
+                           </li>
+                        {% empty %}
+                            <li><em>{% trans "No medias." %}</em></li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
+
+            <div class="row-fludi">
+                <div class="span12">
+                    <legend>{% trans "Prets:" %}</legend>
+                    <a class="btn btn-success btn-small" href="{% url user_requests_incoming %}">{% trans "Gestion des prets" %}</a></li>
+
+                    <ul>
+                        {% for req in requests_incoming_pending %}
+                            <li>{{ req.html_link }}</li>
+                        {% empty %}
+                            <li><em>{% trans "No entry." %}</em></li>
+                        {% endfor %}
+                        </ul>
+                        {% if requests_incoming_pending %}
+                            <a href="#" class="pull-right">{% trans "See more ..." %}</a>
+                        {% endif %}
+                </div>
+            </div>
+
         </div>
 
 {% endblock %}

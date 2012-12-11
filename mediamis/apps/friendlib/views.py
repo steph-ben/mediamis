@@ -119,6 +119,8 @@ def myaccount(request, **kwargs):
     user = request.user.pk
 
     # Last stuffs ...
+    last_medias = Media.objects.all().order_by('-pk').select_related()[:MAX_OBJECTS]
+
     inc_pending_requests = MediaRequest.objects.filter(media__owner=user, status__in=['P'])\
                             .order_by('-date_status_updated')\
                             .select_related('media__owner__username')[:MAX_OBJECTS]
@@ -135,6 +137,7 @@ def myaccount(request, **kwargs):
     
     # Number of Media
     counting = {
+        'last_medias': last_medias,
         'nb_book': Book.objects.filter(owner=user).count(),
         'nb_dvd': DVD.objects.filter(owner=user).count(),
         'nb_divx': Divx.objects.filter(owner=user).count(),
