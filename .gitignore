@@ -5,6 +5,8 @@ dist/
 logs/
 vrac/
 data/
+mediamis/settings_conf/heroku_settings.conf
+mediamis/settings_conf/local_settings.conf
 *.egg-info
 *.pyc
 *.svn
