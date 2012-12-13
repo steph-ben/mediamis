@@ -36,7 +36,7 @@
             <div class="row-fluid">
                 <div class="span12">
                     <legend>{% trans "Mes derniers ajouts:" %}</legend>
-                    <a class="btn btn-success btn-small" href="{% url book_create %}"><i class="icon-plus icon-white"></i>{% trans "Add new Book" %}</a></li>
+                    {% include "friendlib/snippets/media_create_button.html" %}
 
                     <ul class="thumbnails">
                         {% for media in last_medias %}
